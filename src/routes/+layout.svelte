@@ -2,7 +2,7 @@
     import Footer from '$lib/Footer.svelte';
     import NavBar from '$lib/NavBar.svelte';
     import '../app.css'
-    import { initScript, listener } from '$lib/appearance';
+    import { listener } from '$lib/appearance';
     import { onMount } from 'svelte';
 
     onMount(listener)
@@ -15,8 +15,3 @@
     <div class="z-20 max-w-6xl justify-self-center w-full relative"><slot/></div>
     <footer class="w-full flex justify-center"><Footer/></footer>
 </div>
-
-<svelte:head>
-    <link rel="preload" href="/font/lexend-latin.woff2" as="font" type="font/woff2">
-    {@html initScript}
-</svelte:head>
