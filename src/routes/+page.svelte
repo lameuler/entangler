@@ -1,7 +1,6 @@
 <script>
     import ActionLink from '$lib/ActionLink.svelte';
-import Favourites from '$lib/Favourites.svelte';
-import Search from '$lib/Search.svelte';
+    import Favourites from '$lib/Favourites.svelte';
     import { data } from '$lib/data';
 
 </script>

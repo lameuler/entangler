@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Input from './Input.svelte';
+    import Input from './TextInput.svelte';
     let value = ''
 </script>
 <form action="" on:submit|preventDefault={()=>console.log('search',value)}>

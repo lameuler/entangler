@@ -1,5 +1,5 @@
 <script>
-    import Search from '$lib/Search.svelte';
+    import Search from '$lib/input/Search.svelte';
     import TeamCard from '$lib/TeamCard.svelte';
     import { data } from '$lib/data';
 

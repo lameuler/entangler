@@ -1,7 +1,11 @@
 <script lang="ts">
-    export let type: string | null | undefined = undefined
+    export let label: string | null | undefined = undefined
+    export let type: 'text' | 'password' | 'email' | 'url' | null | undefined = undefined
     export let placeholder: string | null | undefined = undefined
     export let error: string | null | undefined = undefined
+    export let info: string | null | undefined = undefined
+    export let maxlength: number | null | undefined = undefined
+    export let spellcheck: boolean | "true" | "false" | null | undefined = undefined
     // export let onInput: ((e: Event, target: HTMLInputElement) => any) | undefined = undefined
     export let value: string = ''
     let input: HTMLInputElement
@@ -10,9 +14,21 @@
 </script>
 
 <div>
+    {#if label}
+        <div class="font-medium px-2 py-1">{label}</div>
+    {/if}
     <div class="flex items-center bg-gray-500/15 rounded-lg w-full focus-within:ring-2 ring-indigo-500">
         <slot name="left"/>
-        <input class="bg-transparent px-3 py-2 flex-grow outline-none min-w-0" {placeholder} type={ override ? 'text' : type} on:input={e => {value = input.value; console.log(value)}} bind:this={input}/>
+        <input class="bg-transparent px-3 py-2 flex-grow outline-none min-w-0"
+            {placeholder}
+            type={ override ? 'text' : type}
+            maxlength={ maxlength !== undefined && maxlength !== null && maxlength >= 0 ? Math.floor(maxlength) : undefined }
+            {spellcheck}
+            on:input={e => {value = input.value; console.log(value)}}
+            bind:this={input}/>
+        {#if maxlength !== undefined && maxlength !== null && maxlength >= 0}
+            <span class="pr-2 opacity-50">{Math.floor(maxlength - value.length)}</span>
+        {/if}
         {#if type === 'password'}
             <button class="pr-3" on:click={() => override = !override}>
                 {#if override}
@@ -33,5 +49,7 @@
     </div>
     {#if error}
     <div class="text-sm text-red-500 px-2 pt-1 -mb-2">{error}</div>
+    {:else if info}
+    <div class="text-sm text-slate-500 px-2 pt-1 -mb-2">{info}</div>
     {/if}
 </div>
