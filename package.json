@@ -10,12 +10,15 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
 	"devDependencies": {
+		"@azure/msal-browser": "^3.10.0",
+		"@azure/msal-node": "^2.6.4",
 		"@faker-js/faker": "^8.3.1",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-static": "^3.0.1",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"autoprefixer": "^10.4.16",
+		"nanoid": "^5.0.6",
 		"postcss": "^8.4.33",
 		"svelte": "^4.2.7",
 		"svelte-check": "^3.6.0",

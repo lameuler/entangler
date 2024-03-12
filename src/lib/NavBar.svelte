@@ -1,5 +1,16 @@
-<script>
+<script lang="ts">
+    import { onMount } from 'svelte';
     import Appearance from './Appearance.svelte';
+    import { login } from './auth';
+    import type { PublicClientApplication } from '@azure/msal-browser';
+
+    // let app: PublicClientApplication | undefined = undefined;
+
+    // onMount(() => {
+    //     app = init()
+    //     console.log(app)
+    //     return () => app = undefined
+    // })
 
 </script>
 <nav class="flex justify-between items-center px-4 h-16 w-full max-w-6xl bg-gradient-to-b from-slate-50 dark:from-slate-950 via-slate-50/85 dark:via-slate-950/75 to-transparent">
@@ -12,6 +23,7 @@
     <div class="flex items-center gap-2">
         <a href="/search" class="px-2 py-1 hover:underline">Search</a>
         <a href="/dashboard" class="bg-violet-600 text-slate-100 px-3 py-1 rounded-md font-medium">Dashboard</a>
+        <button on:click={ login }>Login</button>
         <Appearance/>
     </div>
 </nav>
