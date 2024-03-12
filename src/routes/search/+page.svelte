@@ -3,12 +3,12 @@
     import TeamCard from '$lib/TeamCard.svelte';
     import { data } from '$lib/data';
 
-    const names = [
-        'Media Club Service Requisiton',
-        'Chemistry Lab Requisition',
-        "OPT'24 Logs",
-        'Estate Service Request',
-        'PE Dept Equipment Loan'
+    const teams = [
+        { name: 'Media Club Service Requisiton', favourites: 46, role: 'Member' },
+        { name: 'Chemistry Lab Requisition', favourites: 13, private: true },
+        { name: "OPT'24 Logs", favourites: 57, role: 'Member', private: true },
+        { name: 'Estate Service Request', favourites: 9 },
+        { name: 'PE Dept Equipment Loan', favourites: 28 }
     ]
 </script>
 <main class="h-full relative">
@@ -19,8 +19,8 @@
             <a href="/about#team-visibility" class="underline hover:text-violet-600 hover:dark:text-violet-400">Learn&nbsp;more</a>
         </div>
         <div class="grid md:grid-cols-2 gap-2">
-            {#each names as name }
-                <TeamCard {name}/>
+            {#each teams as team }
+                <TeamCard {team}/>
             {/each}
         </div>
     </section>
