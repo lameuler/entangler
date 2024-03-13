@@ -1,0 +1,36 @@
+services:
+  api:
+    build:
+      context: .
+    ports:
+      - 6231:6231
+    volumes:
+      - type: bind
+        source: .
+        target: /app
+    environment:
+      MYSQL_HOST: db
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db-password
+      MYSQL_DATABASE: sample
+    secrets:
+      - db-password
+
+
+  db:
+    image: mysql:8
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db-password
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_DATABASE: sample
+    secrets:
+      - db-password
+
+volumes:
+  db-data:
+
+secrets:
+  db-password:
+    file: .secret/MYSQL_ROOT_PASSWORD

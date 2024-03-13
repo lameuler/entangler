@@ -1,0 +1,27 @@
+{
+  "name": "entangler-backend",
+  "version": "0.0.1",
+  "private": "true",
+  "scripts": {
+    "init": "bun run init.ts",
+    "start": "bun run index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/passport": "^1.0.16",
+    "@types/passport-azure-ad": "^4.3.6"
+  },
+  "optionalDependencies": {
+    "bun": "^1.0.30"
+  },
+  "dependencies": {
+    "@azure/msal-node": "^2.6.4",
+    "cors": "^2.8.5",
+    "express": "^4.18.3",
+    "mysql2": "^3.9.2",
+    "passport": "^0.7.0",
+    "passport-azure-ad": "^4.3.5"
+  }
+}
