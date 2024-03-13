@@ -1,0 +1,10 @@
+services:
+  web:
+    image: node:20-slim
+    user: node
+    command: sh -c "npm install && npm run dev -- --host"
+    ports:
+      - 6131:6131
+    working_dir: /app
+    volumes:
+      - ./:/app
