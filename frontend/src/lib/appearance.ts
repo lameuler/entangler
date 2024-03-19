@@ -65,28 +65,6 @@ function parseAppearance(classes: string|null|undefined): AppearanceUpdate {
     return result as AppearanceUpdate
 }
 
-const fullscreenStore = writable<boolean>(undefined)
-
-export const fullscreen = {
-    set(value: boolean) {
-        this.update(()=>value)
-    },
-    update(updater: (old: boolean) => boolean) {
-        fullscreenStore.update(old => {
-            const value = updater(old)
-            let promise = undefined
-            if(value === true) {
-                promise = document.documentElement.requestFullscreen()
-            } else if (value === false) {
-                promise = document.exitFullscreen()
-            }
-            promise?.finally(() => fullscreenStore.set(document.fullscreenElement !== null))
-            return old
-        })
-    },
-    subscribe: fullscreenStore.subscribe
-}
-
 export function listener() {
     appearance.set([document.documentElement.className, localStorage.getItem(STORAGE_KEY)])
 
@@ -102,16 +80,9 @@ export function listener() {
     }
     addEventListener('storage', storageHandler)
 
-    const fullscreenHandler = () => {
-        if (document.fullscreenEnabled) fullscreenStore.set(document.fullscreenElement !== null)
-    }
-    fullscreenHandler()
-    addEventListener('fullscreenchange', fullscreenHandler)
-
     return () => {
         matchMedia(MEDIA_DARK).removeEventListener('change', mediaHandler)
         removeEventListener('storage', storageHandler)
-        removeEventListener('fullscreenchange', fullscreenHandler)
     }
 }
 

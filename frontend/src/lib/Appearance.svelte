@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { appearance, fullscreen } from './appearance';
+    import { appearance } from './appearance';
 </script>
 
 {#if $appearance?.theme === 'dark'}
@@ -15,25 +15,6 @@
         <svg class="icon" viewBox="0 0 24 24">
             <path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
             <path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7" />
-        </svg>
-    </button>
-{/if}
-{#if $fullscreen===true}
-    <button on:click={() => fullscreen.set(false)}>
-        <svg class="icon" viewBox="0 0 24 24">
-            <path d="M15 19v-2a2 2 0 0 1 2 -2h2" />
-            <path d="M15 5v2a2 2 0 0 0 2 2h2" />
-            <path d="M5 15h2a2 2 0 0 1 2 2v2" />
-            <path d="M5 9h2a2 2 0 0 0 2 -2v-2" />
-        </svg>
-    </button>
-{:else if $fullscreen===false}
-    <button on:click={() => fullscreen.set(true)}>
-        <svg class="icon" viewBox="0 0 24 24">
-            <path d="M4 8v-2a2 2 0 0 1 2 -2h2" />
-            <path d="M4 16v2a2 2 0 0 0 2 2h2" />
-            <path d="M16 4h2a2 2 0 0 1 2 2v2" />
-            <path d="M16 20h2a2 2 0 0 0 2 -2v-2" />
         </svg>
     </button>
 {/if}
