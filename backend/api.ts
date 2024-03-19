@@ -1,8 +1,13 @@
 import express from 'express'
 import { authenticate } from './auth'
 import { query } from './db'
+import { userRouter } from './routes/user'
+import { teamRouter } from './routes/team'
 
 export const router = express.Router()
+
+router.use(userRouter)
+router.use(teamRouter)
 
 export const public_routes = [
     { route: '/', methods: ['GET'] },
@@ -21,6 +26,7 @@ router.get('/random', (req, res) => {
 router.get('/secret', async (req, res, next) => {
     try {
         const { token, user } = await authenticate(req, res, next)
+        console.log(token)
         res.send('The secret phrase is pineapple!')
     } catch (e) {
         const err = e as { status: number, message: string }

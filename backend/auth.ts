@@ -32,7 +32,7 @@ export const bearerStrategy = new passportAzureAd.BearerStrategy({
 });
 
 export function authenticate(req: Request, res: Response, next: NextFunction) {
-    return new Promise<{ token: object, user: string}>((resolve, reject) => {
+    return new Promise<{ token: any, user: string}>((resolve, reject) => {
         passport.authenticate('oauth-bearer', {
             session: false,
             // tenantIdOrName - does not seem to exist??

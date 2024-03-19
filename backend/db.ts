@@ -13,9 +13,9 @@ async function testing() {
     try {
         // await pool.query("insert into `ikea` (`cost`, `stock`, `name`) values (245, 240, 'Boomer2')")
         await insert('ikea', ['cost', 'stock', 'name'], [
-            [245, 240, 'Armchair'],
-            [12,100, 'Lamp'],
-            [3, 34, 'Table']
+            { cost: 245, stock: 240, name: 'Armchair'},
+            { cost: 12, stock: 100, name: 'Lamp'},
+            { cost: 3, stock: 34, name: 'Table'}
         ])
     } catch (err) {
         console.log('hi', (err as any).code === 'ER_DUP_ENTRY')
@@ -46,18 +46,40 @@ export function query(query: string, values?: any[]) {
     return pool.execute(query, values)
 }
 
-export function insert(table: string, columns: string[], rows: any[][]) {
+export function insert(table: string, columns: string[], items: { [column: string]: any }[]) {
     let query = 'insert into `'+table+'` (' + columns.map(c => '`'+c+'`').join(',') + ') values '
     const values: any[] = []
-    query += rows.filter(row => row.length === columns.length).map(row => {
+    query += items/* .filter(row => row.length === columns.length) */.map(item => {
+        const row = columns.map(col => item[col] ?? null)
         values.push(...row)
-        return util_query_row(rows.length)
+        return '('+util_query_row(row.length)+')'
     }).join(',')
 
     console.log(query)
     return pool.execute(query, values)
 }
 
-function util_query_row(n: number) {
-    return '('+Array(n).fill('?').join(',')+')'
+export function update(table: string, key_cols: string[], val_cols: string[], key: { [column: string]: any }, value: { [column: string]: any }) {
+    let query = 'update '+table+' set '
+    const values: any[] = []
+    query += Object.entries(value).map(([col, val]) => {
+        if (val_cols.includes(col)) {
+            values.push(val)
+            return col+' = ?'
+        } else return null
+    }).filter(e => e).join(', ')
+    query += ' where '
+    query += Object.entries(key).map(([col, val]) => {
+        if (key_cols.includes(col)) {
+            values.push(val)
+            return col+' = ?'
+        } else return null
+    }).filter(e => e).join(' and ')
+
+    console.log(query)
+    return pool.execute(query, values)
+}
+
+export function util_query_row(n: number) {
+    return Array(n).fill('?').join(',')
 }
