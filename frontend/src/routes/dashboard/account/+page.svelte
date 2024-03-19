@@ -9,8 +9,11 @@
     import LinkButton from '$lib/input/LinkButton.svelte';
     import Spinner from '$lib/Spinner.svelte';
     import ErrorAlert from '$lib/ErrorAlert.svelte';
+    import { crumbs } from '../crumb';
     
     export let data: PageData;
+
+    $crumbs = [{ name: 'Account', path: '/dashboard/account' }]
 
     beforeUpdate(async () => {
         console.log('account:data', (await data.user), $account?.name, $account?.idTokenClaims?.email)

@@ -1,6 +1,7 @@
 <script lang="ts">
     import { getToken } from '$lib/auth';
     import { request } from '$lib/api';
+    import { crumbs } from './crumb';
 
     // async function call() {
     //     const t = await getToken()
@@ -10,6 +11,8 @@
     //         console.log(await res.text())
     //     }
     // }
+
+    $crumbs = []
 </script>
 
 <main class="">
