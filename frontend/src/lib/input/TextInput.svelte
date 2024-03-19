@@ -6,26 +6,65 @@
     export let info: string | null | undefined = undefined
     export let maxlength: number | null | undefined = undefined
     export let spellcheck: boolean | "true" | "false" | null | undefined = undefined
-    // export let onInput: ((e: Event, target: HTMLInputElement) => any) | undefined = undefined
+    export let disabled: boolean | null | undefined = undefined
     export let value: string = ''
+
+    export let validator: ((value: string) => { 
+        info?: string | null, 
+        error?: string | null
+    }) | undefined = undefined
+    export let validateAfter: number | null | undefined = 500
+
     let input: HTMLInputElement
     $: input && (input.value = value)
     let override = false
+
+    let timeout = -1
+
+    function onInput() {
+        value = input.value
+        clearTimeout(timeout)
+        if (typeof validateAfter === 'number' && isFinite(validateAfter) && validateAfter>=0) {
+            validate(false)
+            timeout = setTimeout(validate, validateAfter)
+        }
+    }
+
+    function validate(setError: boolean = true) {
+        clearTimeout(timeout)
+        if (validator) {
+            const result = validator(value)
+            if (result.error) {
+                if(setError) error = result.error
+                info = undefined
+            } else if (result.info) {
+                error = undefined
+                info = result.info
+            } else {
+                error = undefined
+                info = undefined
+            }
+        }
+    }
 </script>
 
-<div>
+<div class:opacity-60={disabled}>
     {#if label}
         <div class="font-medium px-2 py-1">{label}</div>
     {/if}
     <div class="flex items-center bg-gray-500/15 rounded-lg w-full focus-within:ring-2 ring-indigo-500">
         <slot name="left"/>
-        <input class="bg-transparent px-3 py-2 flex-grow outline-none min-w-0"
-            {placeholder}
-            type={ override ? 'text' : type}
-            maxlength={ maxlength !== undefined && maxlength !== null && maxlength >= 0 ? Math.floor(maxlength) : undefined }
-            {spellcheck}
-            on:input={e => {value = input.value; console.log(value)}}
-            bind:this={input}/>
+        <form class="contents" on:submit|preventDefault={ () => validate() }>
+            <input class="bg-transparent flex-grow px-3 py-2 outline-none min-w-0 disabled:cursor-not-allowed"
+                {placeholder}
+                type={ override ? 'text' : type}
+                maxlength={ maxlength !== undefined && maxlength !== null && maxlength >= 0 ? Math.floor(maxlength) : undefined }
+                {spellcheck}
+                {disabled}
+                on:input={ onInput }
+                on:focusout={ () => validate() }
+                bind:this={input}/>
+        </form>
         {#if maxlength !== undefined && maxlength !== null && maxlength >= 0}
             <span class="pr-2 opacity-50">{Math.floor(maxlength - value.length)}</span>
         {/if}

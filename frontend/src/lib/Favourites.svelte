@@ -1,8 +1,10 @@
 <script lang="ts">
+    import Card from './Card.svelte';
+
     let editing = false
 </script>
 
-<div class="bg-gray-50/80 dark:bg-slate-900/90 relative border border-gray-300 dark:border-gray-800 p-4 rounded-2xl mt-4 shadow-md">
+<Card glow=false>
     <div class="flex items-center gap-2">
         <h2 class="font-medium text-xl">
             Favourites
@@ -22,4 +24,4 @@
     <div>
         <p class="text-slate-500 mt-1">Login to save favourites</p>
     </div>
-</div>
+</Card>

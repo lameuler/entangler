@@ -1,7 +1,6 @@
 <script>
     import Search from '$lib/input/Search.svelte';
     import TeamCard from '$lib/TeamCard.svelte';
-    import { data } from '$lib/data';
 
     const teams = [
         { name: 'Media Club Service Requisiton', favourites: 46, role: 'Member' },
@@ -12,7 +11,7 @@
     ]
 </script>
 <main class="h-full relative">
-    <div class="fixed px-4 sm:px-8 pb-2 pt-20 w-full max-w-6xl bg-slate-100 dark:bg-slate-950/50 backdrop-blur-xl"><Search/></div>
+    <div class="fixed px-4 sm:px-8 pb-2 pt-20 w-full max-w-6xl bg-slate-100/30 dark:bg-slate-950/50 backdrop-blur-xl"><Search/></div>
     <section class="px-4 sm:px-8 pt-32 pb-4">
         <div class="text-sm p-4 text-slate-500">
             Only public teams, and private teams which you have added to your favourites or are a member of are listed.

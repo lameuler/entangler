@@ -5,7 +5,7 @@
 </script>
 
 <main class="flex flex-col gap-6 h-full">
-    <div class="flex flex-col lg:flex-row justify-between px-4 sm:px-10 pt-20 gap-2 w-full">
+    <div class="flex flex-col lg:flex-row justify-between pt-4 gap-2 w-full">
         <div>
             <span class="text-slate-700 dark:text-slate-300">
                 <a href="/dashboard/{data.team}">{data.team}</a> / <a href="/dashboard/{data.team}">Requests</a>

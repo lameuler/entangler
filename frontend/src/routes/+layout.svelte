@@ -1,17 +1,45 @@
 <script lang="ts">
+    import { goto, invalidateAll } from '$app/navigation';
     import Footer from '$lib/Footer.svelte';
     import NavBar from '$lib/NavBar.svelte';
     import '../app.css'
     import { listener } from '$lib/appearance';
     import { onMount } from 'svelte';
+    import PageSpinner from '$lib/PageSpinner.svelte';
+    import { account } from '$lib/auth';
+    import type { LayoutData } from './$types';
+    import { page } from '$app/stores';
+
+    export let data: LayoutData
 
     onMount(listener)
+
+    let invalidating = false
+
+    onMount(() => {
+        const unsubscribe = account.subscribe(async account => {
+            console.log('account:subscribe', account?.localAccountId, data)
+            const user = await data.user
+            if (user?.u_id != account?.localAccountId && !invalidating) {
+                invalidating = true
+                console.warn('layout:invalidate', 'ACCOUNT CHANGE DETECTED: INVALIDATING LOADED DATA')
+                await invalidateAll()
+                console.log('layout:invalidate','invalidation complete')
+                invalidating = false
+            }
+        })
+
+        return unsubscribe
+    })
+    
 </script>
 
 <div class="grid grid-rows-[1fr_auto] h-full w-full">
     <header class="fixed w-full flex justify-center z-50">
-        <NavBar/>
+        <NavBar user={data.user}/>
     </header>
-    <div class="z-20 max-w-6xl justify-self-center w-full relative"><slot/></div>
+    <div class="z-20 max-w-6xl justify-self-center w-full relative"><slot>
+        <PageSpinner/>
+    </slot></div>
     <footer class="w-full flex justify-center"><Footer/></footer>
 </div>

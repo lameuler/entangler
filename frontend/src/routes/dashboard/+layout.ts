@@ -4,4 +4,5 @@ export const load = (async () => {
     return {};
 }) satisfies LayoutLoad;
 
+export const ssr = false
 export const csr = true

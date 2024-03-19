@@ -1,7 +1,8 @@
 <script>
     import ActionLink from '$lib/ActionLink.svelte';
+    import Card from '$lib/Card.svelte';
     import Favourites from '$lib/Favourites.svelte';
-    import { data } from '$lib/data';
+    import Glow from '$lib/Glow.svelte';
 
 </script>
 <main class="flex flex-col sm:flex-row justify-center items-center p-4 sm:p-10 pt-20 gap-6 h-full">
@@ -16,8 +17,8 @@
         </p>
         <a href="/dashboard" class="mt-4 block w-fit bg-violet-600 text-slate-100 px-3 py-1.5 rounded-md font-medium">Go to dashboard</a>
     </section>
-    <section class="md:min-w-96 sm:min-w-72 w-full">
-        <div class="bg-gray-50/80 dark:bg-slate-900/90 relative border border-gray-300 dark:border-gray-800 p-4 rounded-2xl shadow-md">
+    <section class="md:min-w-96 sm:min-w-72 w-full flex flex-col gap-4">
+        <Card>
             <h2 class="font-medium text-xl">
                 What would you like to do today?
             </h2>
@@ -36,8 +37,7 @@
                     Manage your existing teams
                 </ActionLink>
             </div>
-            <div class="absolute inset-4 -z-10 bg-gradient-to-t from-purple-500/80 to-emerald-400/80 dark:to-emerald-600/80 blur-3xl"/>
-        </div>
+        </Card>
         <Favourites />
     </section>
 </main>

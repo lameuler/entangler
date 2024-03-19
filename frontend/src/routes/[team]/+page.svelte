@@ -1,4 +1,5 @@
 <script lang="ts">
+    import Card from '$lib/Card.svelte';
     import Glow from '$lib/Glow.svelte';
 import type { PageData } from './$types';
     
@@ -10,7 +11,7 @@ import type { PageData } from './$types';
 <main class="flex flex-col sm:flex-row p-4 sm:p-10 pt-20 gap-6 h-full">
     <section class="flex sm:sticky items-center sm:min-w-72 sm:max-w-72 md:min-w-96 md:max-w-96 max-h-screen h-full top-0">
         <div class="relative sm:sticky sm:top-20 sm:min-w-72 sm:max-w-72 md:min-w-96 md:max-w-96">
-            <div class="bg-gray-50/80 dark:bg-slate-900/90 relative border border-gray-300 dark:border-gray-800 p-4 rounded-2xl">
+            <Card>
                 <div class="">
                     <h1 class="text-2xl font-semibold p-1">{ data.team }</h1>
                 </div>
@@ -18,8 +19,7 @@ import type { PageData } from './$types';
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum quis eligendi cupiditate aspernatur? Voluptatum quas aliquid commodi tempore explicabo accusantium!
                 </p>
                 <a href="?request" class="block mt-2 m-0.5 bg-violet-600 text-slate-100 px-3 py-1.5 rounded-md font-medium w-fit">Start request</a>
-            </div>
-            <Glow/>
+            </Card>
         </div>
     </section>
     <section class="grow p-4 self-center">
@@ -35,5 +35,5 @@ import type { PageData } from './$types';
 </main>
 
 <svelte:head>
-    <title>{ data.team }</title>
+    <title>{ data.team } | Entangler</title>
 </svelte:head>
