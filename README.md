@@ -36,6 +36,8 @@ bun run init.ts
 bun run index.ts
 ```
 
+This will run the API at http://localhost:6231
+
 For more details, visit [backend/README.md](backend/README.md).
 
 ### Frontend
@@ -54,7 +56,7 @@ bun install
 bun start
 ```
 
-This will host the site at http://localhost:6131. Alternatively, you can run a development server using `npm run dev` or `bun run dev`.
+This will host the site at http://localhost:6131 and call the live API (https://quantum-entang.ler.sg). Alternatively, you can run a development server using `npm run dev` or `bun run dev` which will call the API locally at http://localhost:6132.
 
 To build the frontend for deployment to static hosting, run:
 ```sh

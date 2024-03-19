@@ -20,53 +20,56 @@ To stop it, run:
 docker compose down
 ```
 
+This will run the site at http://localhost:6131, and call the API at http://localhost:6231. Changing the API location is currently not supported.
+
 If you are developing the site, it is easier to run it locally without Docker. The backend can still be run in Docker even if the frontend is not (and vice versa).
 
 ## Viewing the site
 
 Both `npm` and `bun` can be used to run the frontend, and can essentially be used interchangably. The site will be available at http://localhost:6131.
 
-### Using npm
+### Installing dependencies
 
 Install dependencies with:
 ```sh
 npm install
 ```
-
-To start the site, run:
-```sh
-npm start
-```
-
-Alternatively, to view the site using a development server, run:
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-When using the development server, any updates to the source files will automatically update the hosted site.
-
-### Using bun
-
-Install dependencies with:
+Or, using bun:
 ```sh
 bun install
 ```
 
 To start the site, run:
 ```sh
+npm start
+```
+Or, using bun:
+```sh
 bun start
 ```
 
-Alternatively, to view the site using a development server, run:
+This will build and run the site locally at http://localhost:6131. This will call the live API (https://quantum-entang.ler.sg). Alternative, if you are also running the backend locally, run the site using a development server as described below.
+
+To view the site using a development server, run:
+```sh
+npm run dev
+
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
+Or, using bun:
 ```sh
 bun run dev
 
 # or start the server and open the app in a new browser tab
 bun run dev -- --open
 ```
-When using the development server, any updates to the source files will automatically update the hosted site.
+
+> When using the development server, any updates to the source files will automatically update the hosted site.
+
+This will also run the site locally at http://localhost:6131, but will instead call the API locally at http://localhost:6231.
+
+For more information on running the backend, refer to [backend/README.md](../backend/README.md).
 
 ## Building
 
