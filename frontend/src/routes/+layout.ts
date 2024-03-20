@@ -13,15 +13,18 @@ export const load = (async ({ fetch }) => {
         // goto('/login?redirect=')
     }
 
-    const user = new Promise<User|null>(async resolve => {
-        if (token) {
-            const result = await getUser(fetch, token)
-            console.log('layout:load:fetch', result)
-            resolve(result)
-        } else {
-            console.log('layout:fetch:token', token)
+    const user = new Promise<User|null>(async (resolve, reject) => {
+        try {
+            if (token) {
+                const result = await getUser(fetch, token)
+                console.log('layout:load:fetch', result)
+                resolve(result)
+            }
+            resolve(null)
+        } catch (err) {
+            reject(err)
         }
-        resolve(null)
+        
     })
     
     // console.log('layout:load', user)

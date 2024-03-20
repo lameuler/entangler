@@ -18,14 +18,19 @@
 
     onMount(() => {
         const unsubscribe = account.subscribe(async account => {
-            console.log('account:subscribe', account?.localAccountId, data)
             const user = await data.user
             if (user?.u_id != account?.localAccountId && !invalidating) {
                 invalidating = true
-                console.warn('layout:invalidate', 'ACCOUNT CHANGE DETECTED: INVALIDATING LOADED DATA')
+                // console.warn('layout:invalidate', 'ACCOUNT CHANGE DETECTED: INVALIDATING LOADED DATA')
                 await invalidateAll()
-                console.log('layout:invalidate','invalidation complete')
+                // console.log('layout:invalidate','invalidation complete')
                 invalidating = false
+            }
+        })
+
+        data.user.catch(err => {
+            if ('status' in err && err.status === 401) {
+                goto('/logout?redirect=/login', { replaceState: true })
             }
         })
 

@@ -7,16 +7,15 @@
     
     export let data: PageData;
 
-    // console.log('wtf')
     // if ($account) {
     //     console.log('login:account', $account.name)
     //     goto(data.redirect, { replaceState: true })
     // }
 </script>
 
-<main class="p-4 pt-20 flex flex-col items-center justify-center h-full">
+<main class="p-4 pt-20 flex items-center justify-center h-full">
     <Card>
-        <div class="flex flex-col w-72">
+        <div class="flex flex-col max-w-72 grow">
             <h2 class="px-2 pt-1 text-xl font-semibold">Welcome to Entangler!</h2>
             <p class="px-2 my-3 ">Use your Microsoft account to login or register.</p>
             <ActionButton onClick={ () => login(data.redirect) }>

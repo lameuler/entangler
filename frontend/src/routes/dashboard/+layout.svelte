@@ -4,6 +4,7 @@
     import type { LayoutData } from './$types';
     import { crumbs } from './crumb';
     import PageLink from '$lib/PageLink.svelte';
+    import { beforeNavigate } from '$app/navigation';
     
     // export let data: LayoutData;
 
@@ -15,6 +16,10 @@
             event.matches
             showing = false
         })
+    })
+
+    beforeNavigate(() => {
+        showing = false
     })
 
     const handleClick = (event: MouseEvent) => {
@@ -69,13 +74,13 @@
     <div class="grow pt-16 md:ml-64 px-4 sm:px-8">
         <!-- <div class="sticky w-full pt-20 top-0 bg-violet-600"><slot name="top"/></div> -->
         <nav class="fixed h-7 flex flex-wrap items-center px-1 z-10 rounded-lg shadow-lg bg-slate-100 dark:bg-slate-950 border light:border-slate-200 dark:border-slate-800">
-            <button class="p-2 sm:p-1 shrink-0 opacity-60 hover:opacity-100" on:click|capture|stopPropagation={ () => showing = !showing }>
+            <button class="p-1 shrink-0 opacity-60 hover:opacity-100" on:click|capture|stopPropagation={ () => showing = !showing }>
                 <svg viewBox="0 0 24 24" class="icon h-5 w-5">
                     <path d="M4 6l16 0" /><path d="M4 12l16 0" /><path d="M4 18l16 0" />
                 </svg>
             </button>
             <PageLink href="/dashboard">
-                <span class="px-1.5 sm:px-1 py-1 sm:p-0.5">
+                <span class="px-1 p-0.5">
                     Dashboard
                 </span>
             </PageLink>

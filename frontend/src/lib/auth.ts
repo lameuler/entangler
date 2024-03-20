@@ -1,6 +1,6 @@
 import { goto } from '$app/navigation'
 import { browser } from '$app/environment';
-import { PublicClientApplication, InteractionRequiredAuthError, type AccountInfo, NavigationClient, type NavigationOptions } from '@azure/msal-browser'
+import { PublicClientApplication, type AccountInfo, NavigationClient, type NavigationOptions } from '@azure/msal-browser'
 import { writable } from 'svelte/store';
 import { redirect } from '@sveltejs/kit'
 
@@ -42,30 +42,29 @@ const app = new PublicClientApplication(authConfig);
 if (browser) {
     app.initialize().then(() => {
         const accounts = app.getAllAccounts()
-        console.log('auth:init', accounts.length)
+        // console.log('auth:init', accounts.length)
         if(accounts.length === 1) {
             app.setActiveAccount(accounts[0])
             account.set(app.getActiveAccount())
-            console.log('logged in to user', app.getActiveAccount()?.name)
+            console.log('auth: Logged in to user', app.getActiveAccount()?.name)
         }
 
         app.enableAccountStorageEvents()
-        app.addEventCallback(event => {
-            console.log('auth:event',event)
-            account.set(app.getActiveAccount())
-        })
+        // app.addEventCallback(event => {
+        //     console.log('auth:event',event)
+        //     account.set(app.getActiveAccount())
+        // })
         app.setNavigationClient(new Navigator())
     })
 }
 
 export async function handleRedirect() {
     const result = await app.handleRedirectPromise()
-    console.log('auth:redirect-result', result)
-    console.log(result?.accessToken)
+    // console.log('auth:redirect-result', result)
+    // console.log(result?.accessToken)
     const claims = result?.idTokenClaims as any
     if (claims) console.log(claims['oid'], claims['email'])
 
-    console.log(app.getAllAccounts())
     if(result) {
         app.setActiveAccount(result.account)
         account.set(app.getActiveAccount())
@@ -74,7 +73,6 @@ export async function handleRedirect() {
 }
 
 export async function login(redirect?: string, select?: boolean) {
-    console.log(app)
     await app.clearCache()
     app.loginRedirect({
         ...loginRequest,
@@ -93,8 +91,6 @@ export async function logout() {
 export async function getToken() {
     if (browser) {
         const result = await app.acquireTokenSilent(loginRequest)
-        // app.setActiveAccount(result.account)
-        // account.set(app.getActiveAccount())
         return result.accessToken
     } else {
         return null

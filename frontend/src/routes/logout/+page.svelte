@@ -8,7 +8,6 @@
     export let data: PageData;
 
     $: {
-        console.log('help')
         logout()
         goto(data.redirect, { replaceState: true })
     }

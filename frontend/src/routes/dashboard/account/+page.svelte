@@ -1,6 +1,6 @@
 <script lang="ts">
     import { goto, invalidate } from '$app/navigation';
-    import { request, updateUser, type User } from '$lib/api';
+    import { invalidator, request, updateUser, type User } from '$lib/api';
     import { account, getToken, logout, tokenOrGoto } from '$lib/auth';
     import { beforeUpdate, onMount } from 'svelte';
     import type { PageData } from './$types';
@@ -15,13 +15,9 @@
 
     $crumbs = [{ name: 'Account', path: '/dashboard/account' }]
 
-    beforeUpdate(async () => {
-        console.log('account:data', (await data.user), $account?.name, $account?.idTokenClaims?.email)
-    })
-
     onMount(() => {
         return account.subscribe(acc => {
-            console.log('account:sub',acc)
+            // console.log('account:sub',acc)
             if(acc === null) {
                 goto('/login?redirect='+window.location.pathname, { replaceState: true })
             }
@@ -41,6 +37,7 @@
     let email: string | undefined = undefined
     let error: string | undefined = undefined
     let saving = false
+    let error_closable = false
 
     function validateName(name: string) {
         // if (name === undefined) return ''
@@ -62,13 +59,28 @@
                 try {
                     await updateUser(fetch, token, { name, email })
 
-                    invalidate('http://localhost:6231/user/me')
+                    invalidate(invalidator('/user/me'))
 
                     if (data.redirect) {
                         goto(data.redirect)
                     }
                 } catch (err) {
-                    error = (err as any).error
+                    console.log('account:error', err)
+                    error = 'Something went wrong!'
+                    error_closable = false
+                    if (typeof err === 'object') {
+                        if (err && 'status' in err && typeof err.status === 'number') {
+                            if (err.status < 500) {
+                                if (err.status === 401) {
+                                    goto('/logout?redirect=/login', { replaceState: true })
+                                }
+                                error_closable = true
+                            }
+                        }
+                        if (err && 'error' in err && typeof err.error === 'string') {
+                            error = err.error
+                        }
+                    }
                 }
                 saving = false
             }
@@ -85,9 +97,11 @@
     {:then u }
         {#if u}
             {#if error }
-                <ErrorAlert close={() => error = undefined}>
-                    {error}
-                </ErrorAlert>
+                {#if error_closable }
+                <ErrorAlert bind:error type='warning'/>
+                {:else}
+                <ErrorAlert bind:error />
+                {/if}
             {/if}
             <div class="flex flex-col gap-2">
                 <TextInput label="Name" placeholder="John Tan" bind:value={name} maxlength={64} validator={validateName} disabled={saving}/>
@@ -108,10 +122,10 @@
                 Log out
             </LinkButton>
         {:else}
-            <ErrorAlert>
-                Something went wrong!
-            </ErrorAlert>
+            <ErrorAlert/>
         {/if}
+    {:catch}
+        <ErrorAlert/>
     {/await}
 </main>
 

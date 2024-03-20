@@ -10,9 +10,7 @@
 
     afterUpdate(async () => {
         if (!handled) return
-        console.log('authorize:update:before')
         const user = await data.user
-        console.log('authorize:update', user)
         if (user) {
             if (user.isNew) {
                 goto('/dashboard/account?redirect='+data.redirect, { replaceState: true })
@@ -23,7 +21,7 @@
     })
     onMount(async () => {
         handled = await handleRedirect()
-        console.log('authorize:handled', handled, data.redirect, data.user, window.location.pathname)
+        // console.log('authorize:handled', handled, data.redirect, data.user, window.location.pathname)
         if(!handled) goto('/', { replaceState: true })
     })
 </script>

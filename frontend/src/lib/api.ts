@@ -27,7 +27,7 @@ export type User = {
 export async function getUser(fetch: (input: URL | RequestInfo, init?: RequestInit) => Promise<Response>, token: string): Promise<User | null> {
     const response = await request(fetch, '/user/me', token)
     const result = await (response).json()
-    await wait(5000)
+    // await wait(5000)
     // console.log('layout:load:fetch', result)
     if (response.status !== 200) {
         throw {
@@ -48,10 +48,10 @@ export async function getUser(fetch: (input: URL | RequestInfo, init?: RequestIn
 
 export async function updateUser(fetch: (input: URL | RequestInfo, init?: RequestInit) => Promise<Response>, token: string, update: { name: string, email: string }) {
     const response = await request(fetch, '/user/me', token, 'POST', update)
-    console.log('api:updateUser', response.status)
+    // console.log('api:updateUser', response.status)
     const result = await(response).json()
-    console.log('api:updateUser', result)
-    await wait(2000)
+    // console.log('api:updateUser', result)
+    // await wait(2000)
     if (response.status !== 200) {
         throw {
             ...result,
