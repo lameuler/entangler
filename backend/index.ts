@@ -10,9 +10,9 @@ import { API_PORT } from './config'
 
 const app = express()
 
-app.use(cors({
+app.use(cors(/* {
     origin: ['https://entang.ler.sg', 'http://localhost:6131', 'https://entangler.pages.dev']
-}))
+} */))
 
 const authConfig = {
     tenantID: "d72a7172-d5f8-4889-9a85-d7424751592a",
