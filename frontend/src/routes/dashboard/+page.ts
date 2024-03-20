@@ -1,5 +1,4 @@
-import { getToken, tokenOrRedirect } from '$lib/auth'
-import { redirect } from '@sveltejs/kit'
+import { tokenOrRedirect } from '$lib/auth'
 import type { PageLoad } from './$types';
 
 export const load = (async ({ url }) => {

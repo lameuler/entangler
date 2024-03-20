@@ -8,7 +8,7 @@ const authConfig = {
     auth: {
         clientId: '54ccbe8c-076f-4efb-bc24-237fdb28664d', // This is the ONLY mandatory field that you need to supply.
         authority: 'https://login.microsoftonline.com/common', // Defaults to "https://login.microsoftonline.com/common"
-        redirectUri: 'http://localhost:6131/authorize', // You must register this URI in the app registration on the Microsoft Entra admin center. Defaults to window.location.href e.g. http://localhost:3000/
+        // redirectUri: 'http://localhost:6131/authorize', // You must register this URI in the app registration on the Microsoft Entra admin center. Defaults to window.location.href e.g. http://localhost:3000/
         navigateToLoginRequestUrl: true
         //navigateToLoginRequestUrl: true, // If "true", will navigate back to the original request location before processing the auth code response.
     },
@@ -76,25 +76,25 @@ export async function login(redirect?: string, select?: boolean) {
     await app.clearCache()
     app.loginRedirect({
         ...loginRequest,
+        redirectUri: window.location.origin + '/authorize',
         prompt: select ? 'select_account' : undefined,
         redirectStartPage: '?redirect='+redirect
     })
 }
 
 export async function logout() {
-    console.log('auth:pre-clear', app.getAllAccounts().length)
     await app.clearCache()
-    console.log('auth:post-clear', app.getAllAccounts().length)
     account.set(app.getActiveAccount())
 }
 
 export async function getToken() {
     if (browser) {
-        const result = await app.acquireTokenSilent(loginRequest)
-        return result.accessToken
-    } else {
-        return null
+        try {
+            const result = await app.acquireTokenSilent(loginRequest)
+            return result.accessToken
+        } catch (err) {}
     }
+    return null
 }
 
 export const account = writable<AccountInfo|null>(null)
