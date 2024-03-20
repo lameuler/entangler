@@ -7,12 +7,16 @@ import passportAzureAd from 'passport-azure-ad'
 
 import cors from 'cors'
 import { API_PORT } from './config'
+const ORIGINS = ['https://entang.ler.sg', 'http://localhost:6131', 'https://entangler.pages.dev']
 
 const app = express()
 
-app.use(cors(/* {
-    origin: ['https://entang.ler.sg', 'http://localhost:6131', 'https://entangler.pages.dev']
-} */))
+app.options('*', cors({
+    origin: ORIGINS
+}))
+app.use(cors({
+    origin: ORIGINS
+}))
 
 const authConfig = {
     tenantID: "d72a7172-d5f8-4889-9a85-d7424751592a",
