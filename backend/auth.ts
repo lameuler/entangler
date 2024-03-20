@@ -37,17 +37,14 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
             session: false,
             // tenantIdOrName - does not seem to exist??
         }, (err: any, user?: string, token?: object) => {
-            // console.log('BB', err, user, token)
             
             // Error during authorization
             if (err) {
-                // res.status(401).json({ error: err.message })
                 reject({ status: 401, message: err.message });
             }
         
             if (!user) {
                 // If no user object found, send a 401 response.
-                // res.status(401).json({ error: 'Unauthorized' })
                 reject({ status: 401, message: 'Unauthorized' });
             }
         
