@@ -14,7 +14,9 @@ create database ${MYSQL_DATABASE};
 use ${MYSQL_DATABASE};`
 )
 
-const init_script = await Bun.file('./init.sql').text()
+let init_script = await Bun.file('./init.sql').text()
+
+init_script = init_script.split('\n').filter(line => !line.startsWith('delimiter ')).map(line => line.endsWith('$/$/$') ? line.slice(0, -5)+';' : line).join('\n')
 
 await connection.query(init_script)
 

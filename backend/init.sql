@@ -183,6 +183,7 @@ insert into team (t_id, owner_id, name, public, description, handle) values
 ('e-xiAHoLpp0QiIqJ', '30b59dc0-02a5-441a-9afc-58fd4ba34b93', "OT'24 Logs", false, null, 'o24logs'),
 ('eCNWfCKg_km0KdgQ', 'eb00f5ec-78a4-4630-b71c-29185919ef5a', 'Math tutoring by famous mathematician', false, 'Learn from the best', null);
 
+delimiter $/$/$
 create procedure userteams(in u_id char(36))
 begin
     select * from (select t_id, name, description, public, favourites,
@@ -195,4 +196,5 @@ begin
         end role
     from team t) data
     where public or is_fav or role;
-end;
+end$/$/$
+delimiter ;
