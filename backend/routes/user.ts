@@ -6,9 +6,9 @@ import { objectColumns } from '../utils'
 import { validate } from 'email-validator'
 import bodyParser from 'body-parser'
 
-const KEY = ['u_id']
-const VALUES = ['name', 'email']
-const COLUMNS = [...KEY, ...VALUES]
+const KEY = ['u_id'] as const
+const VALUES = ['name', 'email'] as const
+const COLUMNS = [...KEY, ...VALUES] as const
 const TABLE = 'user'
 
 async function getUser(u_id: string) {

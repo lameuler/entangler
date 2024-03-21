@@ -1,9 +1,11 @@
 <script lang="ts">
-    export let team: { name: string, favourites: number, role?: string, private?: boolean }
+    import type { Team } from './api';
+
+    export let team: Team
     let favourite = false
 </script>
 
-<a href="/{encodeURI(team.name)}" class="group p-4 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 hover:dark:bg-gray-800 border border-gray-300 dark:border-gray-800 rounded-2xl shadow-md">
+<a href="./{encodeURI(team.name)}" class="group p-4 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 hover:dark:bg-gray-800 border border-gray-300 dark:border-gray-800 rounded-2xl shadow-md">
     <div class="flex items-center gap-1">
         <h2 class="font-semibold text-xl group-hover:underline grow">{team.name}</h2>
         <span class="text-gray-500 text-sm">{team.favourites}</span>
@@ -23,11 +25,11 @@
         {#if team.role}
             <a class="rounded-full text-sm bg-violet-600 w-fit px-2" href="/dashboard/{encodeURI(team.name)}">Member</a>
         {/if}
-        {#if team.private}
+        {#if !team.public}
             <span class="rounded-full text-sm bg-slate-600 w-fit px-2">Private</span>
         {/if}
     </div>
     <p class="text-justify text-slate-700 dark:text-slate-300 mt-1">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti, explicabo. Maxime, error. Ex perferendis commodi a officiis accusamus quaerat facilis voluptate alias.
+        { team.description }
     </p>
 </a>

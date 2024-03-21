@@ -1,5 +1,8 @@
+type ObjectResult<T extends readonly string[]> = {
+    [Key in T[number]]?: any;
+};
 
-export function objectColumns(object: any, columns: string[], all=true): any | null {
+export function objectColumns<T extends readonly string[]>(object: any, columns: T, all=true): ObjectResult<T> | null {
     const result: any = {}
     if(!object) {
         return null

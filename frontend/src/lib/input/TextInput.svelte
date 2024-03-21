@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { createEventDispatcher } from 'svelte';
+
     export let label: string | null | undefined = undefined
     export let type: 'text' | 'password' | 'email' | 'url' | null | undefined = undefined
     export let placeholder: string | null | undefined = undefined
@@ -20,6 +22,8 @@
     let override = false
 
     let timeout = -1
+
+    const dispatch = createEventDispatcher<{ submit: string }>()
 
     function onInput() {
         value = input.value
@@ -52,20 +56,19 @@
     {#if label}
         <div class="font-medium px-2 py-1">{label}</div>
     {/if}
-    <div class="flex items-center bg-gray-500/15 rounded-lg w-full focus-within:ring-2 ring-indigo-500">
+    <form on:submit|preventDefault={ () => { validate(); dispatch('submit', value) } }
+        class="flex items-center bg-gray-500/15 rounded-lg w-full focus-within:ring-2 ring-indigo-500">
         <slot name="left"/>
-        <form class="contents" on:submit|preventDefault={ () => validate() }>
-            <input class="bg-transparent flex-grow px-3 py-2 outline-none min-w-0 disabled:cursor-not-allowed"
-                {placeholder}
-                type={ override ? 'text' : type}
-                maxlength={ maxlength !== undefined && maxlength !== null && maxlength >= 0 ? Math.floor(maxlength) : undefined }
-                {spellcheck}
-                {disabled}
-                on:input={ onInput }
-                on:focusout={ () => validate() }
-                bind:this={input}/>
-        </form>
-        {#if maxlength !== undefined && maxlength !== null && maxlength >= 0}
+        <input class="bg-transparent flex-grow px-3 py-2 outline-none min-w-0 disabled:cursor-not-allowed"
+            {placeholder}
+            type={ override ? 'text' : type}
+            maxlength={ maxlength !== undefined && maxlength !== null && maxlength >= 0 ? Math.floor(maxlength) : undefined }
+            {spellcheck}
+            {disabled}
+            on:input={ onInput }
+            on:focusout={ () => validate() }
+            bind:this={input}/>
+            {#if maxlength !== undefined && maxlength !== null && maxlength >= 0}
             <span class="pr-2 opacity-50">{Math.floor(maxlength - value.length)}</span>
         {/if}
         {#if type === 'password'}
@@ -85,7 +88,7 @@
             </button>
         {/if}
         <slot name="right"/>
-    </div>
+    </form>
     {#if error}
     <div class="text-sm text-red-500 px-2 pt-1 -mb-2">{error}</div>
     {:else if info}

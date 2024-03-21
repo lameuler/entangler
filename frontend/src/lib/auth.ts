@@ -47,6 +47,8 @@ if (browser) {
             app.setActiveAccount(accounts[0])
             account.set(app.getActiveAccount())
             console.log('auth: Logged in to user', app.getActiveAccount()?.name)
+        } else if (accounts.length > 1) {
+            app.clearCache()
         }
 
         app.enableAccountStorageEvents()
@@ -88,11 +90,9 @@ export async function logout() {
 }
 
 export async function getToken() {
-    if (browser) {
-        try {
-            const result = await app.acquireTokenSilent(loginRequest)
-            return result.accessToken
-        } catch (err) {}
+    if (browser && app.getActiveAccount()) {
+        const result = await app.acquireTokenSilent(loginRequest)
+        return result.accessToken
     }
     return null
 }
@@ -108,6 +108,14 @@ export async function tokenOrRedirect(location='/') {
         return token
     } else {
         redirect(302, '/login?redirect='+location)
+    }
+}
+
+export async function tokenOrNullRedirect() {
+    try {
+        return await getToken()
+    } catch (err) {
+        redirect(302, '/logout?redirect=/login')
     }
 }
 

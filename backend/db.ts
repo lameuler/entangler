@@ -46,7 +46,7 @@ export function query(query: string, values?: any[]) {
     return pool.execute(query, values)
 }
 
-export function insert(table: string, columns: string[], items: { [column: string]: any }[]) {
+export function insert(table: string, columns: readonly string[], items: { [column: string]: any }[]) {
     let query = 'insert into `'+table+'` (' + columns.map(c => '`'+c+'`').join(',') + ') values '
     const values: any[] = []
     query += items/* .filter(row => row.length === columns.length) */.map(item => {
@@ -59,7 +59,7 @@ export function insert(table: string, columns: string[], items: { [column: strin
     return pool.execute(query, values)
 }
 
-export function update(table: string, key_cols: string[], val_cols: string[], key: { [column: string]: any }, value: { [column: string]: any }) {
+export function update(table: string, key_cols: readonly string[], val_cols: readonly string[], key: { [column: string]: any }, value: { [column: string]: any }) {
     let query = 'update '+table+' set '
     const values: any[] = []
     query += Object.entries(value).map(([col, val]) => {
