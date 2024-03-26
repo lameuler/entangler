@@ -14,10 +14,7 @@ app.use(cors(/* {
     origin: ['https://entang.ler.sg', 'http://localhost:6131', 'https://entangler.pages.dev']
 } */))
 
-const authConfig = {
-    tenantID: "d72a7172-d5f8-4889-9a85-d7424751592a",
-    clientID: "54ccbe8c-076f-4efb-bc24-237fdb28664d"
-}
+app.disable('etag');
 
 app.use(passport.initialize());
 

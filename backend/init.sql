@@ -19,7 +19,7 @@ create table team (
     public      boolean     not null default false,
     favourites  int         default 0,
     description varchar(150),
-    details     varchar(1000),
+    details     text,
     handle      varchar(15) unique,
     foreign key (owner_id) references user(u_id) on delete cascade
 );
@@ -184,17 +184,21 @@ insert into team (t_id, owner_id, name, public, description, handle) values
 ('eCNWfCKg_km0KdgQ', 'eb00f5ec-78a4-4630-b71c-29185919ef5a', 'Math tutoring by famous mathematician', false, 'Learn from the best', null);
 
 delimiter //
-create procedure userteams(in u_id char(36))
+create procedure userteams(in u_id char(36), in id_handle varchar(16), in is_public boolean, in is_fav boolean, in is_role int)
 begin
-    select * from (select t_id, name, description, public, favourites,
-        exists(select true from favourite f where f.t_id=t.t_id and f.u_id=u_id) is_fav,
+    select t_id, name, description, details, handle, public, favourites,
+        exists(select true from favourite f where f.t_id=t.t_id and f.u_id=u_id) fav,
         case
-            when owner_id=u_id then 'Owner'
-            when exists(select true from manager m where m.u_id=u_id and m.t_id=t.t_id) then 'Manager'
-            when exists(select true from member m where m.u_id=u_id and m.t_id=t.t_id) then 'Member'
-            else null
+            when owner_id=u_id then 3
+            when exists(select true from manager m where m.u_id=u_id and m.t_id=t.t_id) then 2
+            when exists(select true from member m where m.u_id=u_id and m.t_id=t.t_id) then 1
+            else 0
         end role
-    from team t) data
-    where public or is_fav or role;
+    from team t
+    having (public or fav or role or id_handle is not null)
+    and (id_handle is null or t_id = id_handle or handle = id_handle)
+    and (is_public is null or is_public = public)
+    and (is_fav is null or is_fav = fav)
+    and (is_role is null or is_role <= role);
 end//
 delimiter ;

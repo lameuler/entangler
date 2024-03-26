@@ -5,7 +5,7 @@
     import { beforeUpdate, onMount } from 'svelte';
     import type { PageData } from './$types';
     import TextInput from '$lib/input/TextInput.svelte';
-    import ActionButton from '$lib/input/ActionButton.svelte';
+    import Button from '$lib/input/Button.svelte';
     import LinkButton from '$lib/input/LinkButton.svelte';
     import Spinner from '$lib/Spinner.svelte';
     import ErrorAlert from '$lib/ErrorAlert.svelte';
@@ -109,9 +109,9 @@
             </div>
 
             <div class="py-4">
-                <ActionButton onClick={save} disabled={saving}>
+                <Button on:click={save} disabled={saving}>
                     Save
-                </ActionButton>
+                </Button>
             </div>
 
             <div class="opacity-60 text-sm px-2 py-4">

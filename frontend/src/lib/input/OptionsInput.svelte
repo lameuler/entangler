@@ -1,20 +1,19 @@
 <script lang="ts">
+    import InputBase from './InputBase.svelte';
+
     export let name: string
     export let options: string[]
     export let label: string | null | undefined = undefined
     export let type: 'radio' | 'checkbox' | null | undefined = undefined
     export let error: string | null | undefined = undefined
     export let info: string | null | undefined = undefined
+    export let disabled: boolean | null | undefined = undefined
     // export let onInput: ((e: Event, target: HTMLInputElement) => any) | undefined = undefined
     export let value: string = ''
     let input: HTMLInputElement
 </script>
 
-<div>
-    {#if label}
-        <div class="font-medium px-2 py-1">{label}</div>
-    {/if}
-    
+<InputBase {label} {info} {error} {disabled}>
     {#each options as option}
         <label class="flex items-center px-2">
             <input class="peer w-0 h-0 opacity-0"
@@ -36,4 +35,4 @@
     {:else if info}
     <div class="text-sm text-slate-500 px-2 pt-1 -mb-2">{info}</div>
     {/if}
-</div>
+</InputBase>

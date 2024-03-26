@@ -33,7 +33,7 @@ export type Team = {
     description: string
     public: boolean
     favourites: number
-    is_fav: boolean
+    fav: boolean
     role: string
 }
 
@@ -73,12 +73,21 @@ export async function updateUser(fetch: FetchFunction, token: string, update: { 
     }
 }
 
-export async function getTeams(fetch: FetchFunction, token?: string|null, search?: string|null) {
+export async function getTeams(fetch: FetchFunction, token?: string|null, search?: string|null, filter?: string|null) {
     let path = '/teams'
+    const params: { q?: string, filter?: string[] } = {}
     search = encodeParam(search)
     if (search) {
-        path += '?q='+search
+        params.q = search
     }
+    if (filter) {
+        params.filter = filter.split(',')
+    }
+    const sp = searchParams(params)
+    if (sp) {
+        path += '?'+sp
+    }
+
     const response = await request(fetch, path, token)
 
     const result = await response.json()
@@ -96,8 +105,38 @@ export async function getTeams(fetch: FetchFunction, token?: string|null, search
     return null
 }
 
-export function encodeParam(param: string|null|undefined) {
-    return param ? param.trim().split(/\s+/g).map(encodeURI).join('+') : undefined
+export async function getTeam(fetch: FetchFunction, token?: string|null, team?: string|null) {
+    if(!team) return null
+
+    const response = await request(fetch, '/team/'+encodeURI(team), token)
+
+    const result = await response.json()
+
+    if (response.status !== 200) {
+        throw {
+            ...result,
+            status: response.status
+        }
+    }
+
+    if (result.team) {
+        return result.team
+    }
+    return null
+}
+
+export function encodeParam(param: string|string[]|null|undefined): string|undefined {
+    return param ? typeof param === 'string' ? param.trim().split(/\s+/g).map(encodeURIComponent).join('+') : param.map(encodeParam).join(',') : undefined
+}
+
+export function searchParams(params: {[key: string]: string|string[]|null|undefined}) {
+    const array: string[] = []
+    for (const key in params) {
+        const encodedKey = encodeParam(key)
+        const encodedParam = encodeParam(params[key])
+        array.push(encodedKey+'='+encodedParam)
+    }
+    return array.join('&')
 }
 
 export function invalidator(path: string) {

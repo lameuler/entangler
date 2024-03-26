@@ -1,5 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
+    import InputBase from './InputBase.svelte';
 
     export let label: string | null | undefined = undefined
     export let type: 'text' | 'password' | 'email' | 'url' | null | undefined = undefined
@@ -52,12 +53,9 @@
     }
 </script>
 
-<div class:opacity-60={disabled}>
-    {#if label}
-        <div class="font-medium px-2 py-1">{label}</div>
-    {/if}
+<InputBase {label} {info} {error} {disabled}>
     <form on:submit|preventDefault={ () => { validate(); dispatch('submit', value) } }
-        class="flex items-center bg-gray-500/15 rounded-lg w-full focus-within:ring-2 ring-indigo-500">
+        class="flex relative items-center bg-gray-500/15 rounded-lg w-full focus-within:ring-2 ring-indigo-500">
         <slot name="left"/>
         <input class="bg-transparent flex-grow px-3 py-2 outline-none min-w-0 disabled:cursor-not-allowed"
             {placeholder}
@@ -89,9 +87,4 @@
         {/if}
         <slot name="right"/>
     </form>
-    {#if error}
-    <div class="text-sm text-red-500 px-2 pt-1 -mb-2">{error}</div>
-    {:else if info}
-    <div class="text-sm text-slate-500 px-2 pt-1 -mb-2">{info}</div>
-    {/if}
-</div>
+</InputBase>

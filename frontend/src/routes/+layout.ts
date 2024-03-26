@@ -5,15 +5,17 @@ import type { LayoutLoad } from './$types';
 
 export const load = (async ({ fetch }) => {
     // console.log('layout:load')
-    let token: string | null = null
-    try {
-        token = await getToken()
-    } catch (err) {
-        // logout()
-        // goto('/login?redirect=')
-    }
-
     const user = new Promise<User|null>(async (resolve, reject) => {
+        let token: string | null = null
+        try {
+            console.log('layout:load', 'aquiring token')
+            token = await getToken()
+        } catch (err) {
+            console.error('Failed to load token', err)
+            redirect(302, '/logout?redirect=/login')
+            // logout()
+            // goto('/login?redirect=')
+        }
         try {
             if (token) {
                 const result = await getUser(fetch, token)
@@ -27,6 +29,5 @@ export const load = (async ({ fetch }) => {
         
     })
     
-    // console.log('layout:load', user)
     return { user };
 }) satisfies LayoutLoad;
