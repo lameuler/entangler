@@ -1,32 +1,48 @@
 <script lang="ts">
+    import ActionLink from '$lib/ActionLink.svelte';
+    import { search } from '$lib/api';
+    import SearchLayout from '$lib/dashboard/SearchLayout.svelte';
+    import ErrorAlert from '$lib/ErrorAlert.svelte';
     import Search from '$lib/input/Search.svelte';
+    import Spinner from '$lib/Spinner.svelte';
     import TeamCard from '$lib/TeamCard.svelte'
     import { crumbs } from '../crumb';
     import type { PageData } from './$types';
     
-    // export let data: PageData;
+    export let data: PageData;
+
+    const options = [['Manager', 'Owner'], ['Favourite']]
 
     $crumbs = [{ name: 'Teams', path: '/dashboard/teams' }]
 </script>
 
-
-<main class="pt-1">
-    <div class="fixed flex justify-center w-full left-0 right-0 top-0 bg-slate-100/30 dark:bg-slate-950/50 backdrop-blur-xl">
-        <div class="w-full max-w-6xl px-4 sm:px-8 md:pl-72 pt-24 pb-2">
-            <Search/>
+<SearchLayout q={data.q ?? ''} search={ (q, filter)=>search('/dashboard/teams', q, filter)} {options} filter={data.filter ?? ''}>
+    {#await data.teamsPromise }
+        <div class="p-8 w-full flex justify-center">
+            <Spinner/>
         </div>
-    </div>
-    <div class="flex flex-col justify-stretch gap-4 pt-14">
-        <TeamCard team={{ name: 'Hi', favourites: 0 }}></TeamCard>
-        <TeamCard team={{ name: 'Hi', favourites: 0 }}></TeamCard>
-        <TeamCard team={{ name: 'Hi', favourites: 0 }}></TeamCard>
-        <TeamCard team={{ name: 'Hi', favourites: 0 }}></TeamCard>
-        <TeamCard team={{ name: 'Hi', favourites: 0 }}></TeamCard>
-        <TeamCard team={{ name: 'Hi', favourites: 0 }}></TeamCard>
-        <TeamCard team={{ name: 'Hi', favourites: 0 }}></TeamCard>
-        <TeamCard team={{ name: 'Hi', favourites: 0 }}></TeamCard>
-        <TeamCard team={{ name: 'Hi', favourites: 0 }}></TeamCard>
-        <TeamCard team={{ name: 'Hi', favourites: 0 }}></TeamCard>
-    </div>
-    
-</main>
+    {:then result }
+        {#if result }
+            <div class="text-sm px-4 text-slate-500">
+                Only teams you are a member of are listed.
+                <a href="/search{ data.q ? '?q='+data.q : '' }" class="underline hover:text-violet-600 hover:dark:text-violet-400">Search all teams</a>
+            </div>
+            <div class="grid gap-2">
+                {#each result.teams as team }
+                    <TeamCard {team} base="/dashboard/"/>
+                {:else}
+                    <div class="col-span-full text-center p-8 text-slate-700 dark:text-slate-300">
+                        No matching teams found.<br/>
+                        <ActionLink href="/dashboard/teams/create">
+                            Create your own
+                        </ActionLink>
+                    </div>
+                {/each}
+            </div>
+        {:else}
+            <ErrorAlert/>
+        {/if}
+    {:catch}
+        <ErrorAlert/>
+    {/await}
+</SearchLayout>

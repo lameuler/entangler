@@ -2,6 +2,7 @@ import { type User, getUser, request } from '$lib/api'
 import { getToken, logout } from '$lib/auth'
 import { redirect } from '@sveltejs/kit'
 import type { LayoutLoad } from './$types';
+import { goto } from '$app/navigation'
 
 export const load = (async ({ fetch }) => {
     // console.log('layout:load')
@@ -12,7 +13,7 @@ export const load = (async ({ fetch }) => {
             token = await getToken()
         } catch (err) {
             console.error('Failed to load token', err)
-            redirect(302, '/logout?redirect=/login')
+            goto('/logout?redirect=/login')
             // logout()
             // goto('/login?redirect=')
         }

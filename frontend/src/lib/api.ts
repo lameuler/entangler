@@ -1,5 +1,6 @@
 import { getToken } from './auth'
 import { dev } from '$app/environment'
+import { goto } from '$app/navigation'
 
 const API_HOST = dev ? 'http://localhost:6231' : 'https://quantum-entang.ler.sg'
 
@@ -35,6 +36,23 @@ export type Team = {
     favourites: number
     fav: boolean
     role: string
+}
+
+export type Item = {
+    t_id: string,
+    item: string,
+    description: string,
+    visible: boolean,
+    count: number,
+    category: string
+}
+
+export type Service = {
+    t_id: string,
+    item: string,
+    description: string,
+    visible: boolean,
+    category: string
 }
 
 export async function getUser(fetch: FetchFunction, token: string): Promise<User | null> {
@@ -125,6 +143,25 @@ export async function getTeam(fetch: FetchFunction, token?: string|null, team?: 
     return null
 }
 
+export async function getTeamElement(fetch: FetchFunction, element: 'items' | 'services' | 'members', token?: string|null, team?: string|null) {
+    if(!team) return null
+
+    const response = await request(fetch, '/team/'+encodeURI(team)+'/'+element, token)
+    const results = await response.json()
+
+    if (response.status !== 200) {
+        throw {
+            ...results,
+            status: response.status
+        }
+    }
+
+    if (results[element]) {
+        return results[element]
+    }
+    return null
+}
+
 export function encodeParam(param: string|string[]|null|undefined): string|undefined {
     return param ? typeof param === 'string' ? param.trim().split(/\s+/g).map(encodeURIComponent).join('+') : param.map(encodeParam).join(',') : undefined
 }
@@ -141,6 +178,17 @@ export function searchParams(params: {[key: string]: string|string[]|null|undefi
 
 export function invalidator(path: string) {
     return (url: URL) => url.origin === API_HOST && url.pathname === path
+}
+
+export function search(path: string, q?: string, filter?: string) {
+    const params: { q?: string, filter?: string } = {}
+    if (q) params.q = encodeParam(q)
+    if (filter) params.filter = filter
+    const search = searchParams(params)
+    if (search)
+        goto(path+'?'+search)
+    else
+        goto(path)
 }
 
 function wait(timeout: number) {

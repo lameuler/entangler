@@ -45,11 +45,11 @@
                 </svg>
                 Account
             </NavLink>
-            <NavLink href="/dashboard/inbox">
+            <NavLink href="/dashboard/requests">
                 <svg viewBox="0 0 24 24" class="icon h-5 w-5 opacity-60">
-                    <path d="M10 21v-6.5a3.5 3.5 0 0 0 -7 0v6.5h18v-6a4 4 0 0 0 -4 -4h-10.5" /><path d="M12 11v-8h4l2 2l-2 2h-4" /><path d="M6 15h1" />
+                    <path d="M12 20m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M10 20h-6" /><path d="M14 20h6" /><path d="M12 15l-2 -2h-3a1 1 0 0 1 -1 -1v-8a1 1 0 0 1 1 -1h10a1 1 0 0 1 1 1v8a1 1 0 0 1 -1 1h-3l-2 2z" /><path d="M9 6h6" /><path d="M9 9h3" />
                 </svg>
-                Inbox
+                Requests
             </NavLink>
             <NavLink href="/dashboard/teams">
                 <svg viewBox="0 0 24 24" class="icon h-5 w-5 opacity-60">
@@ -57,11 +57,11 @@
                 </svg>
                 Teams
             </NavLink>
-            <NavLink href="/dashboard/requests">
+            <NavLink href="/dashboard/inbox">
                 <svg viewBox="0 0 24 24" class="icon h-5 w-5 opacity-60">
-                    <path d="M12 20m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M10 20h-6" /><path d="M14 20h6" /><path d="M12 15l-2 -2h-3a1 1 0 0 1 -1 -1v-8a1 1 0 0 1 1 -1h10a1 1 0 0 1 1 1v8a1 1 0 0 1 -1 1h-3l-2 2z" /><path d="M9 6h6" /><path d="M9 9h3" />
+                    <path d="M10 21v-6.5a3.5 3.5 0 0 0 -7 0v6.5h18v-6a4 4 0 0 0 -4 -4h-10.5" /><path d="M12 11v-8h4l2 2l-2 2h-4" /><path d="M6 15h1" />
                 </svg>
-                Requests
+                Inbox
             </NavLink>
             <NavLink href="/dashboard/deployments">
                 <svg viewBox="0 0 24 24" class="icon h-5 w-5 opacity-60">
@@ -73,7 +73,7 @@
     </nav>
     <div class="grow pt-16 md:ml-64 px-4 sm:px-8">
         <!-- <div class="sticky w-full pt-20 top-0 bg-violet-600"><slot name="top"/></div> -->
-        <nav class="fixed h-7 flex flex-wrap items-center px-1 z-10 rounded-lg shadow-lg bg-slate-100 dark:bg-slate-950 border light:border-slate-200 dark:border-slate-800">
+        <nav class="fixed h-7 flex flex-wrap items-center px-1 z-20 rounded-lg shadow-lg bg-slate-100 dark:bg-slate-950 border light:border-slate-200 dark:border-slate-800">
             <button class="p-1 shrink-0 opacity-60 hover:opacity-100" on:click|capture|stopPropagation={ () => showing = !showing }>
                 <svg viewBox="0 0 24 24" class="icon h-5 w-5">
                     <path d="M4 6l16 0" /><path d="M4 12l16 0" /><path d="M4 18l16 0" />

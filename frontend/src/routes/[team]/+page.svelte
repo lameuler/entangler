@@ -22,9 +22,11 @@
                         <div class="">
                             <h1 class="text-2xl font-semibold p-1">{ team.name }</h1>
                         </div>
+                        {#if team.description }
                         <p class="p-1 text-justify text-slate-700 dark:text-slate-300">
                             { team.description }
                         </p>
+                        {/if}
                         <a href="{window.location.pathname}/request" class="block mt-2 m-0.5 bg-violet-600 text-slate-100 px-3 py-1.5 rounded-md font-medium w-fit">Start request</a>
                     </Card>
                 </div>

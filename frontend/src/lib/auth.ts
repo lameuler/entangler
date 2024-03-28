@@ -38,9 +38,10 @@ class Navigator extends NavigationClient {
 }
 
 const app = new PublicClientApplication(authConfig);
+let appInit: Promise<void>|null = null
 
 if (browser) {
-    app.initialize().then(() => {
+    appInit = app.initialize().then(() => {
         const accounts = app.getAllAccounts()
         // console.log('auth:init', accounts.length)
         if(accounts.length === 1) {
@@ -75,22 +76,29 @@ export async function handleRedirect() {
 }
 
 export async function login(redirect?: string, select?: boolean) {
-    await app.clearCache()
-    app.loginRedirect({
-        ...loginRequest,
-        redirectUri: window.location.origin + '/authorize',
-        prompt: select ? 'select_account' : undefined,
-        redirectStartPage: '?redirect='+redirect
-    })
+    if (appInit) {
+        await appInit
+        await app.clearCache()
+        app.loginRedirect({
+            ...loginRequest,
+            redirectUri: window.location.origin + '/authorize',
+            prompt: select ? 'select_account' : undefined,
+            redirectStartPage: '?redirect='+redirect
+        })
+    }
 }
 
 export async function logout() {
-    await app.clearCache()
-    account.set(app.getActiveAccount())
+    if (appInit) {
+        await appInit
+        await app.clearCache()
+        account.set(app.getActiveAccount())
+    }
 }
 
 export async function getToken() {
-    if (browser && app.getActiveAccount()) {
+    if (browser && appInit && app.getActiveAccount()) {
+        await appInit
         const result = await app.acquireTokenSilent(loginRequest)
         return result.accessToken
     }

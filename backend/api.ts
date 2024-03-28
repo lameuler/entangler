@@ -3,11 +3,13 @@ import { authenticate } from './auth'
 import { query } from './db'
 import { userRouter } from './routes/user'
 import { teamRouter } from './routes/team'
+import { requestRouter } from './routes/request'
 
 export const router = express.Router()
 
 router.use(userRouter)
 router.use(teamRouter)
+router.use(requestRouter)
 
 export const public_routes = [
     { route: '/', methods: ['GET'] },
