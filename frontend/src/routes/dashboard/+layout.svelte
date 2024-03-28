@@ -28,7 +28,7 @@
 </script>
 
 <div class="">
-    <nav bind:this={menu} class="fixed pt-12 top-0 bottom-0 md:bottom-12 w-64 z-20 border-r md:border-none border-slate-300 dark:border-slate-700 -translate-x-full md:translate-x-0 transition-transform bg-slate-50 dark:bg-slate-950" class:translate-x-0={showing}>
+    <nav bind:this={menu} class="fixed pt-12 top-0 bottom-0 md:bottom-12 w-64 z-30 border-r md:border-none border-slate-300 dark:border-slate-700 -translate-x-full md:translate-x-0 transition-transform bg-slate-50 dark:bg-slate-950" class:translate-x-0={showing}>
         <div class="h-full pe-2 overflow-auto">
             <div class="sticky h-8 top-0 -me-2 bg-gradient-to-b from-slate-50 dark:from-slate-950 to-transparent z-10"/>
             <div class="flex items-center">
@@ -73,7 +73,7 @@
     </nav>
     <div class="grow pt-16 md:ml-64 px-4 sm:px-8">
         <!-- <div class="sticky w-full pt-20 top-0 bg-violet-600"><slot name="top"/></div> -->
-        <nav class="fixed h-7 flex flex-wrap items-center px-1 z-20 rounded-lg shadow-lg bg-slate-100 dark:bg-slate-950 border light:border-slate-200 dark:border-slate-800">
+        <nav class="fixed min-h-7 flex flex-wrap items-center px-1 z-20 rounded-lg shadow-lg bg-white dark:bg-slate-950 border light:border-slate-200 dark:border-slate-800">
             <button class="p-1 shrink-0 opacity-60 hover:opacity-100" on:click|capture|stopPropagation={ () => showing = !showing }>
                 <svg viewBox="0 0 24 24" class="icon h-5 w-5">
                     <path d="M4 6l16 0" /><path d="M4 12l16 0" /><path d="M4 18l16 0" />

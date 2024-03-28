@@ -4,15 +4,20 @@
     export let options: string[]
     export let selected: number = 0
     let showing = false
+    let element: HTMLDivElement
 
     function select(i: number) {
         selected = i
         showing = false
     }
+
+    const handleClick = (event: MouseEvent) => {
+        if (!element?.contains(event.target as Node)) showing = false
+    }
 </script>
 
 <div class="h-8 w-full relative">
-    <div class="rounded-lg bg-slate-300/70 dark:bg-slate-700/70 backdrop-blur-md w-full absolute" class:shadow-lg={showing}>
+    <div bind:this={element} class="rounded-lg bg-slate-300/70 dark:bg-slate-700/70 backdrop-blur-md w-full absolute" class:shadow-lg={showing}>
         <button type="button" class="p-1 w-full h-8 flex items-center justify-between font-medium hover:bg-slate-400/20 rounded-lg" on:click={ () => showing = !showing }>
             <span class="px-1">{ options[selected] }</span>
             <svg viewBox="0 0 24 24" class="icon h-5 w-5">
@@ -33,3 +38,5 @@
         {/if}
     </div>
 </div>
+
+<svelte:body on:click={handleClick}/>

@@ -4,8 +4,8 @@
     import { onMount } from 'svelte';
     import Button from './Button.svelte';
 
-    let checked = [false, false, false]
-    let selected = [0,0]
+    let checked: boolean[] = []
+    let selected: number[] = []
     export let filter = ''
 
     export let options: string[][] = []
@@ -17,10 +17,12 @@
     $: updateFilter(checked, selected, options)
 
     function updateFilter(...dep: any[]) {
-        let filters = []
-        if (checked[0]) filters.push(options[0][selected[0]])
-        if (checked[1]) filters.push(options[1][selected[1]])
-        if (checked[2]) filters.push('favourites')
+        let filters: string[] = []
+        checked.forEach((c, i) => {
+            if (c) {
+                filters.push(options[i][selected[i]])
+            }
+        })
 
         filter = filters.join(',').toLowerCase()
         console.log('filter:config', filter)
@@ -28,6 +30,8 @@
 
     function update(...dep: any[]) {
         const filters = filter.toLowerCase().split(',')
+        checked = new Array(options.length).fill(false)
+        selected = new Array(options.length).fill(0)
         options.forEach((opts, i) => {
             opts.forEach((opt, s) => {
                 if (filters.includes(opt.toLowerCase())) {

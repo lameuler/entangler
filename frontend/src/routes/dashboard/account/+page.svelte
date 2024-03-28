@@ -118,9 +118,11 @@
                 Acccount ID:<br/>
                 { u.u_id }
             </div>
-            <LinkButton href="/logout" primary=false>
-                Log out
-            </LinkButton>
+            <div class="w-fit">
+                <LinkButton href="/logout" primary=false>
+                    Log out
+                </LinkButton>
+            </div>
         {:else}
             <ErrorAlert/>
         {/if}

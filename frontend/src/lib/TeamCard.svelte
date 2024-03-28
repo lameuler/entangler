@@ -27,10 +27,15 @@
     </div>
     <div class="flex pt-1 gap-1">
         {#if team.role && typeof team.role === 'number' }
-            <a class="rounded-full text-sm bg-{ role_colours[team.role] }-600 w-fit px-2" href="/dashboard/{encodeURI(team.t_id)}">{ roles[team.role] }</a>
+            <a class="rounded-full text-sm w-fit px-2 text-white" href="/dashboard/{encodeURI(team.t_id)}"
+            class:bg-indigo-600={ team.role === 1 }
+            class:bg-violet-600={ team.role === 2 }
+            class:bg-purple-600={ team.role === 3 }>
+                { roles[team.role] }
+            </a>
         {/if}
         {#if !team.public }
-            <span class="rounded-full text-sm bg-slate-600 w-fit px-2">Private</span>
+            <span class="rounded-full text-sm bg-slate-300 dark:bg-slate-600 w-fit px-2">Private</span>
         {/if}
     </div>
     {#if team.description}
