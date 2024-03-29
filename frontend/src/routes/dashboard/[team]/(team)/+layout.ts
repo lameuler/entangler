@@ -5,7 +5,7 @@ import type { LayoutLoad } from './$types';
 
 export const load = (async ({ params, url, fetch }) => {
     const token = await tokenOrRedirect(url.pathname)
-    if (params.team.length === 16) {
+    if (params.team.length === 10 && !params.team.startsWith('@')) {
         return {
             teamPromise: getTeam(fetch, token, params.team),
             itemsPromise: getTeamElement(fetch, 'items', token, params.team),

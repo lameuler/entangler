@@ -75,7 +75,7 @@ bun run index.ts
 | ---- | ----------- | --------------- |
 | `API_PORT` | The port to host the API at. | `6231` |
 | `MYSQL_HOST` | The hostname of the MySQL database. | `localhost` |
-| `MYSQL_DATABASE` | The MySQL database to use. | `sample` |
+| `MYSQL_DATABASE` | The MySQL database to use. | `entangler` |
 
 For more details, you may refer to [config.ts](./config.ts) and [compose.yaml](./compose.yaml) (for Docker). Note that not all environment variables can be modified for both local and Docker running.
 
