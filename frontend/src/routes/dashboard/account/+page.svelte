@@ -91,9 +91,7 @@
 <main class="">
     <h1 class="text-2xl font-medium px-2 pb-4 pt-8">Your Account</h1>
     {#await data.user }
-        <div class="p-8 w-full flex justify-center">
-            <Spinner/>
-        </div>
+        <Spinner/>
     {:then u }
         {#if u}
             {#if error }
@@ -118,11 +116,9 @@
                 Acccount ID:<br/>
                 { u.u_id }
             </div>
-            <div class="w-fit">
-                <LinkButton href="/logout" primary=false>
-                    Log out
-                </LinkButton>
-            </div>
+            <LinkButton href="/logout" primary=false>
+                Log out
+            </LinkButton>
         {:else}
             <ErrorAlert/>
         {/if}

@@ -30,9 +30,7 @@
     </div>
     <section class="px-4 sm:px-8 pt-32 pb-4">
         {#await data.teamsPromise }
-            <div class="p-8 w-full flex justify-center">
-                <Spinner/>
-            </div>
+            <Spinner/>
         {:then result }
             {#if result }
                 <div class="text-sm p-4 text-slate-500">

@@ -1,0 +1,16 @@
+import { getTeam, getTeamElement } from '$lib/api'
+import { tokenOrRedirect } from '$lib/auth'
+import { error } from '@sveltejs/kit'
+import type { LayoutLoad } from './$types';
+
+export const load = (async ({ params, url, fetch }) => {
+    const token = await tokenOrRedirect(url.pathname)
+    if (params.team.length === 16) {
+        return {
+            teamPromise: getTeam(fetch, token, params.team),
+            itemsPromise: getTeamElement(fetch, 'items', token, params.team),
+            servicesPromise: getTeamElement(fetch, 'services', token, params.team)
+        };
+    }
+    error(404, 'Team not found :(')
+}) satisfies LayoutLoad;

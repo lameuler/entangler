@@ -16,9 +16,7 @@
 
 <SearchLayout q={data.q ?? ''} search={(q, filter) => search('/dashboard/inbox', q, filter)} {options} filter={data.filter ?? ''}>
     {#await data.requestsPromise }
-        <div class="p-8 w-full flex justify-center">
-            <Spinner/>
-        </div>
+        <Spinner/>
     {:then result }
         {#if result.requests }
             <div class="text-sm px-4 text-slate-500">

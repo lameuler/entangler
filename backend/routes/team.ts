@@ -9,6 +9,10 @@ const router = Router()
 
 const COLUMNS = ['t_id', 'name', 'description', 'public', 'favourites', 'fav', 'role'] as const
 
+const ITEM_COLUMNS = ['t_id', 'item', 'description', 'count', 'visible', 'category'] as const
+
+const SERVICE_COLUMNS = ['t_id', 'item', 'description', 'visible', 'category'] as const
+
 const OPTIONS = {
     'is_public': ['private', 'public'],
     'is_fav': ['', 'favourite'],
@@ -77,6 +81,46 @@ router.get('/team/:id', async (req, res, next) => {
             }
         }
         res.status(404).json({ error: 'Team not found' })
+    } catch (e) {
+        const err = e as { status: number|undefined, message: string }
+        res.status(err.status ?? 500).json({ error: err.message })
+    }
+})
+
+router.get('/team/:id/items', async (req, res, next) => {
+    try {
+        await authenticate(req, res, next)
+
+        const [raw] = await query('select * from item where t_id=?', [req.params.id])
+
+        if(Array.isArray(raw)) {
+            const results = Array.isArray(raw[0]) ? raw[0] : raw
+            const items = results.map(r => objectColumns(r, ITEM_COLUMNS))
+            
+            res.json({ items })
+            return
+        }
+        res.status(404).json({ error: 'Not found' })
+    } catch (e) {
+        const err = e as { status: number|undefined, message: string }
+        res.status(err.status ?? 500).json({ error: err.message })
+    }
+})
+
+router.get('/team/:id/services', async (req, res, next) => {
+    try {
+        await authenticate(req, res, next)
+
+        const [raw] = await query('select * from service where t_id=?', [req.params.id])
+
+        if(Array.isArray(raw)) {
+            const results = Array.isArray(raw[0]) ? raw[0] : raw
+            results.map(r => objectColumns(r, SERVICE_COLUMNS))
+            
+            res.json({ services: results })
+            return
+        }
+        res.status(404).json({ error: 'Not found' })
     } catch (e) {
         const err = e as { status: number|undefined, message: string }
         res.status(err.status ?? 500).json({ error: err.message })

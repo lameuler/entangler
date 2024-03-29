@@ -3,7 +3,6 @@
     import { search } from '$lib/api';
     import SearchLayout from '$lib/dashboard/SearchLayout.svelte';
     import ErrorAlert from '$lib/ErrorAlert.svelte';
-    import Search from '$lib/input/Search.svelte';
     import Spinner from '$lib/Spinner.svelte';
     import TeamCard from '$lib/TeamCard.svelte'
     import { crumbs } from '../crumb';
@@ -18,9 +17,7 @@
 
 <SearchLayout q={data.q ?? ''} search={ (q, filter)=>search('/dashboard/teams', q, filter)} {options} filter={data.filter ?? ''}>
     {#await data.teamsPromise }
-        <div class="p-8 w-full flex justify-center">
-            <Spinner/>
-        </div>
+        <Spinner/>
     {:then result }
         {#if result }
             <div class="text-sm px-4 text-slate-500">
