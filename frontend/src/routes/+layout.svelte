@@ -40,10 +40,10 @@
 </script>
 
 <div class="grid grid-rows-[1fr_auto] h-full w-full">
-    <header class="fixed w-full flex justify-center z-50">
+    <header class="fixed w-full flex justify-center z-40">
         <NavBar user={data.user}/>
     </header>
-    <div class="z-20 max-w-6xl justify-self-center w-full relative"><slot>
+    <div class="max-w-6xl justify-self-center w-full relative"><slot>
         <PageSpinner/>
     </slot></div>
     <footer class="w-full flex justify-center"><Footer/></footer>

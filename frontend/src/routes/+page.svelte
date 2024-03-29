@@ -17,7 +17,7 @@
         </p>
         <a href="/dashboard" class="mt-4 block w-fit bg-violet-600 text-slate-100 px-3 py-1.5 rounded-md font-medium">Go to dashboard</a>
     </section>
-    <section class="md:min-w-96 sm:min-w-72 w-full flex flex-col gap-4">
+    <section class="md:min-w-96 sm:min-w-72 w-full flex flex-col gap-4 z-0 relative">
         <Card>
             <h2 class="font-medium text-xl">
                 What would you like to do today?

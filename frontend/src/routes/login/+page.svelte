@@ -13,7 +13,7 @@
     // }
 </script>
 
-<main class="p-4 pt-20 flex items-center justify-center h-full">
+<main class="p-4 pt-20 flex items-center justify-center h-full z-0 relative">
     <Card>
         <div class="flex flex-col max-w-72 grow">
             <h2 class="px-2 pt-1 text-xl font-semibold">Welcome to Entangler!</h2>

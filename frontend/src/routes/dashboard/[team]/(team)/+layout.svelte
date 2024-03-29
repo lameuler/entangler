@@ -28,7 +28,7 @@
         {#if !team }
             <ErrorAlert error="null"/>
         {:else if team.role > 0}
-            <section class="grid grid-cols-[1fr_auto] gap-4" aria-hidden={$page.route.id !== '/dashboard/[team]/(team)'}>
+            <section class="grid grid-rows-[auto-auto] sm:grid-cols-[1fr_auto] gap-4 z-0 relative" aria-hidden={$page.route.id !== '/dashboard/[team]/(team)'}>
                 <Card glow="false">
                     <div class="flex flex-wrap items-center">
                         <h1 class="text-2xl font-semibold p-1 grow">{ team.name }</h1>
