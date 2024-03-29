@@ -9,18 +9,19 @@
     export let info: string | null | undefined = undefined
     export let disabled: boolean | null | undefined = undefined
     // export let onInput: ((e: Event, target: HTMLInputElement) => any) | undefined = undefined
-    export let value: string = ''
+    export let selected: number = 0
     let input: HTMLInputElement
 </script>
 
 <InputBase {label} {info} {error} {disabled}>
-    {#each options as option}
-        <label class="flex items-center px-2">
+    {#each options as option, i}
+        <label class="flex items-center px-2 cursor-pointer">
             <input class="peer w-0 h-0 opacity-0"
             {name}
             id={option}
             type = {type ?? 'radio'}
-            on:input={e => {value = input.value; console.log(value)}}
+            checked={ selected === i }
+            on:input={() => selected = i }
             bind:this={input}/>
             <svg class="inline w-5 h-5 stroke-gray-500 peer-checked:stroke-violet-500 fill-none peer-checked:fill-violet-500" viewBox="-9 -9 18 18">
                 <circle class="stroke-2 fill-none" x="0" y="0" r="8"/>

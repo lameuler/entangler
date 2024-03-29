@@ -1,6 +1,7 @@
 <script lang="ts">
     import { goto, pushState } from '$app/navigation';
     import { page } from '$app/stores';
+    import ActionLink from '$lib/ActionLink.svelte';
     import Card from '$lib/Card.svelte';
     import ErrorAlert from '$lib/ErrorAlert.svelte';
     import Spinner from '$lib/Spinner.svelte';
@@ -20,27 +21,38 @@
     }).catch(console.log)
 </script>
 
-<main>
+<main class="py-4">
     {#await data.teamPromise }
         <Spinner/>
     {:then team }
         {#if !team }
             <ErrorAlert error="null"/>
         {:else if team.role > 0}
-            <section class="">
+            <section class="grid grid-cols-[1fr_auto] gap-4" aria-hidden={$page.route.id !== '/dashboard/[team]/(team)'}>
                 <Card glow="false">
-                    <div class="">
-                        <h1 class="text-2xl font-semibold p-1">{ team.name }</h1>
+                    <div class="flex flex-wrap items-center">
+                        <h1 class="text-2xl font-semibold p-1 grow">{ team.name }</h1>
+                        {#if team.handle}
+                            <a href="/@{team.handle}" class="p-1 opacity-60 hover:opacity-80 hover:underline">@{team.handle}</a>
+                        {/if}
                     </div>
                     {#if team.description }
-                    <p class="p-1 text-justify text-slate-700 dark:text-slate-300">
+                    <p class="p-1 text-justify text-slate-700 dark:text-slate-300 mb-2">
                         { team.description }
                     </p>
                     {/if}
-                    <LinkButton href={join(path, 'details')}>Edit details</LinkButton>
-                    <LinkButton href={join(path, 'members')}>View members</LinkButton>
-                    <LinkButton href="{window.location.pathname}/items">Manage items</LinkButton>
-                    <LinkButton href="{window.location.pathname}/services">Manage services</LinkButton>
+                    <div class="flex gap-4">
+                        <LinkButton href="/dashboard/{team.t_id}/details">Edit details</LinkButton>
+                        <ActionLink href="/{team.t_id}">View page</ActionLink>
+                    </div>
+                </Card>
+                <Card>
+                    <div class="flex flex-col gap-1.5 h-min px-1 pt-1">
+                        <h2 class="text-xl font-semibold lg:me-8">Manage team</h2>
+                        <ActionLink href="/dashboard/{team.t_id}/members">View members</ActionLink>
+                        <ActionLink href="/dashboard/{team.t_id}/items">Manage items</ActionLink>
+                        <ActionLink href="/dashboard/{team.t_id}/services">Manage services</ActionLink>
+                    </div>
                 </Card>
             </section>
             <section class="grow p-4 self-center mb-4 min-h-48">

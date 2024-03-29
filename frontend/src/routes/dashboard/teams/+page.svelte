@@ -3,6 +3,7 @@
     import { search } from '$lib/api';
     import SearchLayout from '$lib/dashboard/SearchLayout.svelte';
     import ErrorAlert from '$lib/ErrorAlert.svelte';
+    import LinkButton from '$lib/input/LinkButton.svelte';
     import Spinner from '$lib/Spinner.svelte';
     import TeamCard from '$lib/TeamCard.svelte'
     import { crumbs } from '../crumb';
@@ -42,4 +43,12 @@
     {:catch}
         <ErrorAlert/>
     {/await}
+    <div class="self-end fixed p-1 rounded-xl bottom-12 bg-slate-50/30 dark:bg-slate-950/30 backdrop-blur-sm shadow-x">
+        <LinkButton href="/dashboard/teams/create">
+            <svg viewBox="0 0 24 24" class="icon w-5 h-5">
+                <path d="M12 5l0 14" /><path d="M5 12l14 0" />
+            </svg>
+            Create Team
+        </LinkButton>
+    </div>
 </SearchLayout>

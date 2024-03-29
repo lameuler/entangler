@@ -32,10 +32,12 @@ export type Team = {
     t_id: string
     name: string
     description: string
-    public: boolean
+    details: string
+    handle: string
+    public: 0 | 1
     favourites: number
     fav: boolean
-    role: string
+    role: number
 }
 
 export type Item = {

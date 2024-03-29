@@ -18,7 +18,7 @@
         </div>
     </div>
     {#if showContent }
-    <div class="p-4 flex flex-col grow w-full h-full sm:w-auto bg-inherit absolute sm:static">
+    <div class="p-4 flex flex-col grow w-full h-full sm:w-auto bg-inherit absolute sm:static overflow-y-auto">
         <button on:click={ ()=>dispatch('back', undefined, undefined) } class="text-violet-600 dark:text-violet-400 flex items-center -mx-2 -mt-1 p-1 sm:hidden">
             <svg viewBox="0 0 24 24" class="icon h-5 w-5">
                 <path d="M15 6l-6 6l6 6" />

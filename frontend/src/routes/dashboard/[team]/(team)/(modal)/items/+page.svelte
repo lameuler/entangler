@@ -2,6 +2,8 @@
     import SidebarLayout from '$lib/dashboard/SidebarLayout.svelte';
     import Search from '$lib/input/Search.svelte';
     import Button from '$lib/input/Button.svelte';
+    import TextInput from '$lib/input/TextInput.svelte';
+    import IncrementInput from '$lib/input/IncrementInput.svelte';
     import Spinner from '$lib/Spinner.svelte';
     import { media } from '$lib/utils';
     import Fuse from 'fuse.js'
@@ -10,7 +12,6 @@
     import { page } from '$app/stores';
     import { pushState } from '$app/navigation';
     import { onMount } from 'svelte';
-    import TextInput from '$lib/input/TextInput.svelte';
 
     export let data: PageData
 
@@ -64,14 +65,7 @@
             {#if items[selected]}
             <h2 class="text-xl font-semibold">{ items[selected].item }</h2>
             <TextInput label="Description" value={ items[selected].description }/>
-            <div class="flex mt-2 gap-1">
-                <span>Total count:</span>
-                <div class="rounded-lg bg-gray-500/15 px-2">
-                    <button>+</button>
-                    <input class="text-center w-6 bg-transparent" value={ items[selected].count }/>
-                    <button>-</button>
-                </div>
-            </div>
+            <IncrementInput label="Total count:" max={999} value={ items[selected].count } labelposition="side"/>
             <h3 class="text-lg font-semibold mt-4">Deployments</h3>
             hi
             {/if}

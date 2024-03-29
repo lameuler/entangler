@@ -7,7 +7,7 @@ import Fuse, { type IFuseOptions } from 'fuse.js'
 
 const router = Router()
 
-const COLUMNS = ['t_id', 'name', 'description', 'public', 'favourites', 'fav', 'role'] as const
+const COLUMNS = ['t_id', 'name', 'description', 'public', 'handle', 'favourites', 'fav', 'role'] as const
 
 const ITEM_COLUMNS = ['t_id', 'item', 'description', 'count', 'visible', 'category'] as const
 

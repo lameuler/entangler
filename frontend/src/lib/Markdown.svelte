@@ -5,7 +5,7 @@
 
     export let markdown: string | null | undefined = undefined
 
-    const rendered = micromark(markdown ?? '', {
+    $: rendered = micromark(markdown ?? '', {
         extensions: [gfmAutolinkLiteral(), gfmStrikethrough()],
         htmlExtensions: [gfmAutolinkLiteralHtml(), gfmStrikethroughHtml()]
     })
@@ -17,27 +17,30 @@
 
 <style lang="postcss">
     article :global(a) {
-        @apply text-violet-600 hover:underline;
+        @apply text-violet-600 underline;
     }
     :global(.dark) article :global(a) {
         @apply text-violet-400;
     }
+    article :global(p) {
+        @apply mb-2;
+    }
     article :global(ol) {
-        @apply list-decimal list-inside
+        @apply list-decimal list-inside;
     }
     article :global(ul) {
-        @apply list-disc list-inside
+        @apply list-disc list-inside;
     }
     article :global(h1) {
-        @apply text-2xl font-semibold
+        @apply text-2xl font-semibold my-2;
     }
     article :global(h2) {
-        @apply text-xl font-semibold
+        @apply text-xl font-semibold my-2;
     }
     article :global(h3) {
-        @apply text-lg font-semibold
+        @apply text-lg font-semibold my-1;
     }
     article :global(h4) {
-        @apply font-bold
+        @apply font-bold my-1;
     }
 </style>

@@ -3,44 +3,51 @@
     import InputBase from './InputBase.svelte';
 
     export let label: string | null | undefined = undefined
+    export let labelposition: 'top' | 'side' | undefined = undefined
     export let type: 'text' | 'password' | 'email' | 'url' | null | undefined = undefined
     export let placeholder: string | null | undefined = undefined
     export let error: string | null | undefined = undefined
     export let info: string | null | undefined = undefined
     export let maxlength: number | null | undefined = undefined
     export let spellcheck: boolean | "true" | "false" | null | undefined = undefined
+    export let inputmode: "text" | "email" | "url" | "search" | "none" | "tel" | "numeric" | "decimal" | null | undefined = undefined
     export let disabled: boolean | null | undefined = undefined
+    export let compact: boolean = false
     export let value: string = ''
 
-    export let validator: ((value: string) => { 
+    export let preprocess: (value: string, data: string|null) => string = s => s
+    type ValidatorResult =  { 
         info?: string | null, 
         error?: string | null
-    }) | undefined = undefined
+    }
+    export let validator: ((value: string) => Promise<ValidatorResult> | ValidatorResult) | undefined = undefined
     export let validateAfter: number | null | undefined = 500
 
-    let input: HTMLInputElement
-    $: input && (input.value = value)
+    // let input: HTMLInputElement
+    // $: input && (input.value = value)
     let override = false
 
     let timeout = -1
 
     const dispatch = createEventDispatcher<{ submit: string }>()
 
-    function onInput() {
-        value = input.value
+    function onInput(event: Event) {
+        const input = event.currentTarget as HTMLInputElement
+        value = preprocess(input.value, (event as InputEvent).data)
+        input.value = value
         clearTimeout(timeout)
         if (typeof validateAfter === 'number' && isFinite(validateAfter) && validateAfter>=0) {
-            validate(false)
+            error = info = undefined
             timeout = setTimeout(validate, validateAfter)
         }
     }
 
-    function validate(setError: boolean = true) {
+    async function validate() {
         clearTimeout(timeout)
         if (validator) {
-            const result = validator(value)
+            const result = await validator(value)
             if (result.error) {
-                if(setError) error = result.error
+                error = result.error
                 info = undefined
             } else if (result.info) {
                 error = undefined
@@ -53,19 +60,21 @@
     }
 </script>
 
-<InputBase {label} {info} {error} {disabled}>
+<InputBase {label} {info} {error} {disabled} {labelposition}>
     <form on:submit|preventDefault={ () => { validate(); dispatch('submit', value) } }
-        class="flex relative items-center bg-gray-500/15 rounded-lg w-full focus-within:ring-2 ring-indigo-500">
+        class="flex relative items-center bg-gray-500/15 rounded-lg w-full focus-within:ring-2 ring-indigo-500 group">
         <slot name="left"/>
-        <input class="bg-transparent flex-grow px-3 py-2 outline-none min-w-0 disabled:cursor-not-allowed"
-            {placeholder}
+        <input class="bg-transparent flex-grow { compact ? 'p-1' : 'px-3 py-2'} outline-none min-w-0 disabled:cursor-not-allowed text-align-[inherit]"
+            {placeholder} {inputmode}
             type={ override ? 'text' : type}
             maxlength={ maxlength !== undefined && maxlength !== null && maxlength >= 0 ? Math.floor(maxlength) : undefined }
             {spellcheck}
             {disabled}
             on:input={ onInput }
             on:focusout={ () => validate() }
-            bind:this={input}/>
+            {value}
+            style="text-align: inherit"
+            />
             {#if maxlength !== undefined && maxlength !== null && maxlength >= 0}
             <span class="pr-2 opacity-50">{Math.floor(maxlength - value.length)}</span>
         {/if}
