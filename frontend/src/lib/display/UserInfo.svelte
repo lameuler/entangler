@@ -1,6 +1,6 @@
 <script lang="ts">
     import ErrorAlert from './ErrorAlert.svelte';
-import type { User } from './api';
+    import type { User } from '../api';
 
     export let user: Promise<User | null>
 </script>

@@ -1,6 +1,6 @@
 <script lang="ts">
-    import DeploymentItems from '$lib/DeploymentItems.svelte';
-import type { PageData } from './$types';
+    import DeploymentItems from '$lib/dashboard/DeploymentItems.svelte';
+    import type { PageData } from './$types';
     
     export let data: PageData;
 
@@ -10,9 +10,6 @@ import type { PageData } from './$types';
 <main class="flex flex-col gap-6 h-full">
     <div class="flex flex-col lg:flex-row justify-between pt-4 gap-2 w-full">
         <div>
-            <span class="text-slate-700 dark:text-slate-300">
-                <a href="/dashboard/{data.team}">{data.team}</a> / <a href="/dashboard/{data.request}">{data.request}</a>
-            </span>
             <h1 class="text-2xl font-medium mt-1">
                 {#if data.deployment === 'deploy'} Create {:else} Edit {/if}
                 Deployment

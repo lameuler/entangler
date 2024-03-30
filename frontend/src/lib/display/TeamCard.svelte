@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Team } from './api';
+    import type { Team } from '../api';
 
     export let team: Team
     export let base: string = '/'

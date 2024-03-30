@@ -3,7 +3,7 @@
     import { page } from '$app/stores';
     import ActionLink from '$lib/ActionLink.svelte';
     import Card from '$lib/Card.svelte';
-    import ErrorAlert from '$lib/ErrorAlert.svelte';
+    import ErrorAlert from '$lib/display/ErrorAlert.svelte';
     import Spinner from '$lib/Spinner.svelte';
     import LinkButton from '$lib/input/LinkButton.svelte';
     import { join } from '$lib/utils';

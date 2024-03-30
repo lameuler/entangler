@@ -1,10 +1,10 @@
 <script lang="ts">
     import ActionLink from '$lib/ActionLink.svelte';
     import { search } from '$lib/api';
-    import ErrorAlert from '$lib/ErrorAlert.svelte';
+    import ErrorAlert from '$lib/display/ErrorAlert.svelte';
     import Search from '$lib/input/Search.svelte';
     import Spinner from '$lib/Spinner.svelte';
-    import TeamCard from '$lib/TeamCard.svelte';
+    import TeamCard from '$lib/display/TeamCard.svelte';
     import type { PageData } from './$types';
     import Filters from '$lib/input/FiltersConfig.svelte';
 

@@ -1,10 +1,8 @@
 <script lang="ts">
-    import ErrorAlert from '$lib/ErrorAlert.svelte';
-import Markdown from '$lib/Markdown.svelte';
+    import ErrorAlert from '$lib/display/ErrorAlert.svelte';
+    import Markdown from '$lib/display/Markdown.svelte';
     import Spinner from '$lib/Spinner.svelte';
     import TeamEditor from '$lib/dashboard/TeamEditor.svelte';
-    import TextArea from '$lib/input/TextArea.svelte';
-    import TextInput from '$lib/input/TextInput.svelte';
 import type { PageData } from './$types';
     
     export let data: PageData;

@@ -8,7 +8,7 @@
     import Button from '$lib/input/Button.svelte';
     import LinkButton from '$lib/input/LinkButton.svelte';
     import Spinner from '$lib/Spinner.svelte';
-    import ErrorAlert from '$lib/ErrorAlert.svelte';
+    import ErrorAlert from '$lib/display/ErrorAlert.svelte';
     import { crumbs } from '../crumb';
     
     export let data: PageData;

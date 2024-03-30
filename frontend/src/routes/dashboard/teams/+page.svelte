@@ -2,10 +2,10 @@
     import ActionLink from '$lib/ActionLink.svelte';
     import { search } from '$lib/api';
     import SearchLayout from '$lib/dashboard/SearchLayout.svelte';
-    import ErrorAlert from '$lib/ErrorAlert.svelte';
+    import ErrorAlert from '$lib/display/ErrorAlert.svelte';
     import LinkButton from '$lib/input/LinkButton.svelte';
     import Spinner from '$lib/Spinner.svelte';
-    import TeamCard from '$lib/TeamCard.svelte'
+    import TeamCard from '$lib/display/TeamCard.svelte'
     import { crumbs } from '../crumb';
     import type { PageData } from './$types';
     

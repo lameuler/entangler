@@ -1,7 +1,7 @@
 <script>
     import ActionLink from '$lib/ActionLink.svelte';
     import Card from '$lib/Card.svelte';
-    import Favourites from '$lib/Favourites.svelte';
+    import Favourites from '$lib/display/Favourites.svelte';
     import Glow from '$lib/Glow.svelte';
 
 </script>

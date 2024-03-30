@@ -7,7 +7,7 @@
     // let app: PublicClientApplication | undefined = undefined;
     import { page } from '$app/stores';
     import type { User } from './api';
-    import UserInfo from './UserInfo.svelte';
+    import UserInfo from './display/UserInfo.svelte';
     import { onNavigate } from '$app/navigation';
     import { redirect } from '@sveltejs/kit';
     import LinkButton from './input/LinkButton.svelte';

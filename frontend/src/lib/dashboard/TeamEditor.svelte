@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Markdown from '$lib/Markdown.svelte';
+    import Markdown from '$lib/display/Markdown.svelte';
     import type { Team } from '$lib/api';
     import TextArea from '$lib/input/TextArea.svelte';
     import TextInput from '$lib/input/TextInput.svelte';

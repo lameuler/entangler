@@ -3,7 +3,7 @@
     import RequestCard from '$lib/dashboard/RequestCard.svelte';
     import { crumbs } from '../crumb';
     import SearchLayout from '$lib/dashboard/SearchLayout.svelte';
-    import ErrorAlert from '$lib/ErrorAlert.svelte';
+    import ErrorAlert from '$lib/display/ErrorAlert.svelte';
     import Spinner from '$lib/Spinner.svelte';
     import ActionLink from '$lib/ActionLink.svelte';
     import { search } from '$lib/api';
