@@ -21,3 +21,6 @@ init_script = init_script.split('\n').filter(line => !line.startsWith('delimiter
 await connection.query(init_script)
 
 await connection.end()
+
+console.log('Initialization complete!')
+process.exit()
