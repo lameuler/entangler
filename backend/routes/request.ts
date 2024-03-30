@@ -3,6 +3,7 @@ import { authenticate } from '../auth'
 import { query } from '../db'
 import { objectColumns, parseFilters } from '../utils'
 import Fuse, { type IFuseOptions } from 'fuse.js'
+import { error } from '../api'
 
 const router = Router()
 
@@ -69,9 +70,7 @@ router.get('/requests', async (req, res, next) => {
             res.json({ requests: null, filters })
         }
     } catch (e) {
-        const err = e as { status: number|undefined, message: string }
-        console.log(err)
-        res.status(err.status ?? 500).json({ error: err.message })
+        error(e, res)
     }
 })
 

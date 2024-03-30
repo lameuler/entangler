@@ -22,7 +22,7 @@ create table team (
     favourites  int         default 0,
     description varchar(150),
     details     text,
-    handle      varchar(15) unique,
+    handle      varchar(20) unique,
     foreign key (owner_id) references user(u_id) on delete cascade
 );
 

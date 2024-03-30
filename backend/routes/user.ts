@@ -5,6 +5,7 @@ import { insert, query, update, util_query_row } from '../db'
 import { objectColumns } from '../utils'
 import { validate } from 'email-validator'
 import bodyParser from 'body-parser'
+import { error } from '../api'
 
 const KEY = ['u_id'] as const
 const VALUES = ['name', 'email', 'is_member', 'is_manager'] as const
@@ -57,8 +58,7 @@ router.get('/user/me', async (req, res, next) => {
             res.json({ user: result })
         }
     } catch (e) {
-        const err = e as { status: number|undefined, message: string }
-        res.status(err.status ?? 500).json({ error: err.message })
+        error(e, res)
     }
 })
 
@@ -103,14 +103,7 @@ router.post('/user/me', bodyParser.json(), async (req, res, next) => {
         }
 
     } catch (e) {
-        const err = e as { status?: number, message: string }
-
-        if (typeof err.status === 'number') {   
-            res.status(err.status).json({ error: err.message })
-        } else {
-            res.status(500).json({ error: 'Server error while processing request' })
-        }
-        console.log(err)
+        error(e, res)
     }
 })
 
@@ -121,8 +114,7 @@ router.get('/user/:user', async (req, res, next) => {
         const user = req.params.user
         res.json({ user: await getUser(user) })
     } catch (e) {
-        const err = e as { status: number, message: string }
-        res.status(err.status).json({ error: err.message })
+        error(e, res)
     }
 })
 

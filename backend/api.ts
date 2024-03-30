@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { type Response } from 'express'
 import { authenticate } from './auth'
 import { query } from './db'
 import { userRouter } from './routes/user'
@@ -34,3 +34,9 @@ router.get('/secret', async (req, res, next) => {
         res.status(err.status).json({ error: err.message })
     }
 })
+
+export function error(err: any, res: Response) {
+    const e = err as { status: number|undefined, message: string }
+    console.error(err)
+    res.status(err.status ?? 500).json({ error: typeof e.status === 'number' ? e.message : 'Server error' })
+}

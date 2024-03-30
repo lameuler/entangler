@@ -6,6 +6,7 @@ import { objectColumns, parseFilters } from '../utils'
 import Fuse, { type IFuseOptions } from 'fuse.js'
 import bodyParser from 'body-parser'
 import { nanoid } from 'nanoid'
+import { error } from '../api'
 
 const router = Router()
 
@@ -63,8 +64,7 @@ router.get('/teams', async (req, res, next) => {
             res.json({ search, teams: null, filters })
         }
     } catch (e) {
-        const err = e as { status: number, message: string }
-        res.status(err.status).json({ error: err.message })
+        error(e, res)
     }
 })
 
@@ -88,8 +88,7 @@ router.post('/teams/checkHandle', bodyParser.json(), async (req, res, next) => {
         const result = await checkHandle(req.body?.handle, req.body?.t_id)
         res.json(result)
     } catch (e) {
-        const err = e as { status: number|undefined, message: string }
-        res.status(err.status ?? 500).json({ error: err.message })
+        error(e, res)
     }
 })
 
@@ -136,8 +135,7 @@ router.post('/team/create', bodyParser.json(), async (req, res, next) => {
         await insert('team', columns, [team])
         res.status(200).json({ t_id: body.t_id })
     } catch (e) {
-        const err = e as { status: number|undefined, message: string }
-        res.status(err.status ?? 500).json({ error: err.message })
+        error(e, res)
     }
 })
 
@@ -162,8 +160,7 @@ router.get('/team/:id', async (req, res, next) => {
         }
         res.status(404).json({ error: 'Team not found' })
     } catch (e) {
-        const err = e as { status: number|undefined, message: string }
-        res.status(err.status ?? 500).json({ error: err.message })
+        error(e, res)
     }
 })
 
@@ -177,8 +174,7 @@ router.post('/team/:id', bodyParser.json(), async (req, res, next) => {
         await update('team', KEYS, columns, { t_id: req.params.id }, team)
         res.status(200).json({ t_id: body.t_id })
     } catch (e) {
-        const err = e as { status: number|undefined, message: string }
-        res.status(err.status ?? 500).json({ error: err.message })
+        error(e, res)
     }
 })
 
@@ -197,8 +193,7 @@ router.get('/team/:id/items', async (req, res, next) => {
         }
         res.status(404).json({ error: 'Not found' })
     } catch (e) {
-        const err = e as { status: number|undefined, message: string }
-        res.status(err.status ?? 500).json({ error: err.message })
+        error(e, res)
     }
 })
 
@@ -217,8 +212,7 @@ router.get('/team/:id/services', async (req, res, next) => {
         }
         res.status(404).json({ error: 'Not found' })
     } catch (e) {
-        const err = e as { status: number|undefined, message: string }
-        res.status(err.status ?? 500).json({ error: err.message })
+        error(e, res)
     }
 })
 
