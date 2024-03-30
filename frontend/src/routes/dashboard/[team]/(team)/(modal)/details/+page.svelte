@@ -11,7 +11,7 @@ import type { PageData } from './$types';
 {#await data.teamPromise}
     <Spinner/>
 {:then team}
-    <main class="p-4 absolute h-full w-full overflow-y-auto">
+    <main class="p-4 absolute h-full w-full overflow-y-auto bg-inherit">
         <TeamEditor {team}/>
     </main>
 {:catch err}

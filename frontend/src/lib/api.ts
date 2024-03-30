@@ -25,16 +25,21 @@ export type User = {
     u_id: string
     name: string
     email: string
+    is_member: boolean
+    is_manager: boolean
     isNew?: boolean
 }
 
-export type Team = {
+export interface Team {
     t_id: string
     name: string
-    description: string
-    details: string
-    handle: string
+    description?: string
+    details?: string
+    handle?: string
     public: 0 | 1
+}
+
+export interface TeamResult extends Team {
     favourites: number
     fav: boolean
     role: number
@@ -73,6 +78,8 @@ export async function getUser(fetch: FetchFunction, token: string): Promise<User
             u_id: result.user.u_id,
             name: result.user.name,
             email: result.user.email,
+            is_member: result.user.is_member ?? false,
+            is_manager: result.user.is_manager ?? false,
             isNew: result.user.isNew
         }
     }

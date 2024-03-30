@@ -7,7 +7,7 @@ import { validate } from 'email-validator'
 import bodyParser from 'body-parser'
 
 const KEY = ['u_id'] as const
-const VALUES = ['name', 'email'] as const
+const VALUES = ['name', 'email', 'is_member', 'is_manager'] as const
 const COLUMNS = [...KEY, ...VALUES] as const
 const TABLE = 'user'
 

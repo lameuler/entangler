@@ -1,22 +1,13 @@
 <script lang="ts">
     import type { Team } from '$lib/api';
     import TeamEditor from '$lib/dashboard/TeamEditor.svelte';
-import OptionsInput from '$lib/input/OptionsInput.svelte';
-    import TextInput from '$lib/input/TextInput.svelte';
-    import type { PageData } from './$types';
     
     // export let data: PageData;
 
     let team: Team = {
         t_id: '',
         name: '',
-        handle: '',
-        description: '',
-        details: '',
-        fav: false,
-        role: 3,
-        public: 0,
-        favourites: 0
+        public: 0
     }
 </script>
 

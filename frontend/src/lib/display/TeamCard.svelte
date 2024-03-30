@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type { Team } from '../api';
+    import type { TeamResult } from '../api';
 
-    export let team: Team
+    export let team: TeamResult
     export let base: string = '/'
     let favourite = team.fav
 

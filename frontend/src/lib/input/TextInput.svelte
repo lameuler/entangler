@@ -29,6 +29,8 @@
 
     let timeout = -1
 
+    if(value) validate()
+
     const dispatch = createEventDispatcher<{ submit: string }>()
 
     function onInput(event: Event) {

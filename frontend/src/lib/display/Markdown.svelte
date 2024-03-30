@@ -22,7 +22,7 @@
     :global(.dark) article :global(a) {
         @apply text-violet-400;
     }
-    article :global(p) {
+    article :global(p), article :global(ul), article :global(ol) {
         @apply mb-2;
     }
     article :global(ol) {
