@@ -16,11 +16,8 @@
     export let value: string = ''
 
     export let preprocess: (value: string, data: string|null) => string = s => s
-    type ValidatorResult =  { 
-        info?: string | null, 
-        error?: string | null
-    }
-    export let validator: ((value: string) => Promise<ValidatorResult> | ValidatorResult) | undefined = undefined
+
+    export let validator: ((value: string) => Promise<any> | any) | undefined = undefined
     export let validateAfter: number | null | undefined = 500
 
     // let input: HTMLInputElement
@@ -47,17 +44,7 @@
     async function validate() {
         clearTimeout(timeout)
         if (validator) {
-            const result = await validator(value)
-            if (result.error) {
-                error = result.error
-                info = undefined
-            } else if (result.info) {
-                error = undefined
-                info = result.info
-            } else {
-                error = undefined
-                info = undefined
-            }
+            await validator(value)
         }
     }
 </script>

@@ -40,7 +40,7 @@
 </script>
 
 <div class="grid grid-rows-[1fr_auto] h-full w-full">
-    <header class="fixed w-full flex justify-center z-40">
+    <header class="fixed w-full flex justify-center top-0 z-40">
         <NavBar user={data.user}/>
     </header>
     <div class="max-w-6xl justify-self-center w-full relative"><slot>

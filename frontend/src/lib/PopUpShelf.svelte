@@ -7,6 +7,8 @@
     export let open: boolean = false
     export let close: 'self' | 'back' | 'none' = 'self'
 
+    let top = 0
+
     const dispatch = createEventDispatcher<{close: undefined}>()
 
     function onClose() {
@@ -14,6 +16,20 @@
         else if (close === 'back') history.back()
         dispatch('close')
     }
+    function onOpen(o: boolean) {
+        if (o) {
+            if (!document.body.classList.contains('fixed')) {
+                top = -document.documentElement.scrollTop
+            }
+            document.body.classList.add('fixed')
+            document.body.style.top = top+'px'
+        } else {
+            document.body.classList.remove('fixed')
+            document.documentElement.scrollTop = -top
+        }
+    }
+
+    $: onOpen(open)
 </script>
 
 {#if open || close === 'none' }

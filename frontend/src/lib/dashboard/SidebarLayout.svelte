@@ -7,15 +7,19 @@
 
 <div class="h-full w-full absolute flex bg-inherit">
     <div class="flex flex-col w-full h-full sm:w-56 sm:border-e p-1 border-slate-400 dark:border-slate-600 absolute sm:static">
+        {#if $$slots.top}
         <div class="shrink-0 p-1">
             <slot name="top"/>
         </div>
+        {/if}
         <div class="flex flex-col p-1 grow shrink overflow-auto">
             <slot name="items"/>
         </div>
+        {#if $$slots.bottom}
         <div class="shrink-0 p-1 mb-2">
             <slot name="bottom"/>
         </div>
+        {/if}
     </div>
     {#if showContent }
     <div class="p-4 flex flex-col grow w-full h-full sm:w-auto bg-inherit absolute sm:static overflow-y-auto">

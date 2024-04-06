@@ -36,26 +36,32 @@
     let name: string | undefined = undefined
     let email: string | undefined = undefined
     let error: string | undefined = undefined
+    let nameError: string | undefined = undefined
+    let emailError: string | undefined = undefined
     let saving = false
     let error_closable = false
 
     function validateName(name: string) {
         // if (name === undefined) return ''
-        if (name.replaceAll(/\s+/g, '').length === 0) return { error: 'Name cannot be blank' }
-        return {}
+        if (name.replaceAll(/\s+/g, '').length === 0) nameError = 'Name cannot be blank'
+        else nameError = undefined
     }
     function validateEmail(email: string) {
         // if (email === undefined) return undefined
-        if (email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/) === null) return { error: 'Invalid email' }
-        return {}
+        if (email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/) === null) emailError = 'Invalid email'
+        else emailError = undefined
     }
 
     async function save() {
-        if (name && !validateName(name).error && email && !validateEmail(email).error) {
+        if (name && email) {
+            validateName(name)
+            validateEmail(email)
+            if (nameError || emailError) return
+
             saving = true
             let token = await tokenOrGoto('/dashboard/account')
             
-            if (token && name && email) {
+            if (token) {
                 try {
                     await updateUser(fetch, token, { name, email })
 
@@ -102,8 +108,8 @@
                 {/if}
             {/if}
             <div class="flex flex-col gap-2">
-                <TextInput label="Name" placeholder="John Tan" bind:value={name} maxlength={64} validator={validateName} disabled={saving}/>
-                <TextInput type="email" label="Email" placeholder="john.tan@example.com" bind:value={email} maxlength={64} validator={validateEmail} disabled={saving}/>
+                <TextInput label="Name" placeholder="John Tan" bind:value={name} maxlength={64} validator={validateName} bind:error={nameError} disabled={saving}/>
+                <TextInput type="email" label="Email" placeholder="john.tan@example.com" bind:value={email} maxlength={64} validator={validateEmail} bind:error={emailError} disabled={saving}/>
             </div>
 
             <div class="py-4">

@@ -44,3 +44,8 @@ export function parseFilters<T extends {[key: string]: string[]}>(filter: any, o
     }
     return result
 }
+
+export function formatDate(d: Date) {
+    const minutes = d.getUTCMinutes().toLocaleString(undefined, { minimumIntegerDigits: 2, maximumFractionDigits: 0 })
+    return d.getUTCFullYear()+'-'+(d.getUTCMonth()+1)+'-'+d.getUTCDate()+' '+d.getUTCHours()+':'+minutes+':00'
+}

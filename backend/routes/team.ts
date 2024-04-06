@@ -20,7 +20,7 @@ const COLUMNS_DERIVED = [...COLUMNS, 'favourites', 'fav', 'role'] as const
 
 const ITEM_COLUMNS = ['t_id', 'item', 'description', 'count', 'visible', 'category'] as const
 
-const SERVICE_COLUMNS = ['t_id', 'item', 'description', 'visible', 'category'] as const
+const SERVICE_COLUMNS = ['t_id', 'service', 'description', 'visible', 'category'] as const
 
 const OPTIONS = {
     'is_public': ['private', 'public'],
@@ -139,6 +139,18 @@ router.post('/team/create', bodyParser.json(), async (req, res, next) => {
     }
 })
 
+async function isManager(t_id: string, u_id: string) {
+    try {
+        const [result] = await query('select * from manager where t_id=? and u_id=?', [t_id, u_id])
+        if (Array.isArray(result)) {
+            return result.length === 1
+        }
+        return false
+    } catch {
+        return false
+    }
+}
+
 router.get('/team/:id', async (req, res, next) => {
     let u_id = null
     try {
@@ -147,7 +159,6 @@ router.get('/team/:id', async (req, res, next) => {
     } catch (e) {}
 
     try {
-
         const [raw] = await query('call userteams(?,?,?,?,?)', [u_id, req.params.id, null, null, null])
 
         if(Array.isArray(raw)) {
@@ -166,7 +177,11 @@ router.get('/team/:id', async (req, res, next) => {
 
 router.post('/team/:id', bodyParser.json(), async (req, res, next) => {
     try {
-        await authenticate(req, res, next)
+        const { user } = await authenticate(req, res, next)
+        if(!(await isManager(req.params.id, user))) {
+            res.status(401).json({ error: 'Unauthorized' })
+            return
+        }
         const body = req.body ?? {}
         const team = await validateTeam({...body, t_id: req.params.id})
         const columns = Object.entries(team).filter(([key, val]) => val !== undefined).map(([key]) => key)
@@ -180,13 +195,14 @@ router.post('/team/:id', bodyParser.json(), async (req, res, next) => {
 
 router.get('/team/:id/items', async (req, res, next) => {
     try {
-        await authenticate(req, res, next)
+        const { user } = await authenticate(req, res, next)
+        const showAll = await isManager(req.params.id, user)
 
-        const [raw] = await query('select * from item where t_id=?', [req.params.id])
+        const [raw] = await query('select * from item where t_id=? and (visible=true or ?)', [req.params.id, showAll])
 
         if(Array.isArray(raw)) {
             const results = Array.isArray(raw[0]) ? raw[0] : raw
-            const items = results.map(r => objectColumns(r, ITEM_COLUMNS))
+            const items = results.map(r => objectColumns(r, ITEM_COLUMNS)).filter(x=>x)
             
             res.json({ items })
             return
@@ -197,19 +213,168 @@ router.get('/team/:id/items', async (req, res, next) => {
     }
 })
 
+router.post('/team/:id/items', bodyParser.json(), async (req, res, next) => {
+    try {
+        const { user } = await authenticate(req, res, next)
+        if (!(await isManager(req.params.id, user))) {
+            res.status(401).send({ error: 'Unauthorized' })
+        }
+        const item = objectColumns(req.body.item, ['item', 'description', 'count', 'visible'], false)
+        
+        if (item && item.item !== undefined) {
+            item.count = Math.min(Math.max(0, item.count), 999)
+            const [result] = await update('item', ['t_id', 'item'], ['description', 'count', 'visible'], { t_id: req.params.id, item: item.item }, item)
+            const affected = 'affectedRows' in result ? result.affectedRows : -1
+            if (affected === 1) {
+                res.sendStatus(200)
+            } else if (affected === 0) {
+                res.status(404).send({ error: 'Not found' })
+            } else {
+                res.status(500).send({ error: 'Failed to update item' })
+            }
+        }
+        res.status(404).send({ error: 'Not found' })
+        
+    } catch (e) {
+        error(e, res)
+    }
+})
+
+router.post('/team/:id/items/create', bodyParser.json(), async (req, res, next) => {
+    try {
+        const { user } = await authenticate(req, res, next)
+        if (!(await isManager(req.params.id, user))) {
+            res.status(401).send({ error: 'Unauthorized' })
+        }
+        if(typeof req.body.item === 'object') req.body.item.t_id = req.params.id
+        const item = objectColumns(req.body.item, ['t_id', 'item', 'description', 'count', 'visible'])
+        
+        if (item && item.item !== undefined) {
+            item.count = Math.min(Math.max(0, item.count), 999)
+            const [result] = await insert('item', ['t_id', 'item', 'description', 'count', 'visible'], [item])
+            console.log(result)
+            const affected = result && 'affectedRows' in result ? result.affectedRows : -1
+            if (affected === 1) {
+                res.sendStatus(200)
+            } else if (affected === 0) {
+                res.status(404).send({ error: 'Not found' })
+            } else {
+                res.status(500).send({ error: 'Failed to insert item' })
+            }
+        }
+        res.status(400).send({ error: 'No item specified' })
+        
+    } catch (e) {
+        if ('code' in (e as any) && (e as any).code === 'ER_DUP_ENTRY') {
+            res.status(400).send({ error: 'Item already exists' })
+        }
+        error(e, res)
+    }
+})
+
+router.post('/team/:id/items/checkName', bodyParser.json(), async (req, res, next) => {
+    try {
+        const { user } = await authenticate(req, res, next)
+        if (!(await isManager(req.params.id, user))) {
+            res.status(401).send({ error: 'Unauthorized' })
+        }
+
+        const name = req.body.name
+        
+        if (typeof name === 'string') {
+            const [result] = await query('select true from item where t_id=? and item=?', [req.params.id, name])
+
+            if (Array.isArray(result)) {
+                if (result.length === 0) {
+                    res.send({ available: true })
+                } else {
+                    res.send({ available: false })
+                }
+            }
+            res.send({ available: null })
+        }
+        res.status(400).send({ error: 'No name specified' })
+        
+    } catch (e) {
+        error(e, res)
+    }
+})
+
 router.get('/team/:id/services', async (req, res, next) => {
     try {
-        await authenticate(req, res, next)
+        const { user } = await authenticate(req, res, next)
+        const showAll = await isManager(req.params.id, user)
 
-        const [raw] = await query('select * from service where t_id=?', [req.params.id])
+        const [raw] = await query('select * from service where t_id=? and (visible=true or ?)', [req.params.id, showAll])
 
         if(Array.isArray(raw)) {
             const results = Array.isArray(raw[0]) ? raw[0] : raw
-            results.map(r => objectColumns(r, SERVICE_COLUMNS))
+            const services = results.map(r => objectColumns(r, SERVICE_COLUMNS)).filter(x=>x)
             
-            res.json({ services: results })
+            res.json({ services })
             return
         }
+        res.status(404).json({ error: 'Not found' })
+    } catch (e) {
+        error(e, res)
+    }
+})
+
+router.get('/team/:id/members', async (req, res, next) => {
+    try {
+        const { user } = await authenticate(req, res, next)
+        const isMan = await isManager(req.params.id, user)
+        console.log('isManager', isMan)
+        if(!isMan) {
+            res.status(401).json({ error: 'Unauthorized' })
+            return
+        }
+
+        const [raw] = await query('call teammembers(?)', [req.params.id])
+        
+        if(Array.isArray(raw)) {
+            const results = Array.isArray(raw[0]) ? raw[0] : raw
+            const members = results.map(r => objectColumns(r, ['u_id', 'name', 'email', 'role'])).filter(x=>x)
+            
+            res.json({ members })
+            return
+        }
+        res.status(404).json({ error: 'Not found' })
+    } catch (e) {
+        console.log('uhoh',e)
+        error(e, res)
+    }
+})
+
+router.post('/team/:id/members', bodyParser.json(), async (req, res, next) => {
+    try {
+        const { user } = await authenticate(req, res, next)
+
+        if(!(await isManager(req.params.id, user))) {
+            res.status(401).json({ error: 'Unauthorized' })
+            return
+        }
+        
+        const t_id = req.params.id
+        const raw = req.body.members
+
+        if (Array.isArray(raw)) {
+            for (const item of raw) {
+                const member = objectColumns(item, ['u_id', 'role'] as const)
+                console.log('mem', member)
+                if (member?.role === 1) { // Member
+                    const [r1] = await query('insert into member (t_id, u_id) values (?, ?) on duplicate key update u_id=u_id', [t_id, member.u_id])
+                    console.log('mem1', r1)
+                    const [r2] = await query('delete from manager where t_id=? and u_id=?', [t_id, member.u_id])
+                    console.log('mem2', r2)
+                } else if (member?.role === 2) { // Manager
+                    await query('insert into manager (t_id, u_id) values (?, ?) on duplicate key update u_id=u_id', [t_id, member.u_id])
+                }
+            }
+            res.sendStatus(200)
+            return
+        }
+        
         res.status(404).json({ error: 'Not found' })
     } catch (e) {
         error(e, res)

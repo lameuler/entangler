@@ -12,6 +12,7 @@
     import { page } from '$app/stores';
     import { pushState } from '$app/navigation';
     import { onMount } from 'svelte';
+    import ItemEditor from '$lib/dashboard/ItemEditor.svelte';
 
     export let data: PageData
 
@@ -54,7 +55,7 @@
             </button>
         {/each}
         </svelte:fragment>
-        <Button slot="bottom" full>
+        <Button slot="bottom" full on:click={() => selected = items.length}>
             <svg viewBox="0 0 24 24" class="icon w-5 h-5">
                 <path d="M12 5l0 14" /><path d="M5 12l14 0" />
             </svg>
@@ -62,12 +63,10 @@
         </Button>
         
         <svelte:fragment>
-            {#if items[selected]}
-            <h2 class="text-xl font-semibold">{ items[selected].item }</h2>
-            <TextInput label="Description" value={ items[selected].description }/>
-            <IncrementInput label="Total count:" max={999} value={ items[selected].count } labelposition="side"/>
-            <h3 class="text-lg font-semibold mt-4">Deployments</h3>
-            hi
+            <ItemEditor item={items[selected]} team={data.t_id}/>
+            {#if selected < items.length}
+                <h3 class="text-lg font-semibold mt-4">Deployments</h3>
+                hi
             {/if}
         </svelte:fragment>
     </SidebarLayout>

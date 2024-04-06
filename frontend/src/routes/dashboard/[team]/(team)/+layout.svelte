@@ -19,6 +19,10 @@
         }
         $crumbs = [{ name: team.name }]
     }).catch(console.log)
+
+    data.membersPromise.then(members => {
+        console.log(members)
+    })
 </script>
 
 <main class="py-4">

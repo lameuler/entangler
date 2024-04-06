@@ -13,54 +13,51 @@
     let showPreview = false
     let validatingHandle = false
     let saving = false
-    let errors = 0
-    let error = ''
 
-    $: console.log(team.details)
+    let error = ''
+    let nameError = ''
+    let handleError = ''
+    let handleInfo = ''
 
     function validateName(value: string) {
-        errors++
+        nameError = ''
         if (value.match(/^\s*$/g)) {
-            return { error: 'Name cannot be blank' }
+            nameError = 'Name cannot be blank'
         }
-        errors--
-        return {}
     }
 
-    async function validateHandle(value: string) {
+    async function validateHandle(value: string|undefined) {
         validatingHandle = true
-        const val: { info?: string, error?: string } = {}
-        if (value.length>0) {
-            errors++
+        handleError = ''
+        handleInfo = ''
+        if (value) {
             if (value.length<3 || value.length>16) {
-                val.error = 'Handle must be between 3 and 20 characters long'
+                handleError = 'Handle must be between 3 and 20 characters long'
             } else if (!value.match(/^[A-Za-z0-9_.]+$/)) {
-                val.error = 'Handle can only contain letters, numbers, periods, or underscores'
+                handleError = 'Handle can only contain letters, numbers, periods, or underscores'
             } else {
-                errors--
                 const token = await tokenOrGoto()
                 try {
                     const req = request(fetch, '/teams/checkHandle', token, 'POST', { handle: value, t_id: team.t_id || undefined })
                     const result = await (await req).json()
-                    console.log(result)
                     if (result.handle && typeof result.available === 'boolean') {
-                        if (result.available) val.info = 'Your team will be found at entang.ler.sg/@'+result.handle
+                        if (result.available) handleInfo = 'Your team will be found at entang.ler.sg/@'+result.handle
                         else {
-                            errors++
-                            val.error = 'Handle @'+result.handle+' is taken'
+                            handleError = 'Handle @'+result.handle+' is taken'
                         }
-                    } else val.error = 'Could not check handle'
+                    } else handleError = 'Could not check handle'
                 } catch (e) {
-                    val.error = 'Error: Could not check handle'
+                    handleError = 'Error: Could not check handle'
                 }
             }
         }
         validatingHandle = false
-        return val
     }
 
     async function save() {
-        if (!saving && !validatingHandle && errors === 0) {
+        validateName(team.name)
+        await validateHandle(team.handle)
+        if (!saving && !validatingHandle && !nameError && !handleError) {
             error = ''
             saving = true
             try {
@@ -77,6 +74,7 @@
                 } else {
                     const response = await request(fetch, '/team/create', token, 'POST', team)
                     const result = await (response).json()
+                    console.log(result, response.status)
                     if (response.status === 200) {
                         if (result.t_id) await goto('/dashboard/'+result.t_id)
                     } else {
@@ -98,9 +96,9 @@
         <ErrorAlert {error} type="warning"/>
     </div>
 {/if}
-<TextInput label="Team Name" placeholder="Team Name" bind:value={team.name} maxlength={50} validator={validateName} disabled={saving}/>
+<TextInput label="Team Name" placeholder="Team Name" bind:value={team.name} maxlength={50} validator={validateName} bind:error={nameError} disabled={saving}/>
 <TextInput label="Handle" placeholder="handle" bind:value={team.handle} maxlength={20} spellcheck="false"
-    validator={validateHandle} disabled={saving}/>
+    validator={validateHandle} bind:error={handleError} disabled={saving}/>
 <OptionsInput label="Visibility" name="visibility" options={['Private', 'Public']} bind:selected={team.public} disabled={saving}/>
 <TextArea label="Description" placeholder="Description" maxlength={150} bind:value={team.description} compact disabled={saving}/>
 <TextArea label="Details" placeholder="Details" maxlength={1000} bind:value={team.details} disabled={saving}>
@@ -117,4 +115,4 @@
         <Markdown bind:markdown={ team.details }/>
     </div>
 {/if}
-<div class="mt-4"><Button on:click={save}>Save team</Button></div>
+<div class="mt-4"><Button on:click={save} disabled={validatingHandle}>Save team</Button></div>

@@ -30,10 +30,4 @@
             <span class="px-2 py-1">{option}</span>
         </label>
     {/each}
-        
-    {#if error}
-    <div class="text-sm text-red-500 px-2 pt-1 -mb-2">{error}</div>
-    {:else if info}
-    <div class="text-sm text-slate-500 px-2 pt-1 -mb-2">{info}</div>
-    {/if}
 </InputBase>

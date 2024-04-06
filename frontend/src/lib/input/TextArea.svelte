@@ -18,8 +18,8 @@
         bind:value 
         {placeholder} {spellcheck} {disabled} {maxlength}
         />
-        {#if typeof value === 'string' && maxlength}
-            <span class="absolute end-2 bottom-0.5 text-sm opacity-50">{value.length} / {Math.floor(maxlength)}</span>
+        {#if maxlength}
+            <span class="absolute end-2 bottom-0.5 text-sm opacity-50">{ typeof value === 'string' ? value.length : 0 } / {Math.floor(maxlength)}</span>
         {/if}
     </div>
 </InputBase>

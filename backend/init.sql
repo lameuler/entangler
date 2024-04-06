@@ -6,6 +6,9 @@ create table ikea (
 insert into ikea values
 ('Blahaj', 10.9, 29);
 
+set global time_zone = '+00:00';
+set time_zone = "+00:00";
+
 create table user (
     u_id        char(36)    primary key,
     name        varchar(64) not null,
@@ -56,7 +59,7 @@ create table request (
     u_id        char(36) not null,
     date        datetime not null,
     name        varchar(50),
-    description varchar(150),
+    description varchar(500),
     committee   varchar(50),
     note        varchar(150),
     status      int         not null default 0,
@@ -165,54 +168,57 @@ create table can_serve (
 
 delimiter $/$/$
 create procedure userteams(in u_id char(36), in id_handle varchar(16), in is_public boolean, in is_fav boolean, in is_role int)
-begin
-    select t_id, name, description, details, handle, public, favourites,
-        exists(select true from favourite f where f.t_id=t.t_id and f.u_id=u_id) fav,
-        case
-            when owner_id=u_id then 3
-            when exists(select true from manager m where m.u_id=u_id and m.t_id=t.t_id) then 2
-            when exists(select true from member m where m.u_id=u_id and m.t_id=t.t_id) then 1
-            else 0
-        end role
-    from team t
-    having (public or fav or role or id_handle is not null)
-    and (id_handle is null or (length(id_handle) = 10 and t_id = id_handle) or (id_handle like "@%" and handle = substring(id_handle from 2)))
-    and (is_public is null or is_public = public)
-    and (is_fav is null or is_fav = fav)
-    and (is_role is null or is_role <= role);
-end $/$/$
+select t_id, name, description, details, handle, public, favourites,
+    exists(select true from favourite f where f.t_id=t.t_id and f.u_id=u_id) fav,
+    case
+        when owner_id=u_id then 3
+        when exists(select true from manager m where m.u_id=u_id and m.t_id=t.t_id) then 2
+        when exists(select true from member m where m.u_id=u_id and m.t_id=t.t_id) then 1
+        else 0
+    end role
+from team t
+having (public or fav or role or id_handle is not null)
+and (id_handle is null or (length(id_handle) = 10 and t_id = id_handle) or (id_handle like "@%" and handle = substring(id_handle from 2)))
+and (is_public is null or is_public = public)
+and (is_fav is null or is_fav = fav)
+and (is_role is null or is_role <= role) $/$/$
 
 create procedure userrequests(in u_id char(36), in t_id binary(16), in creator char(36), in managed boolean, in is_status int)
-begin
-    select r.*, t.name team
-    from request r, team t
-    where r.t_id = t.t_id
-    and (t_id is null or r.t_id=t_id)
-    and (creator is null or r.u_id=creator)
-    and (is_status is null or r.status=is_status)
-    and (((managed is null or managed=true) and exists(select * from manager m where m.u_id=u_id and m.t_id=r.t_id))
-        or ((managed is null or managed=false) and r.u_id=u_id));
-end $/$/$
+select r.*, u.name user, t.name team
+from request r, team t, user u
+where r.t_id = t.t_id and r.u_id = u.u_id
+and (t_id is null or r.t_id=t_id)
+and (creator is null or r.u_id=creator)
+and (is_status is null or r.status=is_status)
+and (((managed is null or managed=true) and exists(select * from manager m where m.u_id=u_id and m.t_id=r.t_id))
+    or ((managed is null or managed=false) and r.u_id=u_id)) $/$/$
 
 create procedure userdeployments(in u_id char(36), in t_id binary(16), in req_id binary(16), in is_approved int)
-begin
-    select d.*, t.name team, r.name request
-    from deployment d, team t, request r
-    where d.t_id = t.t_id and d.req_id = r.req_id
-    and (t_id is null or d.t_id=t_id)
-    and (req_id is null or d.req_id=req_id)
-    and (is_approved is null or (d.approver_id is not null)=is_approved)
-    and (exists(select * from manager m where m.u_id=u_id and m.t_id=d.t_id)
-        or u_id in (select s.u_id from service_dep s where s.dep_id=d.dep_id));
-end $/$/$
+select d.*, t.name team, r.name request
+from deployment d, team t, request r
+where d.t_id = t.t_id and d.req_id = r.req_id
+and (t_id is null or d.t_id=t_id)
+and (req_id is null or d.req_id=req_id)
+and (is_approved is null or (d.approver_id is not null)=is_approved)
+and (exists(select * from manager m where m.u_id=u_id and m.t_id=d.t_id)
+    or u_id in (select s.u_id from service_dep s where s.dep_id=d.dep_id)) $/$/$
 
 create procedure updaterole(in u_id char(36))
-begin
-    update user u set
-    is_member = u.u_id in (select m.u_id from member m),
-    is_manager = u.u_id in (select m.u_id from manager m)
-    where u_id is null or u.u_id = u_id;
-end $/$/$
+update user u set
+is_member = u.u_id in (select m.u_id from member m),
+is_manager = u.u_id in (select m.u_id from manager m)
+where u_id is null or u.u_id = u_id $/$/$
+
+create procedure teammembers(in t_id char(10))
+select u.u_id, u.name, u.email, 
+    case
+        when t.owner_id=u.u_id then 3
+        when exists(select true from manager mn where mn.u_id=u.u_id and mn.t_id=t_id) then 2
+        else 1
+    end role
+from member m, user u, team t
+where m.u_id=u.u_id and t.t_id=m.t_id and t.t_id=t_id
+order by role desc $/$/$
 
 create trigger manager_insert before insert on manager
 for each row

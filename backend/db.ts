@@ -47,6 +47,7 @@ export function query(query: string, values?: any[]) {
 }
 
 export function insert(table: string, columns: readonly string[], items: { [column: string]: any }[]) {
+    if (columns.length === 0 || items.length === 0) return [undefined, undefined]
     let query = 'insert into `'+table+'` (' + columns.map(c => '`'+c+'`').join(',') + ') values '
     const values: any[] = []
     query += items/* .filter(row => row.length === columns.length) */.map(item => {

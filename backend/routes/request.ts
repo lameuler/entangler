@@ -1,13 +1,15 @@
 import { Router } from 'express'
 import { authenticate } from '../auth'
-import { query } from '../db'
-import { objectColumns, parseFilters } from '../utils'
+import { insert, query } from '../db'
+import { formatDate, objectColumns, parseFilters } from '../utils'
 import Fuse, { type IFuseOptions } from 'fuse.js'
 import { error } from '../api'
+import bodyParser from 'body-parser'
+import { nanoid } from 'nanoid'
 
 const router = Router()
 
-const COLUMNS = ['req_id','t_id','team','u_id','date','dates','deps','name','description','committee','note','status'] as const
+const COLUMNS = ['req_id','t_id','team','u_id','user','date','dates','items','services','deps','name','description','committee','note','status'] as const
 
 const fuseOptions: IFuseOptions<any> = {
     keys: [{ name: 'name', weight: 2 }, 'description']
@@ -35,7 +37,7 @@ router.get('/requests', async (req, res, next) => {
 
         if(Array.isArray(raw)) {
             const results = Array.isArray(raw[0]) ? raw[0] : raw
-            let requests = results.map(r => objectColumns({ ...r, dates: null, deps: null }, COLUMNS))
+            let requests = results.map(r => objectColumns({ ...r, dates: [], items: [], services: [], deps: [] }, COLUMNS))
 
             for (const request of requests) {
                 if (request) {
@@ -43,8 +45,26 @@ router.get('/requests', async (req, res, next) => {
                     try {
                         const [raw_dates] = await query('select * from req_date where req_id=? order by start', [request.req_id])
                         if (Array.isArray(raw_dates)) {
-                            const dates = raw_dates.map(d => objectColumns(d, ['req_id', 'start', 'end', 'description']))
+                            const dates = raw_dates.map(d => objectColumns(d, ['start', 'end', 'description']))
                             request.dates = dates
+                        }
+                    } catch (e) {}
+
+                    // get items
+                    try {
+                        const [raw_items] = await query('select * from item_req where req_id=?', [request.req_id])
+                        if (Array.isArray(raw_items)) {
+                            const items = raw_items.map(d => objectColumns(d, ['item', 'count']))
+                            request.items = items
+                        }
+                    } catch (e) {}
+
+                    // get services
+                    try {
+                        const [raw_services] = await query('select * from service_req where req_id=?', [request.req_id])
+                        if (Array.isArray(raw_services)) {
+                            const services= raw_services.map(d => objectColumns(d, ['service']))
+                            request.services = services
                         }
                     } catch (e) {}
                     
@@ -52,7 +72,7 @@ router.get('/requests', async (req, res, next) => {
                     try {
                         const [raw_deps] = await query('select * from deployment where req_id=? and t_id=? order by start', [request.req_id, request.t_id])
                         if (Array.isArray(raw_deps)) {
-                            const deps = raw_deps.map(d => objectColumns(d, ['dep_id', 'req_id', 't_id', 'start', 'end', 'approver_id', 'approve_date', 'note']))
+                            const deps = raw_deps.map(d => objectColumns(d, ['dep_id', 'start', 'end', 'approver_id', 'approve_date', 'note']))
                             request.deps = deps
                         }
                     } catch (e) {}
@@ -70,6 +90,80 @@ router.get('/requests', async (req, res, next) => {
             res.json({ requests: null, filters })
         }
     } catch (e) {
+        error(e, res)
+    }
+})
+
+router.post('/team/:id/request', bodyParser.json(), async (req, res, next) => {
+    try {
+        const { user } = await authenticate(req, res, next)
+
+        const request = objectColumns(req.body?.request, ['name', 'description', 'committee', 'dates', 'items', 'services'])
+
+        if (!request) {
+            throw { status: 400, message: 'No request provided' }
+        }
+
+        const req_id = nanoid(10)
+        console.log(req_id)
+
+        await insert('request', ['req_id', 't_id', 'u_id', 'date', 'name', 'description', 'committee'], [{ ...request, req_id, t_id: req.params.id, u_id: user, date: formatDate(new Date())}])
+
+        if (Array.isArray(request.dates)) {
+            const dates: { [x: string]: any }[] = []
+            for (const raw of request.dates) {
+                const date = objectColumns(raw, ['start', 'end', 'description'])
+                if (date) {
+                    date.start = formatDate(new Date(date.start))
+                    date.end = formatDate(new Date(date.end))
+                    date.description = typeof date.description === 'string' ? date.description.trim() : ''
+                    if (!dates.some(d => d.start === date.start && d.end === date.end && d.description.toLowerCase() === date.description.toLowerCase())) {
+                        dates.push({
+                            ...date,
+                            req_id
+                        })
+                    }
+                }
+            }
+            console.log(dates)
+            await insert('req_date', ['req_id', 'start', 'end', 'description'], dates)
+        }
+        if (Array.isArray(request.items)) {
+            const items: { [x: string]: any }[] = []
+            for (const raw of request.items) {
+                const item = objectColumns(raw, ['item', 'count'])
+                if (item) {
+                    item.count = Number(item.count)
+                    if (item.count > 0) {
+                        if (!items.some(i => i.item === item.item)) {
+                            item.req_id = req_id
+                            item.t_id = req.params.id
+                            items.push(item)
+                        }
+                    }
+                }
+            }
+            console.log(items)
+            await insert('item_req', ['req_id', 'item', 't_id', 'count'], items)
+        }
+        if (Array.isArray(request.services)) {
+            const services: { [x: string]: any }[] = []
+            for (const raw of request.services) {
+                const service = objectColumns(raw, ['service'])
+                if (service) {
+                    if (!services.some(s => s.service === service.service)) {
+                        service.req_id = req_id
+                        service.t_id = req.params.id
+                        services.push(service)
+                    }
+                }
+            }
+            console.log(services)
+            await insert('service_req', ['req_id', 'service', 't_id'], services)
+            res.send({ req_id })
+        }
+    } catch (e) {
+        console.log(e)
         error(e, res)
     }
 })
