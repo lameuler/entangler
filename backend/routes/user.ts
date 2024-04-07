@@ -108,17 +108,6 @@ router.post('/user/me', bodyParser.json(), async (req, res, next) => {
     }
 })
 
-router.get('/user/:user', async (req, res, next) => {
-    try {
-        await authenticate(req, res, next)
-
-        const user = req.params.user
-        res.json({ user: await getUser(user) })
-    } catch (e) {
-        error(e, res)
-    }
-})
-
 router.get('/users', async (req, res, next) => {
     try {
         await authenticate(req, res, next)

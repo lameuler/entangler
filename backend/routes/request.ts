@@ -9,10 +9,54 @@ import { nanoid } from 'nanoid'
 
 const router = Router()
 
-const COLUMNS = ['req_id','t_id','team','u_id','user','date','dates','items','services','deps','name','description','committee','note','status'] as const
+const COLUMNS = ['req_id','t_id','team','u_id','user','date','dates','name','description','committee','note','status'] as const
 
 const fuseOptions: IFuseOptions<any> = {
     keys: [{ name: 'name', weight: 2 }, 'description']
+}
+
+async function getDates(req_id: string) {
+    try {
+        const [raw_dates] = await query('select * from req_date where req_id=? order by start', [req_id])
+        if (Array.isArray(raw_dates)) {
+            const dates = raw_dates.map(d => objectColumns(d, ['start', 'end', 'description']))
+            return dates
+        }
+    } catch (e) {}
+    return []
+}
+
+async function getItems(req_id: string) {
+    try {
+        const [raw_items] = await query('select * from item_req where req_id=?', [req_id])
+        if (Array.isArray(raw_items)) {
+            const items = raw_items.map(d => objectColumns(d, ['item', 'count']))
+            return items
+        }
+    } catch (e) {}
+    return []
+}
+
+async function getServices(req_id: string) {
+    try {
+        const [raw_services] = await query('select * from service_req where req_id=?', [req_id])
+        if (Array.isArray(raw_services)) {
+            const services= raw_services.map(d => objectColumns(d, ['service']))
+            return services
+        }
+    } catch (e) {}
+    return []
+}
+
+async function getDeployments(req_id: string) {
+    try {
+        const [raw_deps] = await query('select * from deployment where req_id=? order by start', [req_id])
+        if (Array.isArray(raw_deps)) {
+            const deps = raw_deps.map(d => objectColumns(d, ['dep_id', 'start', 'end', 'approver_id', 'approve_date', 'note']))
+            return deps
+        }
+    } catch (e) {}
+    return []
 }
 
 router.get('/requests', async (req, res, next) => {
@@ -32,50 +76,21 @@ router.get('/requests', async (req, res, next) => {
             is_status: ['pending','rejected','approved']
         })
         
-        const [raw] = await query('call userrequests(?,?,?,?,?)',
-            [user, team, creator, result.is_managed ?? null, result.is_status ?? null])
+        const [raw] = await query('call userrequests(?,?,?,?,?,?)',
+            [user, team, null, creator, result.is_managed ?? null, result.is_status ?? null])
 
         if(Array.isArray(raw)) {
             const results = Array.isArray(raw[0]) ? raw[0] : raw
-            let requests = results.map(r => objectColumns({ ...r, dates: [], items: [], services: [], deps: [] }, COLUMNS))
+            let requests = results.map(r => objectColumns({ ...r, dates: [], items: [], services: [], deps: [] }, [...COLUMNS, 'items', 'services', 'deps'] as const))
 
             for (const request of requests) {
                 if (request) {
-                    // get dates
-                    try {
-                        const [raw_dates] = await query('select * from req_date where req_id=? order by start', [request.req_id])
-                        if (Array.isArray(raw_dates)) {
-                            const dates = raw_dates.map(d => objectColumns(d, ['start', 'end', 'description']))
-                            request.dates = dates
-                        }
-                    } catch (e) {}
-
-                    // get items
-                    try {
-                        const [raw_items] = await query('select * from item_req where req_id=?', [request.req_id])
-                        if (Array.isArray(raw_items)) {
-                            const items = raw_items.map(d => objectColumns(d, ['item', 'count']))
-                            request.items = items
-                        }
-                    } catch (e) {}
-
-                    // get services
-                    try {
-                        const [raw_services] = await query('select * from service_req where req_id=?', [request.req_id])
-                        if (Array.isArray(raw_services)) {
-                            const services= raw_services.map(d => objectColumns(d, ['service']))
-                            request.services = services
-                        }
-                    } catch (e) {}
-                    
-                    // get deployments
-                    try {
-                        const [raw_deps] = await query('select * from deployment where req_id=? and t_id=? order by start', [request.req_id, request.t_id])
-                        if (Array.isArray(raw_deps)) {
-                            const deps = raw_deps.map(d => objectColumns(d, ['dep_id', 'start', 'end', 'approver_id', 'approve_date', 'note']))
-                            request.deps = deps
-                        }
-                    } catch (e) {}
+                    await Promise.all([
+                        getDates(request.req_id).then(dates => request.dates = dates),
+                        getItems(request.req_id).then(items => request.items = items),
+                        getServices(request.req_id).then(services => request.services = services),
+                        getDeployments(request.req_id).then(deps => request.deps = deps)
+                    ])
                 }
             }
 
@@ -89,6 +104,31 @@ router.get('/requests', async (req, res, next) => {
         } else {
             res.json({ requests: null, filters })
         }
+    } catch (e) {
+        error(e, res)
+    }
+})
+
+router.get('/request/:id', async (req, res, next) => {
+    try {
+        const { user } = await authenticate(req, res, next)
+
+        const [raw] = await query('call userrequests(?,?,?,?,?,?)', [user, req.query.team ?? null, req.params.id, null, true, null])
+
+        if (Array.isArray(raw)) {
+            const results = Array.isArray(raw[0]) ? raw[0] : raw
+            const request = objectColumns({ ...results[0], dates: [], items: [], services: [] }, [...COLUMNS, 'items', 'services'] as const)
+            if (request) {
+                await Promise.all([
+                    getDates(request.req_id).then(dates => request.dates = dates),
+                    getItems(request.req_id).then(items => request.items = items),
+                    getServices(request.req_id).then(services => request.services = services)
+                ])
+            }
+            res.send({ request })
+            return
+        }
+        res.status(404).send({ error: 'Request not found' })
     } catch (e) {
         error(e, res)
     }

@@ -183,25 +183,30 @@ and (is_public is null or is_public = public)
 and (is_fav is null or is_fav = fav)
 and (is_role is null or is_role <= role) $/$/$
 
-create procedure userrequests(in u_id char(36), in t_id binary(16), in creator char(36), in managed boolean, in is_status int)
+create procedure userrequests(in u_id char(36), in t_id binary(10), in req_id binary(10), in creator char(36), in managed boolean, in is_status int)
 select r.*, u.name user, t.name team
 from request r, team t, user u
 where r.t_id = t.t_id and r.u_id = u.u_id
 and (t_id is null or r.t_id=t_id)
+and (req_id is null or r.req_id=req_id)
 and (creator is null or r.u_id=creator)
 and (is_status is null or r.status=is_status)
 and (((managed is null or managed=true) and exists(select * from manager m where m.u_id=u_id and m.t_id=r.t_id))
     or ((managed is null or managed=false) and r.u_id=u_id)) $/$/$
 
-create procedure userdeployments(in u_id char(36), in t_id binary(16), in req_id binary(16), in is_approved int)
-select d.*, t.name team, r.name request
-from deployment d, team t, request r
-where d.t_id = t.t_id and d.req_id = r.req_id
+create procedure userdeployments(in u_id char(36), in is_approved int)
+select d.dep_id, d.req_id, d.t_id, d.start, d.end, d.note, d.approver_id is not null approved, s.service, s.role, t.name team, r.name request
+from deployment d, service_dep s, team t, request r
+where d.t_id = t.t_id and d.req_id = r.req_id and s.dep_id = d.dep_id and s.u_id = u_id
+and (is_approved is null or (d.approver_id is not null)=is_approved) $/$/$
+
+create procedure teamdeployments(in t_id binary(10), in req_id binary(10), in is_approved int)
+select d.*, t.name team, r.name request, u.name creator
+from deployment d, team t, request r, user u
+where d.t_id = t.t_id and d.req_id = r.req_id and u.u_id = d.creator_id
 and (t_id is null or d.t_id=t_id)
 and (req_id is null or d.req_id=req_id)
-and (is_approved is null or (d.approver_id is not null)=is_approved)
-and (exists(select * from manager m where m.u_id=u_id and m.t_id=d.t_id)
-    or u_id in (select s.u_id from service_dep s where s.dep_id=d.dep_id)) $/$/$
+and (is_approved is null or (d.approver_id is not null)=is_approved) $/$/$
 
 create procedure updaterole(in u_id char(36))
 update user u set
@@ -435,7 +440,7 @@ insert into service_dep (dep_id, service, t_id, u_id, role) values
 ('7dQtxic61a', 'AV', 'aOS7wG5P02', '30b59dc0-02a5-441a-9afc-58fd4ba34b93', 'Lights'),
 ('7dQtxic61a', 'AV', 'aOS7wG5P02', '1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89', 'Sound'),
 ('oY7e_F0-g9', 'AV', 'aOS7wG5P02', 'd50b038d-2521-4300-948d-f3d4ca79cd63', 'Roamer'),
-('sXwn2OqK9S', 'AV', 'aOS7wG5P02', 'd50b038d-2521-4300-948d-f3d4ca79cd63', 'Slide');
+('sXwn2OqK9S', 'AV', 'aOS7wG5P02', '636c9342-e0ce-47e8-aa23-4fc2e0eceef1', 'Slide');
 
 insert into can_serve (u_id, service, t_id) values
 ('52c4eabf-89bb-45ac-aca7-29797afdde36', 'Photo', 'aOS7wG5P02'),

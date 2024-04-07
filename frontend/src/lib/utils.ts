@@ -31,3 +31,11 @@ export function media(query: string) {
 
     return [readonly(state), onMount] as const
 }
+
+export function roundDate(offset: number = 0) {
+    const date = new Date()
+    date.setMinutes(Math.ceil((date.getMinutes()+offset)/30)*30)
+    date.setSeconds(0)
+    date.setMilliseconds(0)
+    return date
+}

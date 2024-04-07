@@ -17,6 +17,7 @@
     import { tokenOrGoto } from '$lib/auth';
     import Error from '../../dashboard/[team]/+error.svelte';
     import { goto } from '$app/navigation';
+    import { roundDate } from '$lib/utils';
     
     export let data: PageData;
 
@@ -65,13 +66,6 @@
     }
     function clearDup(d: any) {
         dupDates = []
-    }
-    function roundDate(offset: number = 0) {
-        const date = new Date()
-        date.setMinutes(Math.ceil((date.getMinutes()+offset)/30)*30)
-        date.setSeconds(0)
-        date.setMilliseconds(0)
-        return date
     }
 
     $: validateDates(dates)

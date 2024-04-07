@@ -139,7 +139,7 @@ router.post('/team/create', bodyParser.json(), async (req, res, next) => {
     }
 })
 
-async function isManager(t_id: string, u_id: string) {
+export async function isManager(t_id: string, u_id: string) {
     try {
         const [result] = await query('select * from manager where t_id=? and u_id=?', [t_id, u_id])
         if (Array.isArray(result)) {

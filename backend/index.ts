@@ -3,6 +3,7 @@ import { bearerStrategy } from './auth'
 import { userRouter } from './routes/user'
 import { teamRouter } from './routes/team'
 import { requestRouter } from './routes/request'
+import { deploymentRouter } from './routes/deployment'
 
 import passport from 'passport'
 
@@ -25,6 +26,7 @@ passport.use(bearerStrategy);
 app.use(userRouter)
 app.use(teamRouter)
 app.use(requestRouter)
+app.use(deploymentRouter)
 
 app.get("/", (req, res) => {
     res.redirect(302, 'https://entang.ler.sg')
