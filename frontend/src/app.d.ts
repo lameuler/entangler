@@ -7,6 +7,7 @@ declare global {
 		// interface PageData {}
 		interface PageState {
 			selected?: number
+			popupOpen?: boolean
 		}
 		// interface Platform {}
 	}

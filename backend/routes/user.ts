@@ -6,6 +6,7 @@ import { objectColumns } from '../utils'
 import { validate } from 'email-validator'
 import bodyParser from 'body-parser'
 import { error } from '../api'
+import Fuse from 'fuse.js'
 
 const KEY = ['u_id'] as const
 const VALUES = ['name', 'email', 'is_member', 'is_manager'] as const
@@ -113,6 +114,27 @@ router.get('/user/:user', async (req, res, next) => {
 
         const user = req.params.user
         res.json({ user: await getUser(user) })
+    } catch (e) {
+        error(e, res)
+    }
+})
+
+router.get('/users', async (req, res, next) => {
+    try {
+        await authenticate(req, res, next)
+
+        const [raw] = await query('select u.u_id, u.name, u.email from user u where not exists (select * from member m where m.u_id=u.u_id and m.t_id=?)', [req.query.exclude ?? null])
+
+        if (Array.isArray(raw)) {
+            const users = raw.map(u => objectColumns(u, ['u_id', 'name', 'email'] as const)).filter(x=>x)
+    
+            const fuse = new Fuse(users, { keys: ['name', 'email'] })
+
+            const result = fuse.search(typeof req.query.q === 'string' ? req.query.q : '', { limit: 8 }).map(r => r.item)
+
+            res.send({ users: result })
+        }
+        res.status(404).send({ error: 'Failed to search users' })
     } catch (e) {
         error(e, res)
     }

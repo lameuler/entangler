@@ -2,34 +2,41 @@
     import { fly, fade } from 'svelte/transition';
     import { cubicOut, cubicIn, linear } from 'svelte/easing';
     import { createEventDispatcher } from 'svelte';
+    import { onNavigate } from '$app/navigation';
 
     export let title: string
     export let open: boolean = false
     export let close: 'self' | 'back' | 'none' = 'self'
 
-    let top = 0
-
     const dispatch = createEventDispatcher<{close: undefined}>()
 
     function onClose() {
-        if (close === 'self') open = false
-        else if (close === 'back') history.back()
+        open = false
+        onOpen(open)
+        if (close === 'back') {
+            history.back()
+        }
         dispatch('close')
     }
     function onOpen(o: boolean) {
         if (o) {
             if (!document.body.classList.contains('fixed')) {
-                top = -document.documentElement.scrollTop
+                const top = -document.documentElement.scrollTop
+                document.body.classList.add('fixed')
+                document.body.style.top = top+'px'
             }
-            document.body.classList.add('fixed')
-            document.body.style.top = top+'px'
         } else {
+            let top = parseInt(document.body.style.top)
+            top = isFinite(top) ? -top : 0
             document.body.classList.remove('fixed')
-            document.documentElement.scrollTop = -top
+            document.documentElement.scrollTop = top
         }
     }
+    onNavigate(nav => {
+        if (nav.from?.route.id === '/dashboard/[team]/(team)/(modal)/items') onOpen(false)
+    })
 
-    $: onOpen(open)
+    $: onOpen(open || close === 'none')
 </script>
 
 {#if open || close === 'none' }

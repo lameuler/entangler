@@ -7,17 +7,17 @@
     export let team: string
     export let member: { u_id: string, name: string, email: string, role: number }
 
-    let selected = 0
+    let selected = 1
 
-    const memberUpdate = (m: any) => selected = member.role - 1
+    const memberUpdate = (m: any) => selected = member.role
 
     $: memberUpdate(member)
 
     async function update(selected: number) {
-        if (selected != member.role-1) {
+        if (selected != member.role) {
             const path = '/team/'+team+'/members'
             const token = await tokenOrGoto()
-            await request(fetch, path, token, 'POST', { members: [{ u_id: member.u_id, role: selected + 1 }] })
+            await request(fetch, path, token, 'POST', { members: [{ u_id: member.u_id, role: selected }] })
             invalidate(invalidator(path))
         }
     }
@@ -37,7 +37,7 @@
         {#if member.role > 2}
             <span class="px-2 font-medium">Owner</span>
         {:else}
-            <Dropdown options={['Member', 'Manager', 'Remove']} bind:selected/>
+            <Dropdown options={['Remove', 'Member', 'Manager']} bind:selected/>
         {/if}
     </div>
 </div>

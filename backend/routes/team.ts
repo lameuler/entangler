@@ -364,11 +364,11 @@ router.post('/team/:id/members', bodyParser.json(), async (req, res, next) => {
                 console.log('mem', member)
                 if (member?.role === 1) { // Member
                     const [r1] = await query('insert into member (t_id, u_id) values (?, ?) on duplicate key update u_id=u_id', [t_id, member.u_id])
-                    console.log('mem1', r1)
                     const [r2] = await query('delete from manager where t_id=? and u_id=?', [t_id, member.u_id])
-                    console.log('mem2', r2)
                 } else if (member?.role === 2) { // Manager
                     await query('insert into manager (t_id, u_id) values (?, ?) on duplicate key update u_id=u_id', [t_id, member.u_id])
+                } else if (member?.role === 0) { // Remove
+                    await query('delete from member where t_id=? and u_id=?', [t_id, member.u_id])
                 }
             }
             res.sendStatus(200)
