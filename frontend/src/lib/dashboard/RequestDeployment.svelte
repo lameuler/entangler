@@ -7,23 +7,46 @@
     import TextInput from '$lib/input/TextInput.svelte';
     import { createEventDispatcher } from 'svelte';
     import DateRange from './DateRange.svelte';
-    import { invalidator } from '$lib/api';
+    import { invalidator, request } from '$lib/api';
+    import { tokenOrGoto } from '$lib/auth';
 
     export let deployment: any
 
+    let id = deployment.dep_id
     let start = new Date(deployment.start)
     let end = new Date(deployment.end)
     let deleting = false
+    let saving = false
 
     const dispatch = createEventDispatcher()
 
-    function create() {
-        // TODO await post request
-        goto(`/dashboard/${deployment.t_id}/${deployment.req_id}/${deployment.dep_id}`)
+    $: update(deployment)
+
+    function update(dep: any) {
+        if (dep.dep_id !== id) {
+            id = dep.dep_id
+            start = new Date(dep.start)
+            end = new Date(dep.end)
+            deleting = false
+        }
     }
-    function del() {
+
+    async function create() {
+        saving = true
+        deployment.start = start.toISOString()
+        deployment.end = end.toISOString()
+        const token = await tokenOrGoto()
+        const response = await request(fetch, '/request/'+deployment.req_id+'/deploy', token, 'POST', { deployment })
+        const result = await response.json()
+        if (result.dep_id) {
+            goto(`/dashboard/${deployment.t_id}/${deployment.req_id}/${deployment.dep_id}`)
+            dispatch('create', result.dep_id)
+        }
+    }
+    async function del() {
         console.log('deleting')
-        // TODO await delete request
+        const token = await tokenOrGoto()
+        await request(fetch, '/deployment/'+deployment.dep_id, token, 'DELETE')
         dispatch('delete', deployment.dep_id)
     }
 </script>
@@ -37,7 +60,7 @@
         <div class="px-2">
             <DateRangeInput bind:start={start} bind:end={end}/>
         </div>
-        <TextInput label="Note" bind:value={deployment.note}/>
+        <TextInput label="Note" bind:value={deployment.note} maxlength={150}/>
     {/if}
     {#if Array.isArray(deployment.items) && deployment.items.length > 0}
         <ul class="flex flex-wrap gap-1 mt-2">
@@ -78,7 +101,7 @@
         </div>
     {:else}
         <div class="flex gap-1 mt-2">
-            <Button>Create</Button>
+            <Button on:click={create}>Create</Button>
             <Button primary=false on:click={()=>dispatch('cancel')}>Cancel</Button>
         </div>
     {/if}
