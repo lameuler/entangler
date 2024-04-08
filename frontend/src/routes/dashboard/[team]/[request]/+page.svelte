@@ -9,7 +9,6 @@
     import RequestDeployment from '$lib/dashboard/RequestDeployment.svelte';
     import ErrorAlert from '$lib/display/ErrorAlert.svelte';
     import Button from '$lib/input/Button.svelte';
-    import LinkButton from '$lib/input/LinkButton.svelte';
     import { roundDate } from '$lib/utils';
     import type { PageData } from './$types';
     
@@ -21,6 +20,8 @@
     function create(deployment?: any) {
         creating = typeof deployment === 'object' ? {...deployment} : {}
         creating.dep_id = undefined
+        creating.req_id = data.req_id
+        creating.t_id = data.t_id
         creating.start ??= roundDate()
         creating.end ??= roundDate(60)
         creatorElement.scrollIntoView(true)

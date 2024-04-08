@@ -1,8 +1,9 @@
 <script lang="ts">
     import { fly, fade } from 'svelte/transition';
     import { cubicOut, cubicIn, linear } from 'svelte/easing';
-    import { createEventDispatcher } from 'svelte';
+    import { createEventDispatcher, onMount } from 'svelte';
     import { onNavigate } from '$app/navigation';
+    import { page } from '$app/stores';
 
     export let title: string
     export let open: boolean = false
@@ -33,7 +34,7 @@
         }
     }
     onNavigate(nav => {
-        if (nav.from?.route.id === '/dashboard/[team]/(team)/(modal)/items') onOpen(false)
+        if (nav.from?.route.id === $page.route.id) onOpen(false)
     })
 
     $: onOpen(open || close === 'none')
