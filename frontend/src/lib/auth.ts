@@ -127,6 +127,14 @@ export async function tokenOrNullRedirect() {
     }
 }
 
+export async function tokenOrNullGoto() {
+    try {
+        return await getToken()
+    } catch (err) {
+        goto('/logout?redirect=/login')
+    }
+}
+
 export async function tokenOrGoto(location='/', replaceState=true) {
     let token = null
     try {

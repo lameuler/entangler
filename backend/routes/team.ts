@@ -466,4 +466,26 @@ router.post('/team/:id/members', bodyParser.json(), async (req, res, next) => {
     }
 })
 
+router.post('/team/:id/favourite', bodyParser.json(), async (req, res, next) => {
+    try {
+        const { user } = await authenticate(req, res, next)
+
+        const favourite = typeof req.body.favourite === 'boolean' ? req.body.favourite : undefined
+
+        if (favourite !== undefined) {
+            if (favourite) {
+                await insert('favourite', ['t_id', 'u_id'], [{ t_id: req.params.id, u_id: user}], true)
+            } else {
+                await query('delete from favourite where t_id=? and u_id=?', [req.params.id, user])
+            }
+            return res.sendStatus(200)
+        }
+
+        res.status(400).send({ error: 'No favourite value provided' })
+
+    } catch (e) {
+        error(e, res)
+    }
+})
+
 export const teamRouter = router
