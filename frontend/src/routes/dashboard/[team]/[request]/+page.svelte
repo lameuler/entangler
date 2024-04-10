@@ -8,6 +8,7 @@
     import RequestCard from '$lib/dashboard/RequestCard.svelte';
     import RequestDeployment from '$lib/dashboard/RequestDeployment.svelte';
     import ErrorAlert from '$lib/display/ErrorAlert.svelte';
+    import PageError from '$lib/display/PageError.svelte';
     import Button from '$lib/input/Button.svelte';
     import { roundDate } from '$lib/utils';
     import type { PageData } from './$types';
@@ -75,8 +76,8 @@
         </section>
     </main>
     {:else}
-        <ErrorAlert error="Request not found"/>
+        <PageError message="Request not found"/>
     {/if}
 {:catch err}
-    <ErrorAlert error={err.message}/>
+    <PageError status={err?.cause?.status} message={err?.message}/>
 {/await}

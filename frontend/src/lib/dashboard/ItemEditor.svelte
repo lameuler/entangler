@@ -32,13 +32,13 @@
         nameError = ''
         if (value && !value.match(/^\s+$/)) {
             const token = await tokenOrGoto()
-            const response = await request(fetch, '/team/'+team+'/items/checkName', token, 'POST', { name: value })
-            if (response.status !== 200) {
+            try {
+                const result = await request(fetch, '/team/'+team+'/items/checkName', token, 'POST', { name: value })
+                if (!result.available) {
+                    nameError = 'Item with name '+value+' already exists'
+                }
+            } catch (e) {
                 nameError = 'Could not check name'
-            }
-            const result = await response.json()
-            if (!result.available) {
-                nameError = 'Item with name '+value+' already exists'
             }
         } else {
             nameError = 'Item name cannot be blank'

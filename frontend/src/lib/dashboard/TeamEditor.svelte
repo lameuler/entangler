@@ -38,8 +38,7 @@
             } else {
                 const token = await tokenOrGoto()
                 try {
-                    const req = request(fetch, '/teams/checkHandle', token, 'POST', { handle: value, t_id: team.t_id || undefined })
-                    const result = await (await req).json()
+                    const result = await request(fetch, '/teams/checkHandle', token, 'POST', { handle: value, t_id: team.t_id || undefined })
                     if (result.handle && typeof result.available === 'boolean') {
                         if (result.available) handleInfo = 'Your team will be found at entang.ler.sg/@'+result.handle
                         else {
@@ -64,25 +63,13 @@
                 const token = await tokenOrGoto()
                 if (team.t_id) { // update team
                     const path = '/team/'+team.t_id
-                    const response = await request(fetch, '/team/'+team.t_id, token, 'POST', team)
-                    const result = await (response).json()
-                    if (response.status === 200) {
-                        if (result.t_id === team.t_id) await invalidate(invalidator(path))
-                    } else {
-                        throw new Error(result.error)
-                    }
+                    const result = await request(fetch, '/team/'+team.t_id, token, 'POST', team)
+                    if (result.t_id === team.t_id) await invalidate(invalidator(path))
                 } else {
-                    const response = await request(fetch, '/team/create', token, 'POST', team)
-                    const result = await (response).json()
-                    console.log(result, response.status)
-                    if (response.status === 200) {
-                        if (result.t_id) await goto('/dashboard/'+result.t_id)
-                    } else {
-                        throw new Error(result.error)
-                    }
+                    const result = await request(fetch, '/team/create', token, 'POST', team)
+                    if (result.t_id) await goto('/dashboard/'+result.t_id)
                 }
             } catch (e) {
-                console.log(e)
                 error = (e as Error).message
             }
             saving = false

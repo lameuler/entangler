@@ -6,7 +6,7 @@ const API_HOST = dev ? 'http://localhost:6231' : 'https://quantum-entang.ler.sg'
 
 export type FetchFunction = (input: URL | RequestInfo, init?: RequestInit) => Promise<Response>
 
-export function request(fetch: FetchFunction, path: string, token?: string|null, method: string = 'GET', body?: any) {
+export async function request(fetch: FetchFunction, path: string, token?: string|null, method: string = 'GET', body?: any) {
     const options: any = {
         method,
         headers: {}
@@ -18,7 +18,17 @@ export function request(fetch: FetchFunction, path: string, token?: string|null,
         options.body = JSON.stringify(body)
         options.headers['Content-Type'] = 'application/json'
     }
-    return fetch(new URL(path, API_HOST), options)
+    const response = await fetch(new URL(path, API_HOST), options)
+    const type = response.headers.get('Content-Type')
+    let result = undefined
+    if (type?.includes('json')) {
+        result = await response.json()
+        if (response.status >= 300) throw new Error(result.error, { cause: { status: response.status } })
+    } else if (type?.includes('text')) {
+        result = await response.text()
+        if (response.status >= 300) throw new Error(result, { cause: { status: response.status } })
+    }
+    return result
 }
 
 export type User = {
@@ -63,16 +73,7 @@ export type Service = {
 }
 
 export async function getUser(fetch: FetchFunction, token: string): Promise<User | null> {
-    const response = await request(fetch, '/user/me', token)
-    const result = await (response).json()
-    // await wait(5000)
-    // console.log('layout:load:fetch', result)
-    if (response.status !== 200) {
-        throw {
-            ...result,
-            status: response.status
-        }
-    }
+    const result = await request(fetch, '/user/me', token)
     if (result.user && result.user.u_id && result.user.name && result.user.email) {
         return {
             u_id: result.user.u_id,
@@ -87,17 +88,7 @@ export async function getUser(fetch: FetchFunction, token: string): Promise<User
 }
 
 export async function updateUser(fetch: FetchFunction, token: string, update: { name: string, email: string }) {
-    const response = await request(fetch, '/user/me', token, 'POST', update)
-    // console.log('api:updateUser', response.status)
-    const result = await(response).json()
-    // console.log('api:updateUser', result)
-    // await wait(2000)
-    if (response.status !== 200) {
-        throw {
-            ...result,
-            status: response.status
-        }
-    }
+    await request(fetch, '/user/me', token, 'POST', update)
 }
 
 export async function getTeams(fetch: FetchFunction, token?: string|null, search?: string|null, filter?: string|null) {
@@ -115,16 +106,7 @@ export async function getTeams(fetch: FetchFunction, token?: string|null, search
         path += '?'+sp
     }
 
-    const response = await request(fetch, path, token)
-
-    const result = await response.json()
-
-    if (response.status !== 200) {
-        throw {
-            ...result,
-            status: response.status
-        }
-    }
+    const result = await request(fetch, path, token)
 
     if (result.teams) {
         return result
@@ -135,16 +117,7 @@ export async function getTeams(fetch: FetchFunction, token?: string|null, search
 export async function getTeam(fetch: FetchFunction, token?: string|null, team?: string|null) {
     if(!team) return null
 
-    const response = await request(fetch, '/team/'+encodeURI(team), token)
-
-    const result = await response.json()
-
-    if (response.status !== 200) {
-        throw {
-            ...result,
-            status: response.status
-        }
-    }
+    const result = await request(fetch, '/team/'+encodeURI(team), token)
 
     if (result.team) {
         return result.team
@@ -155,15 +128,7 @@ export async function getTeam(fetch: FetchFunction, token?: string|null, team?: 
 export async function getTeamElement(fetch: FetchFunction, element: 'items' | 'services' | 'members', token?: string|null, team?: string|null) {
     if(!team) return null
 
-    const response = await request(fetch, '/team/'+encodeURI(team)+'/'+element, token)
-    const results = await response.json()
-
-    if (response.status !== 200) {
-        throw {
-            ...results,
-            status: response.status
-        }
-    }
+    const results = await request(fetch, '/team/'+encodeURI(team)+'/'+element, token)
 
     if (results[element]) {
         return results[element]

@@ -70,23 +70,18 @@
                     if (data.redirect) {
                         goto(data.redirect)
                     }
-                } catch (err) {
-                    console.log('account:error', err)
+                } catch (e) {
                     error = 'Something went wrong!'
                     error_closable = false
-                    if (typeof err === 'object') {
-                        if (err && 'status' in err && typeof err.status === 'number') {
-                            if (err.status < 500) {
-                                if (err.status === 401) {
-                                    goto('/logout?redirect=/login', { replaceState: true })
-                                }
-                                error_closable = true
-                            }
+                    const err = e as Error
+                    const status = ((err as Error).cause as { status: number })?.status
+                    if (status < 500) {
+                        if (status === 401) {
+                            goto('/logout?redirect=/login', { replaceState: true })
                         }
-                        if (err && 'error' in err && typeof err.error === 'string') {
-                            error = err.error
-                        }
+                        error_closable = true
                     }
+                    error = err.message
                 }
                 saving = false
             }

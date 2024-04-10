@@ -192,21 +192,25 @@ and (req_id is null or r.req_id=req_id)
 and (creator is null or r.u_id=creator)
 and (is_status is null or r.status=is_status)
 and (((managed is null or managed=true) and exists(select * from manager m where m.u_id=u_id and m.t_id=r.t_id))
-    or ((managed is null or managed=false) and r.u_id=u_id)) $/$/$
+    or ((managed is null or managed=false) and r.u_id=u_id))
+order by r.date $/$/$
 
-create procedure userdeployments(in u_id char(36), in is_approved int)
+create procedure memberdeployments(in u_id char(36))
 select d.dep_id, d.req_id, d.t_id, d.start, d.end, d.note, d.approver_id is not null approved, s.service, s.role, t.name team, r.name request
 from deployment d, service_dep s, team t, request r
-where d.t_id = t.t_id and d.req_id = r.req_id and s.dep_id = d.dep_id and s.u_id = u_id
-and (is_approved is null or (d.approver_id is not null)=is_approved) $/$/$
+where d.t_id = t.t_id and d.req_id = r.req_id
+and s.dep_id = d.dep_id and s.u_id = u_id
+order by d.start $/$/$
 
-create procedure teamdeployments(in t_id binary(10), in req_id binary(10), in is_approved int)
+create procedure teamdeployments(in t_id binary(10), in req_id binary(10), in dep_id binary(10), in is_approved int)
 select d.*, t.name team, r.name request, u.name creator
 from deployment d, team t, request r, user u
 where d.t_id = t.t_id and d.req_id = r.req_id and u.u_id = d.creator_id
 and (t_id is null or d.t_id=t_id)
 and (req_id is null or d.req_id=req_id)
-and (is_approved is null or (d.approver_id is not null)=is_approved) $/$/$
+and (dep_id is null or d.dep_id=dep_id)
+and (is_approved is null or (d.approver_id is not null)=is_approved)
+order by d.start $/$/$
 
 create procedure updaterole(in u_id char(36))
 update user u set
@@ -214,7 +218,7 @@ is_member = u.u_id in (select m.u_id from member m),
 is_manager = u.u_id in (select m.u_id from manager m)
 where u_id is null or u.u_id = u_id $/$/$
 
-create procedure teammembers(in t_id char(10))
+create procedure teammembers(in t_id char(10), in exclude char(10))
 select u.u_id, u.name, u.email, 
     case
         when t.owner_id=u.u_id then 3
@@ -223,6 +227,7 @@ select u.u_id, u.name, u.email,
     end role
 from member m, user u, team t
 where m.u_id=u.u_id and t.t_id=m.t_id and t.t_id=t_id
+and (exclude is null or m.u_id not in (select u_id from service_dep s where s.dep_id=exclude))
 order by role desc $/$/$
 
 create trigger manager_insert before insert on manager

@@ -8,7 +8,7 @@ export const load = (async ({ url, fetch }) => {
     const filter = url.searchParams.get('filter')
     
     return {
-        deploymentsPromise: request(fetch, `/user/deployments?filter=created,${filter}&q=${q ?? ''}`, token).then(res => res.json()),
+        deploymentsPromise: request(fetch, `/user/deployments?filter=created,${filter}&q=${q ?? ''}`, token),
         q, filter
     };
 }) satisfies PageLoad;

@@ -20,7 +20,7 @@
     {:then result }
         {#if result.requests }
             <div class="text-sm px-4 text-slate-500">
-                View the requests submtited to teams you manage.
+                View the requests submitted to teams you manage.
             </div>
             <div class="flex flex-col gap-2">
                 {#each result.requests as request }

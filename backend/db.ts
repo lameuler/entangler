@@ -46,7 +46,7 @@ export function query(query: string, values?: any[]) {
     return pool.execute(query, values)
 }
 
-export function insert(table: string, columns: readonly string[], items: { [column: string]: any }[]) {
+export function insert(table: string, columns: readonly string[], items: { [column: string]: any }[], allowUpdate = false) {
     if (columns.length === 0 || items.length === 0) return [undefined, undefined]
     let query = 'insert into `'+table+'` (' + columns.map(c => '`'+c+'`').join(',') + ') values '
     const values: any[] = []
@@ -55,6 +55,10 @@ export function insert(table: string, columns: readonly string[], items: { [colu
         values.push(...row)
         return '('+util_query_row(row.length)+')'
     }).join(',')
+
+    if (allowUpdate) {
+        query += ' as new on duplicate key update '+columns.map(c => '`'+c+'` = new.`'+c+'`').join(',')
+    }
 
     console.log(query)
     return pool.execute(query, values)

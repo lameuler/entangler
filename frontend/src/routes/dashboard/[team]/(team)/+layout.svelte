@@ -9,29 +9,16 @@
     import { join } from '$lib/utils';
     import { crumbs } from '../../crumb';
     import type { LayoutData } from './$types';
+    import PageError from '$lib/display/PageError.svelte';
     
     export let data: LayoutData;
-    const path = $page.url.pathname
-
-    data.teamPromise.then(team => {
-        if (team.role < 1) { // redirect to public page if not manager or owner
-            goto('/'+team.t_id, { replaceState: true })
-        }
-        $crumbs = [{ name: team.name }]
-    }).catch(console.log)
-
-    data.membersPromise.then(members => {
-        console.log(members)
-    })
 </script>
 
 <main class="py-4">
     {#await data.teamPromise }
         <Spinner/>
     {:then team }
-        {#if !team }
-            <ErrorAlert error="null"/>
-        {:else if team.role > 0}
+        {#if team?.role > 0 }
             <section class="grid grid-rows-[auto-auto] sm:grid-cols-[1fr_auto] gap-4 z-0 relative" aria-hidden={$page.route.id !== '/dashboard/[team]/(team)'}>
                 <Card glow="false">
                     <div class="flex flex-wrap items-center">
@@ -61,13 +48,11 @@
             </section>
             <section class="grow p-4 self-center mb-4 min-h-48">
             </section>
+            <slot/>
+        {:else}
+            <PageError message="Team not found"/>
         {/if}
     {:catch err}
-        {#if err?.status === 404 }
-            <div>Team not found</div>
-        {:else}
-            <ErrorAlert/>
-        {/if}
+        <PageError status={err?.cause?.status} message={err?.message}/>
     {/await}
 </main>
-<slot/>

@@ -15,9 +15,9 @@
     import Checkbox from '$lib/input/Checkbox.svelte';
     import { request } from '$lib/api';
     import { tokenOrGoto } from '$lib/auth';
-    import Error from '../../dashboard/[team]/+error.svelte';
     import { goto } from '$app/navigation';
     import { roundDate } from '$lib/utils';
+    import PageError from '$lib/display/PageError.svelte';
     
     export let data: PageData;
 
@@ -83,17 +83,15 @@
                 services: Object.keys(serviceReqs).map(s => serviceReqs[s] ? { service: s } : undefined).filter(s=>s)
             }
             try {
-                const response = await request(fetch, '/team/'+data.t_id+'/request', token, 'POST', { request: req })
-                const result = await response.json()
-                if (response.status === 200) {
-                    await goto('/dashboard/requests')
-                } else if (response.status === 400) {
-                    nameError = result.error
+                await request(fetch, '/team/'+data.t_id+'/request', token, 'POST', { request: req })
+                await goto('/dashboard/requests')
+            } catch (e) {
+                const err = e as Error
+                if ((err.cause as any).status === 400) {
+                    nameError = err.message
                 } else {
-                    throw new Error(result.error)
+                    error = err.message
                 }
-            } catch (err) {
-                error = (err as any).message
             }
         }
         saving = false
@@ -207,10 +205,6 @@
             <ErrorAlert/>
         {/if}
     {:catch err}
-        {#if err?.status === 404 }
-            <div>Team not found</div>
-        {:else}
-            <ErrorAlert/>
-        {/if}
+        <PageError status={err?.cause?.status} message={err?.message}/>
     {/await}
 </main>

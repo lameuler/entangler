@@ -323,14 +323,12 @@ router.get('/team/:id/services', async (req, res, next) => {
 router.get('/team/:id/members', async (req, res, next) => {
     try {
         const { user } = await authenticate(req, res, next)
-        const isMan = await isManager(req.params.id, user)
-        console.log('isManager', isMan)
-        if(!isMan) {
-            res.status(401).json({ error: 'Unauthorized' })
-            return
+        
+        if(!(await isManager(req.params.id, user))) {
+            return res.status(401).json({ error: 'Unauthorized' })
         }
 
-        const [raw] = await query('call teammembers(?)', [req.params.id])
+        const [raw] = await query('call teammembers(?,?)', [req.params.id, req.query.exclude ?? null])
         
         if(Array.isArray(raw)) {
             const results = Array.isArray(raw[0]) ? raw[0] : raw

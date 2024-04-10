@@ -13,7 +13,7 @@
         let minute = ''
         let amPm = ''
         for (const char of s) {
-            console.log('char',char)
+            // console.log('char',char)
             hour: if (stage === 0) { // inputing hours
                 if (hour.length === 2) {
                     stage = 1
@@ -46,7 +46,7 @@
                     break min
                 }
                 const digit = Number(char)
-                console.log('m', digit, Number(minute + digit.toString()))
+                // console.log('m', digit, Number(minute + digit.toString()))
                 if (isFinite(digit)) {
                     sep = ':'
                     const result = Number(minute + digit.toString())

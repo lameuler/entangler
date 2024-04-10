@@ -16,7 +16,7 @@
             <title>Entangler</title>
         {/if}
     {:catch err}
-        {#if err?.status === 404 }
+        {#if err?.cause?.status === 404 }
             <title>Not found | Entangler</title>
         {:else}
             <title>Entangler</title>

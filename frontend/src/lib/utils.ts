@@ -39,3 +39,7 @@ export function roundDate(offset: number = 0) {
     date.setMilliseconds(0)
     return date
 }
+
+export function s(n: number) {
+    return n===1 ? '' : 's'
+}

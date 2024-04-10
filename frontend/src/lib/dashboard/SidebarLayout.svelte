@@ -19,7 +19,9 @@
 
     $: fuse = new Fuse(items, { keys: ['item', { name: 'description', weight: 0.4 }] })
 
-    $: selected = items[$page.state.selected ?? -1] ?? ($sm ? items[0] : undefined)
+    $: selected = $sm ? (selected ?? items[0]) : items[$page.state.selected ?? -1]
+
+    $: console.log('selected' in $page.state, $page.state)
 
     let search = ''
     $: view = search ? fuse?.search(search).map(res => res.item) : undefined

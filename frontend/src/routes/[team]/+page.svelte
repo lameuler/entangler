@@ -1,7 +1,9 @@
 <script lang="ts">
-    import Card from '$lib/Card.svelte';
+    import ActionLink from '$lib/ActionLink.svelte';
+import Card from '$lib/Card.svelte';
     import ErrorAlert from '$lib/display/ErrorAlert.svelte';
     import Markdown from '$lib/display/Markdown.svelte';
+    import PageError from '$lib/display/PageError.svelte';
     import PageSpinner from '$lib/PageSpinner.svelte';
     import type { PageData } from './$types';
     
@@ -38,13 +40,13 @@
                 {/if}
             </section>
         {:else}
-            <ErrorAlert error="null"/>
+            <PageError message={'Team not found'}>
+                <ActionLink href="/search">Search all teams</ActionLink>
+            </PageError>
         {/if}
     {:catch err}
-        {#if err?.status === 404 }
-            <div>Team not found</div>
-        {:else}
-            <ErrorAlert/>
-        {/if}
+        <PageError message={err?.message} status={err?.cause?.status}>
+            <ActionLink href="/search">Search all teams</ActionLink>
+        </PageError>
     {/await}
 </main>
