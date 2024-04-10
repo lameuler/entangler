@@ -27,7 +27,7 @@
             </div>
             <div class="grid gap-2">
                 {#each result.teams as team }
-                    <TeamCard {team} base="/dashboard/"/>
+                    <TeamCard {team} base={ team.role > 1 ? '/dashboard/' : '/'}/>
                 {:else}
                     <div class="col-span-full text-center p-8 text-slate-700 dark:text-slate-300">
                         No matching teams found.<br/>

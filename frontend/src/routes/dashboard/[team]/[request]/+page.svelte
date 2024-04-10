@@ -37,7 +37,7 @@
 {:then request}
     {#if request}
     <main class="flex flex-col gap-6 h-full pt-4">
-        <RequestCard {request} showExtra={false} showDate={true} editing={true} on:edit={({detail})=>console.log(detail)}/>
+        <RequestCard {request} showExtra={false} showDate={true} editing={true} on:edit={({detail})=>console.log(detail)} manager/>
         {#if Array.isArray(request.dates) && request.dates.length > 0}
         <Collapsible title="Dates" open={true} length={request.dates.length}>
             <section id="dates" class="flex flex-col gap-2 pt-2">

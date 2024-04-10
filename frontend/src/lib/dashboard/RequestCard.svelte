@@ -7,11 +7,13 @@
     import Dropdown from '$lib/input/Dropdown.svelte';
     import { tokenOrGoto } from '$lib/auth';
     import { request as apireq } from '$lib/api'
+    import ActionLink from '$lib/ActionLink.svelte';
 
     export let request: any
     export let showExtra = true
     export let showDate = false
     export let editing = false
+    export let manager = false
 
     const dispatch = createEventDispatcher()
 
@@ -36,13 +38,19 @@
 </script>
 
 <Card glow="false">
-    <a href="/dashboard/{request.t_id}" class="text-sm opacity-60 hover:underline hover:opacity-80">
+    <a href="{ manager ? '/dashboard/' : '/'}{request.t_id}" class="text-sm opacity-60 hover:underline hover:opacity-80">
         { request.team }
     </a>
     <div class="flex flex-wrap gap-x-2 items-center">
+        {#if manager}
         <a href="/dashboard/{request.t_id}/{request.req_id}" class="grow text-xl px-2 -mx-2 font-semibold hover:underline">
             { request.name }
         </a>
+        {:else}
+        <span class="grow text-xl px-2 -mx-2 font-semibold">
+            { request.name }
+        </span>
+        {/if}
         {#if editing}
         <div class="w-32 z-10">
             <Dropdown bind:selected={status} options={statusOptions}/>
@@ -62,7 +70,7 @@
         <p class="text-sm opacity-60">{ (new Date(request.date)).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'medium' }) }</p>
     {/if}
     {#if request.description}
-    <p class="text-justify text-slate-700 dark:text-slate-300 mt-1">
+    <p class="text-justify text-slate-700 dark:text-slate-300 mt-1 line-clamp-3 overflow-ellipsis">
         { request.description }
     </p>
     {/if}
@@ -103,11 +111,14 @@
     {#if request.deps && Array.isArray(request.deps) && request.deps.length > 0 && showExtra }
         <Collapsible title="Deployments" length={request.deps.length}>
             <ul>
-                {#each request.deps as { start, end, note } }
-                    <li class="text-slate-700 dark:text-slate-300 list-disc list-inside ps-1">
+                {#each request.deps as { dep_id, start, end, note } }
+                    <li class="text-slate-700 dark:text-slate-300 list-disc list-inside ps-1" class:py-0.5={manager}>
                         <DateRange {start} {end}/>
                         {#if note }
-                            ({note})
+                            <span class="pe-2">({note})</span>
+                        {/if}
+                        {#if manager}
+                            <ActionLink href="/dashboard/{request.t_id}/{request.req_id}/{dep_id}">Edit</ActionLink>
                         {/if}
                     </li>
                 {/each}

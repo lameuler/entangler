@@ -15,7 +15,7 @@
 {:then [request, deployment]}
 {#if request && deployment}
 <main class="flex flex-col gap-6 h-full pt-4">
-    <RequestCard {request}/>
+    <RequestCard {request} manager/>
     <h2 class="text-xl font-semibold">Deployment</h2>
     <RequestDeployment {deployment} edit/>
     <section id="items">

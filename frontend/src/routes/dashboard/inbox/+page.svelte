@@ -24,7 +24,7 @@
             </div>
             <div class="flex flex-col gap-2">
                 {#each result.requests as request }
-                    <RequestCard {request}/>
+                    <RequestCard {request} manager/>
                 {:else}
                     <div class="col-span-full text-center p-8 text-slate-700 dark:text-slate-300">
                         No requests found.

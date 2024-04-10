@@ -6,7 +6,6 @@
     let favourite = team.fav
 
     const roles = ['', 'Member', 'Manager', 'Owner']
-    const role_colours = ['indigo', 'violet', 'purple']
 </script>
 
 <a href="{base}{encodeURI(team.t_id)}" class="group p-4 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 hover:dark:bg-gray-800 border border-gray-300 dark:border-gray-800 rounded-2xl shadow-md">
