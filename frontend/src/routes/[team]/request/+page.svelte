@@ -41,7 +41,8 @@
     $: data.servicesPromise.then(initServices)
 
     function validateName() {
-        if (name.match(/^\s$/)) nameError = 'Name cannot be blank'
+        nameError = ''
+        if (name.match(/^\s*$/)) nameError = 'Name cannot be blank'
     }
     function visible(array: any[]) {
         return array.filter(a => a.visible)

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { goto, invalidate } from '$app/navigation';
+    import { goto } from '$app/navigation';
     import Card from '$lib/Card.svelte';
     import Button from '$lib/input/Button.svelte';
     import DateRangeInput from '$lib/input/DateRangeInput.svelte';
@@ -7,7 +7,7 @@
     import TextInput from '$lib/input/TextInput.svelte';
     import { createEventDispatcher } from 'svelte';
     import DateRange from './DateRange.svelte';
-    import { invalidator, request } from '$lib/api';
+    import { request } from '$lib/api';
     import { tokenOrGoto } from '$lib/auth';
 
     export let deployment: any
@@ -56,7 +56,6 @@
         await request(fetch, '/deployment/'+deployment.dep_id, token, 'POST', { deployment })
     }
     async function del() {
-        console.log('deleting')
         const token = await tokenOrGoto()
         await request(fetch, '/deployment/'+deployment.dep_id, token, 'DELETE')
         dispatch('delete', deployment.dep_id)

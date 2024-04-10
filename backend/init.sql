@@ -193,14 +193,14 @@ and (creator is null or r.u_id=creator)
 and (is_status is null or r.status=is_status)
 and (((managed is null or managed=true) and exists(select * from manager m where m.u_id=u_id and m.t_id=r.t_id))
     or ((managed is null or managed=false) and r.u_id=u_id))
-order by r.date $/$/$
+order by r.date desc $/$/$
 
 create procedure memberdeployments(in u_id char(36))
 select d.dep_id, d.req_id, d.t_id, d.start, d.end, d.note, d.approver_id is not null approved, s.service, s.role, t.name team, r.name request
 from deployment d, service_dep s, team t, request r
 where d.t_id = t.t_id and d.req_id = r.req_id
 and s.dep_id = d.dep_id and s.u_id = u_id
-order by d.start $/$/$
+order by d.start desc $/$/$
 
 create procedure teamdeployments(in t_id binary(10), in req_id binary(10), in dep_id binary(10), in is_approved int)
 select d.*, t.name team, r.name request, u.name creator
@@ -210,7 +210,7 @@ and (t_id is null or d.t_id=t_id)
 and (req_id is null or d.req_id=req_id)
 and (dep_id is null or d.dep_id=dep_id)
 and (is_approved is null or (d.approver_id is not null)=is_approved)
-order by d.start $/$/$
+order by d.start desc $/$/$
 
 create procedure updaterole(in u_id char(36))
 update user u set
