@@ -9,7 +9,7 @@
 
     export let add: string | null | undefined = undefined
     export let items: any[] = []
-    export let selected: any = null
+    export let selected: any = undefined
 
     // const dispatch = createEventDispatcher<{back: undefined, add:undefined}>()
 
@@ -19,7 +19,7 @@
 
     $: fuse = new Fuse(items, { keys: ['item', { name: 'description', weight: 0.4 }] })
 
-    $: selected = $sm ? (selected ?? items[0]) : items[$page.state.selected ?? -1]
+    $: selected = $sm ? (selected!==undefined ? selected : items[0]) : items[$page.state.selected ?? -1]
 
     $: console.log('selected' in $page.state, $page.state)
 

@@ -66,7 +66,7 @@ export type Item = {
 
 export type Service = {
     t_id: string,
-    item: string,
+    service: string,
     description: string,
     visible: boolean,
     category: string

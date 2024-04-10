@@ -320,6 +320,93 @@ router.get('/team/:id/services', async (req, res, next) => {
     }
 })
 
+router.post('/team/:id/services', bodyParser.json(), async (req, res, next) => {
+    try {
+        const { user } = await authenticate(req, res, next)
+        if (!(await isManager(req.params.id, user))) {
+            res.status(401).send({ error: 'Unauthorized' })
+        }
+        const service = objectColumns(req.body.service, ['service', 'description', 'visible'], false)
+        
+        if (service && service.service !== undefined) {
+            service.count = Math.min(Math.max(0, service.count), 999)
+            const [result] = await update('service', ['t_id', 'service'], ['description', 'visible'], { t_id: req.params.id, service: service.service }, service)
+            const affected = 'affectedRows' in result ? result.affectedRows : -1
+            if (affected === 1) {
+                res.sendStatus(200)
+            } else if (affected === 0) {
+                res.status(404).send({ error: 'Not found' })
+            } else {
+                res.status(500).send({ error: 'Failed to update service' })
+            }
+        }
+        res.status(404).send({ error: 'Not found' })
+        
+    } catch (e) {
+        error(e, res)
+    }
+})
+
+router.post('/team/:id/services/create', bodyParser.json(), async (req, res, next) => {
+    try {
+        const { user } = await authenticate(req, res, next)
+        if (!(await isManager(req.params.id, user))) {
+            res.status(401).send({ error: 'Unauthorized' })
+        }
+        if(typeof req.body.service === 'object') req.body.service.t_id = req.params.id
+        const service = objectColumns(req.body.service, ['t_id', 'service', 'description', 'visible'])
+        
+        if (service && service.service !== undefined) {
+            service.count = Math.min(Math.max(0, service.count), 999)
+            const [result] = await insert('service', ['t_id', 'service', 'description', 'visible'], [service])
+
+            const affected = result && 'affectedRows' in result ? result.affectedRows : -1
+            if (affected === 1) {
+                res.sendStatus(200)
+            } else if (affected === 0) {
+                res.status(404).send({ error: 'Not found' })
+            } else {
+                res.status(500).send({ error: 'Failed to insert service' })
+            }
+        }
+        res.status(400).send({ error: 'No service specified' })
+        
+    } catch (e) {
+        if ('code' in (e as any) && (e as any).code === 'ER_DUP_ENTRY') {
+            res.status(400).send({ error: 'Service already exists' })
+        }
+        error(e, res)
+    }
+})
+
+router.post('/team/:id/services/checkName', bodyParser.json(), async (req, res, next) => {
+    try {
+        const { user } = await authenticate(req, res, next)
+        if (!(await isManager(req.params.id, user))) {
+            res.status(401).send({ error: 'Unauthorized' })
+        }
+
+        const name = req.body.name
+        
+        if (typeof name === 'string') {
+            const [result] = await query('select true from service where t_id=? and service=?', [req.params.id, name])
+
+            if (Array.isArray(result)) {
+                if (result.length === 0) {
+                    res.send({ available: true })
+                } else {
+                    res.send({ available: false })
+                }
+            }
+            res.send({ available: null })
+        }
+        res.status(400).send({ error: 'No name specified' })
+        
+    } catch (e) {
+        error(e, res)
+    }
+})
+
 router.get('/team/:id/members', async (req, res, next) => {
     try {
         const { user } = await authenticate(req, res, next)

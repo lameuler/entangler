@@ -11,6 +11,7 @@
 {#await data.itemsPromise }
     <Spinner/>
 {:then items }
+    {#if Array.isArray(items)}
     <SidebarLayout {items} add={'Add item'}>
         <svelte:fragment slot="item" let:item>
             <div class="font-semibold">{item.item}</div>
@@ -18,4 +19,5 @@
         </svelte:fragment>
         <ItemEditor slot="content" let:selected item={selected} team={data.t_id}/>
     </SidebarLayout>
+    {/if}
 {/await}
