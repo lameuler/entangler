@@ -24,7 +24,7 @@
 
     $: update(selected)
 </script>
-<div class="flex flex-wrap justify-between items-center rounded-xl px-4 py-2 bg-gray-300/30 dark:bg-slate-700/30">
+<div class="flex flex-wrap justify-between items-center rounded-xl px-4 py-2 bg-gray-300/30 dark:bg-slate-700/30 z-[inherit]">
     <div>
         <div class="font-semibold">
             { member.name }
@@ -33,7 +33,7 @@
             { member.email }
         </span>
     </div>
-    <div class="w-32">
+    <div class="w-32 z-[inherit]">
         {#if member.role > 2}
             <span class="px-2 font-medium">Owner</span>
         {:else}

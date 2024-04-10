@@ -60,7 +60,7 @@
             </div>
         {/each}
         </div>
-        <div class="absolute bottom-4 right-4 z-10 shadow-lg">
+        <div class="absolute bottom-4 right-4 shadow-lg" style="z-index: {members.length}">
             <Button on:click={ ()=>open=true }>Add member</Button>
         </div>
     </div>

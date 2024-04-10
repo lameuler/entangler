@@ -29,7 +29,7 @@
         <div transition:slide>
             {#each options as option, i}
                 {#if i !== selected }
-                    <button type="button" class="px-2 py-1 w-full h-8 text-start hover:bg-slate-400/20 rounded-lg z-50" on:click={ () => select(i) }>
+                    <button type="button" class="px-2 py-1 w-full h-8 text-start hover:bg-slate-400/20 rounded-lg" on:click={ () => select(i) }>
                         { option }
                     </button>
                 {/if}
