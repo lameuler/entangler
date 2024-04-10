@@ -17,3 +17,7 @@
         <TeamEditor {team}/>
     </section>
 </main>
+
+<svelte:head>
+    <title>Create team | Entangler</title>
+</svelte:head>

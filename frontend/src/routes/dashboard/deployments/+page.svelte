@@ -38,3 +38,7 @@
         <ErrorAlert/>
     {/await}
 </SearchLayout>
+
+<svelte:head>
+    <title>Deployments | Entangler</title>
+</svelte:head>

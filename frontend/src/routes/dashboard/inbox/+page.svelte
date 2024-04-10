@@ -38,3 +38,7 @@
         <ErrorAlert/>
     {/await}
 </SearchLayout>
+
+<svelte:head>
+    <title>Inbox | Entangler</title>
+</svelte:head>

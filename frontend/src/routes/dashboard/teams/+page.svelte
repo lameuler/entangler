@@ -52,3 +52,7 @@
         </LinkButton>
     </div>
 </SearchLayout>
+
+<svelte:head>
+    <title>Teams | Entangler</title>
+</svelte:head>

@@ -42,3 +42,7 @@
         <ErrorAlert/>
     {/await}
 </SearchLayout>
+
+<svelte:head>
+    <title>Requests | Entangler</title>
+</svelte:head>
