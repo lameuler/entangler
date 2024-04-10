@@ -88,7 +88,7 @@
                 await goto('/dashboard/requests')
             } catch (e) {
                 const err = e as Error
-                if ((err.cause as any).status === 400) {
+                if ((err?.cause as any).status === 400) {
                     nameError = err.message
                 } else {
                     error = err.message

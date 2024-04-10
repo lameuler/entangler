@@ -74,7 +74,7 @@
                     error = 'Something went wrong!'
                     error_closable = false
                     const err = e as Error
-                    const status = ((err as Error).cause as { status: number })?.status
+                    const status = (err?.cause as { status: number })?.status
                     if (status < 500) {
                         if (status === 401) {
                             goto('/logout?redirect=/login', { replaceState: true })

@@ -27,7 +27,7 @@
         })
 
         data.user.catch(err => {
-            if (((err as Error).cause as { status: number })?.status === 401) {
+            if (err && ((err as Error).cause as { status: number })?.status === 401) {
                 goto('/logout?redirect=/login', { replaceState: true })
             }
         })

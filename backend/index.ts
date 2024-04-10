@@ -13,9 +13,13 @@ const ORIGINS = ['https://entang.ler.sg', 'http://localhost:6131', 'https://enta
 
 const app = express()
 
-app.options('*', cors())
+app.options('*', cors({
+    origin: ORIGINS,
+    allowedHeaders: ['Content-Type']
+}))
 app.use(cors({
-    origin: ORIGINS
+    origin: ORIGINS,
+    allowedHeaders: ['Content-Type']
 }))
 app.disable('etag');
 
