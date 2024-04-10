@@ -1,11 +1,12 @@
 import { Router } from 'express'
 import { authenticate } from '../auth'
-import { insert, query } from '../db'
+import { insert, query, update } from '../db'
 import { formatDate, objectColumns, parseFilters } from '../utils'
 import Fuse, { type IFuseOptions } from 'fuse.js'
 import { error } from '../api'
 import bodyParser from 'body-parser'
 import { nanoid } from 'nanoid'
+import { isManager } from './team'
 
 const router = Router()
 
@@ -204,6 +205,28 @@ router.post('/team/:id/request', bodyParser.json(), async (req, res, next) => {
         }
     } catch (e) {
         console.log(e)
+        error(e, res)
+    }
+})
+
+router.post('/request/:id', bodyParser.json(), async (req, res, next) => {
+    try {
+        const { user } = await authenticate(req, res, next)
+
+        const status = objectColumns(req.body.request, ['status'] as const)?.status
+        if (typeof status !== 'number') throw { status: 400, message: 'No status provided' }
+
+        const [raw] = await query('select t_id from request where req_id=?', [req.params.id])
+
+        if (Array.isArray(raw)) {
+            const t_id = objectColumns(raw[0], ['t_id'])?.t_id
+            if (!t_id || !(await isManager(t_id, user))) throw { status: 401, message: 'Unauthorized' }
+
+            await update('request', ['req_id'], ['status'], { req_id: req.params.id }, { status })
+            return res.sendStatus(200)
+        }
+        throw { status: 404, message: 'Request not found' }
+    } catch (e) {
         error(e, res)
     }
 })

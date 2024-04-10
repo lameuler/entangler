@@ -5,6 +5,8 @@
     import Collapsible from './Collapsible.svelte';
     import { createEventDispatcher } from 'svelte';
     import Dropdown from '$lib/input/Dropdown.svelte';
+    import { tokenOrGoto } from '$lib/auth';
+    import { request as apireq } from '$lib/api'
 
     export let request: any
     export let showExtra = true
@@ -23,8 +25,12 @@
     }
     $: onUpdate(request)
 
-    function onEdit(status: number) {
-        if (status !== request.status) dispatch('edit', status)
+    async function onEdit(status: number) {
+        if (status !== request.status) {
+            dispatch('edit', status)
+            const token = await tokenOrGoto()
+            await apireq(fetch, '/request/'+request.req_id, token, 'POST', { request: { status } })
+        }
     }
     $: onEdit(status)
 </script>
@@ -48,8 +54,7 @@
         {/if}
     </div>
     <p class="text-sm opacity-60 mt-1">
-        {request.user},
-        {#if request.committee}
+        {request.user}{#if request.committee},
             {request.committee}
         {/if}
     </p>
