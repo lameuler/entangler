@@ -48,7 +48,7 @@
         class="max-w-2xl w-full grow-[2] h-96 max-h-full flex flex-col bg-slate-50 dark:bg-slate-900 z-10 rounded-t-2xl shadow-2xl">
             <div class="px-4 pt-3 pb-2 flex justify-between border-b border-slate-400 dark:border-slate-600">
                 <span class="font-semibold">{title}</span>
-                <button on:click={ onClose }>Done</button>
+                <button class="text-violet-600 dark:text-violet-400" on:click={ onClose }>Done</button>
             </div>
             <div class="grow relative bg-inherit"><slot/></div>
         </main>
