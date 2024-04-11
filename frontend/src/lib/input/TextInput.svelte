@@ -65,7 +65,7 @@
             style="text-align: inherit"
             />
             {#if maxlength !== undefined && maxlength !== null && maxlength >= 0}
-            <span class="pr-2 opacity-50">{Math.floor(maxlength - value.length)}</span>
+            <span class="pr-2 opacity-50">{Math.floor(maxlength - (value?.length ?? 0))}</span>
         {/if}
         {#if type === 'password'}
             <button class="pr-3" on:click={() => override = !override}>

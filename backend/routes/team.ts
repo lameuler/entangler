@@ -77,8 +77,10 @@ async function checkHandle(value: any, t_id?: string) {
         } else {
             return { handle, available: null}
         }
-    } else {
+    } else if (handle) {
         throw { status: 400, message: 'Handle must be between 3 and 20 characters long and can only contain letters, numbers, underscores, or periods.' }
+    } else {
+        return { handle: null, available: null }
     }
 }
 
@@ -113,7 +115,7 @@ async function validateTeam(team: any) {
         } else data.description = undefined
 
         if (typeof data.details === 'string' || data.details === null) {
-            data.details = data.details.slice(0,1000)
+            data.details = data.details?.slice(0,1000)
         } else data.details = undefined
 
         if (!(typeof data.public === 'boolean' || data.public === 0 || data.public === 1)) {
@@ -133,7 +135,7 @@ router.post('/team/create', bodyParser.json(), async (req, res, next) => {
         const team = {...await validateTeam(body), t_id: nanoid(10), owner_id: user}
         const columns = Object.entries(team).filter(([key, val]) => val !== undefined).map(([key]) => key)
         await insert('team', columns, [team])
-        res.status(200).json({ t_id: body.t_id })
+        res.status(200).json({ t_id: team.t_id })
     } catch (e) {
         error(e, res)
     }

@@ -68,7 +68,7 @@ router.get('/user/deployments', async (req, res, next) => {
 
         if(Array.isArray(raw)) {
             const results = Array.isArray(raw[0]) ? raw[0] : raw
-            let deployments = results.map(r => objectColumns(r, ['dep_id', 'req_id', 'request', 't_id', 'team', 'start', 'end', 'note', 'service', 'role', 'approved']))
+            let deployments = results.map(r => objectColumns(r, ['dep_id', 'req_id', 'request', 't_id', 'team', 'start', 'end', 'note', 'service', 'role']))
 
             if (search) {
                 const fuse = new Fuse(deployments, fuseOptions)

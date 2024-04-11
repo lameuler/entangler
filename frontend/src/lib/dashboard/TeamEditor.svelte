@@ -85,7 +85,7 @@
 {/if}
 <TextInput label="Team Name" placeholder="Team Name" bind:value={team.name} maxlength={50} validator={validateName} bind:error={nameError} disabled={saving}/>
 <TextInput label="Handle" placeholder="handle" bind:value={team.handle} maxlength={20} spellcheck="false"
-    validator={validateHandle} bind:error={handleError} disabled={saving}/>
+    validator={validateHandle} bind:error={handleError} bind:info={handleInfo} disabled={saving}/>
 <OptionsInput label="Visibility" name="visibility" options={['Private', 'Public']} bind:selected={team.public} disabled={saving}/>
 <TextArea label="Description" placeholder="Description" maxlength={150} bind:value={team.description} compact disabled={saving}/>
 <TextArea label="Details" placeholder="Details" maxlength={1000} bind:value={team.details} disabled={saving}>

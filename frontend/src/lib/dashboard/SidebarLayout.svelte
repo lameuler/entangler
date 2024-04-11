@@ -5,13 +5,11 @@
     import Search from '$lib/input/Search.svelte';
     import { media } from '$lib/utils';
     import Fuse from 'fuse.js';
-    import { createEventDispatcher, onMount } from 'svelte';
+    import { onMount } from 'svelte';
 
     export let add: string | null | undefined = undefined
     export let items: any[] = []
     export let selected: any = undefined
-
-    // const dispatch = createEventDispatcher<{back: undefined, add:undefined}>()
 
     const [sm, mount] = media('(min-width: 640px)')
 
@@ -19,9 +17,7 @@
 
     $: fuse = new Fuse(items, { keys: ['item', { name: 'description', weight: 0.4 }] })
 
-    $: selected = $sm ? (selected!==undefined ? selected : items[0]) : items[$page.state.selected ?? -1]
-
-    $: console.log('selected' in $page.state, $page.state)
+    $: selected = $sm ? (selected!==undefined ? selected : items[0]) : ($page.state.selected === -1 ? null : items[$page.state.selected ?? -1])
 
     let search = ''
     $: view = search ? fuse?.search(search).map(res => res.item) : undefined
@@ -57,7 +53,7 @@
         </div>
         {:else if add}
         <div class="shrink-0 p-1 mb-2">
-            <Button full on:click={() => selected=null}>
+            <Button full on:click={() => open(-1)}>
                 <svg viewBox="0 0 24 24" class="icon w-5 h-5">
                     <path d="M12 5l0 14" /><path d="M5 12l14 0" />
                 </svg>
