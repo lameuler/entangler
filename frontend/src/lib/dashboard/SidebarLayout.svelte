@@ -23,7 +23,7 @@
     $: view = search ? fuse?.search(search).map(res => res.item) : undefined
 
     function open(i: any) {
-        if (!$sm) pushState('', { selected: items.indexOf(i) })
+        if (!$sm) pushState('', { selected: i ? items.indexOf(i) : -1 })
         else selected = i
     }
     function close() {
@@ -53,7 +53,7 @@
         </div>
         {:else if add}
         <div class="shrink-0 p-1 mb-2">
-            <Button full on:click={() => open(-1)}>
+            <Button full on:click={() => open(null)}>
                 <svg viewBox="0 0 24 24" class="icon w-5 h-5">
                     <path d="M12 5l0 14" /><path d="M5 12l14 0" />
                 </svg>
