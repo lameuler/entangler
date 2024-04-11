@@ -10,6 +10,7 @@
     import { crumbs } from '../../crumb';
     import type { LayoutData } from './$types';
     import PageError from '$lib/display/PageError.svelte';
+    import RequestCard from '$lib/dashboard/RequestCard.svelte';
     
     export let data: LayoutData;
 </script>
@@ -19,7 +20,7 @@
         <Spinner/>
     {:then team }
         {#if team?.role > 0 }
-            <section class="grid grid-rows-[auto-auto] sm:grid-cols-[1fr_auto] gap-4 z-0 relative" aria-hidden={$page.route.id !== '/dashboard/[team]/(team)'}>
+            <section class="grid grid-rows-[auto-auto] sm:grid-cols-[1fr_auto] gap-4 z-10 relative" aria-hidden={$page.route.id !== '/dashboard/[team]/(team)'}>
                 <Card glow="false">
                     <div class="flex flex-wrap items-center">
                         <h1 class="text-2xl font-semibold p-1 grow">{ team.name }</h1>
@@ -46,7 +47,26 @@
                     </div>
                 </Card>
             </section>
-            <section class="grow p-4 self-center mb-4 min-h-48">
+            <section class="py-4 flex flex-col gap-2 mt-4">
+                <div class="flex justify-between px-2">
+                    <h2 class="text-xl font-semibold">Pending Requests</h2>
+                    <ActionLink href="/dashboard/{team.t_id}/requests">View all requests</ActionLink>
+                </div>
+                {#await data.requestsPromise}
+                    <Spinner/>
+                {:then result}
+                    {#if Array.isArray(result.requests)}
+                        {#each result.requests.slice(0,4) as request}
+                            <RequestCard {request} manager/>
+                        {:else}
+                            <p class="text-slate-700 dark:text-slate-300 mt-2">No pending requests</p>
+                        {/each}
+                    {:else}
+                        <ErrorAlert/>
+                    {/if}
+                {:catch}
+                    <ErrorAlert/>
+                {/await}
             </section>
             <slot/>
         {:else}

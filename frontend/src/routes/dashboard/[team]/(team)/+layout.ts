@@ -1,6 +1,5 @@
-import { getTeam, getTeamElement } from '$lib/api'
+import { getTeamElement, request } from '$lib/api'
 import { tokenOrRedirect } from '$lib/auth'
-import { error } from '@sveltejs/kit'
 import type { LayoutLoad } from './$types';
 
 export const load = (async ({ params, url, fetch }) => {
@@ -9,7 +8,8 @@ export const load = (async ({ params, url, fetch }) => {
         return {
             itemsPromise: getTeamElement(fetch, 'items', token, params.team),
             servicesPromise: getTeamElement(fetch, 'services', token, params.team),
-            membersPromise: getTeamElement(fetch, 'members', token, params.team)
+            membersPromise: getTeamElement(fetch, 'members', token, params.team),
+            requestsPromise: request(fetch, `/requests?filter=managed,pending&team=${params.team}`, token)
         };
     }
 }) satisfies LayoutLoad;
