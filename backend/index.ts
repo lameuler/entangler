@@ -9,17 +9,18 @@ import passport from 'passport'
 
 import cors from 'cors'
 import { API_PORT } from './config'
-const ORIGINS = ['https://entang.ler.sg', 'http://localhost:6131', 'https://entangler.pages.dev']
+const ORIGINS = '*' //['https://entang.ler.sg', 'http://localhost:6131', 'https://entangler.pages.dev']
+const HEADERS = ['Content-Type', 'Authorization']
 
 const app = express()
 
 app.options('*', cors({
     origin: ORIGINS,
-    allowedHeaders: ['Content-Type']
+    allowedHeaders: HEADERS
 }))
 app.use(cors({
     origin: ORIGINS,
-    allowedHeaders: ['Content-Type']
+    allowedHeaders: HEADERS
 }))
 app.disable('etag');
 

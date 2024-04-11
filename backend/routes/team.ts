@@ -419,7 +419,13 @@ router.get('/team/:id/members', async (req, res, next) => {
         
         if(Array.isArray(raw)) {
             const results = Array.isArray(raw[0]) ? raw[0] : raw
-            const members = results.map(r => objectColumns(r, ['u_id', 'name', 'email', 'role'])).filter(x=>x)
+            let members = results.map(r => objectColumns(r, ['u_id', 'name', 'email', 'role'])).filter(x=>x)
+
+            if(typeof req.query.q === 'string') {
+                const search = decodeURI(req.query.q.replaceAll('+', ' ').trim())
+                const fuse = new Fuse(members, { keys: ['name', 'email'] })
+                members = fuse.search(search).map(result => result.item)
+            }
             
             res.json({ members })
             return
