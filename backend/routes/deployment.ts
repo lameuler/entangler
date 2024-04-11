@@ -10,7 +10,7 @@ import { nanoid } from 'nanoid'
 
 const router = Router()
 
-const COLUMNS = ['dep_id','req_id','request','t_id','team','creator_id','create_date','start','end','note']
+const COLUMNS = ['dep_id','req_id','request','t_id','team','creator_id','create_date','approved','start','end','note']
 
 const fuseOptions: IFuseOptions<any> = {
     keys: [{ name: 'request', weight: 2 }, 'note']
@@ -243,7 +243,7 @@ router.post('/deployment/:id', bodyParser.json(), async (req, res, next) => {
 
         if(!(await isManager(deployment.t_id, user))) throw { status: 401, message: 'Unauthorized' }
 
-        const post = objectColumns(req.body.deployment, ['start', 'end', 'note', 'items', 'services'], false)
+        const post = objectColumns(req.body.deployment, ['start', 'end', 'note', 'approved', 'items', 'services'], false)
 
         if (post) {
             if (post.start) {
@@ -254,9 +254,17 @@ router.post('/deployment/:id', bodyParser.json(), async (req, res, next) => {
                 const end = new Date(post.end)
                 post.end = isFinite(end.getTime()) ? formatDate(end) : null
             }
-            if (post.start || post.end || post.note)
+            if (post.start || post.end || post.note) {
                 await update('deployment', ['dep_id'], ['start', 'end', 'note'], { dep_id: req.params.id }, post)
-
+            }
+            if (typeof post.approved === 'boolean') {
+                const appr = post.approved ? {
+                    approver_id: user, approve_date: formatDate(new Date())
+                } : {
+                    approver_id: null, approve_date: null
+                }
+                await update('deployment', ['dep_id'], ['approver_id', 'approve_date'], { dep_id: req.params.id }, appr)
+            }
             if (Array.isArray(post.items)) {
                 await Promise.all(post.items.map(i => {
                     const item = objectColumns(i, ['item', 't_id', 'count'])

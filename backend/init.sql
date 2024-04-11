@@ -196,15 +196,16 @@ and (((managed is null or managed=true) and exists(select * from manager m where
 order by r.date desc $/$/$
 
 create procedure memberdeployments(in u_id char(36), in is_past boolean)
-select d.dep_id, d.req_id, d.t_id, d.start, d.end, d.note, d.approver_id is not null approved, s.service, s.role, t.name team, r.name request
+select d.dep_id, d.req_id, d.t_id, d.start, d.end, d.note, s.service, s.role, t.name team, r.name request
 from deployment d, service_dep s, team t, request r
 where d.t_id = t.t_id and d.req_id = r.req_id
 and s.dep_id = d.dep_id and s.u_id = u_id
 and (is_past is null or (d.end < now())=is_past)
+and d.approver_id is not null
 order by d.start desc $/$/$
 
 create procedure teamdeployments(in t_id binary(10), in req_id binary(10), in dep_id binary(10), in is_approved int)
-select d.*, t.name team, r.name request, u.name creator
+select d.*, d.approver_id is not null approved, t.name team, r.name request, u.name creator
 from deployment d, team t, request r, user u
 where d.t_id = t.t_id and d.req_id = r.req_id and u.u_id = d.creator_id
 and (t_id is null or d.t_id=t_id)

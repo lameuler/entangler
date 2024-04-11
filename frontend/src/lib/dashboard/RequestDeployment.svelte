@@ -60,6 +60,11 @@
         await request(fetch, '/deployment/'+deployment.dep_id, token, 'DELETE')
         dispatch('delete', deployment.dep_id)
     }
+    async function approve() {
+        const token = await tokenOrGoto()
+        deployment.approved = !deployment.approved
+        await request(fetch, '/deployment/'+deployment.dep_id, token, 'POST', { deployment: { approved: deployment.approved }})
+    }
 </script>
 <Card glow="false">
     {#if deployment.dep_id && !edit }
@@ -113,7 +118,13 @@
                 <Button primary=false on:click={()=>deleting=false}>Cancel</Button>
                 <Button danger=true on:click={del}>Delete</Button>
             {:else}
-                <Button primary={!deployment.approved}>Approve</Button>
+                <Button on:click={approve} primary={!deployment.approved}>
+                    {#if deployment.approved}
+                        Unapprove
+                    {:else}
+                        Approve
+                    {/if}
+                </Button>
                 <button class="p-1" on:click={()=>dispatch('copy', deployment.dep_id)}>
                     <svg viewBox="0 0 24 24" class="icon h-6 w-6"><path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" /><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" /></svg>
                 </button>

@@ -49,11 +49,11 @@ async function getServices(req_id: string) {
     return []
 }
 
-async function getDeployments(req_id: string) {
+async function getDeployments(req_id: string, is_manager = false) {
     try {
-        const [raw_deps] = await query('select * from deployment where req_id=? order by start', [req_id])
+        const [raw_deps] = await query('select * from deployment where req_id=? and (approver_id is not null or ?) order by start', [req_id, is_manager])
         if (Array.isArray(raw_deps)) {
-            const deps = raw_deps.map(d => objectColumns(d, ['dep_id', 'start', 'end', 'approver_id', 'approve_date', 'note']))
+            const deps = raw_deps.map(d => objectColumns(d, ['dep_id', 'start', 'end', 'note']))
             return deps
         }
     } catch (e) {}
@@ -90,7 +90,7 @@ router.get('/requests', async (req, res, next) => {
                         getDates(request.req_id).then(dates => request.dates = dates),
                         getItems(request.req_id).then(items => request.items = items),
                         getServices(request.req_id).then(services => request.services = services),
-                        getDeployments(request.req_id).then(deps => request.deps = deps)
+                        getDeployments(request.req_id, result.is_managed === 1).then(deps => request.deps = deps)
                     ])
                 }
             }
