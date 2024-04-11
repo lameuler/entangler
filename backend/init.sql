@@ -303,154 +303,162 @@ where t_id=old.t_id $/$/$
 
 delimiter ;
 
+insert into `user` (`u_id`,`name`,`email`) values
+("1f95f196-fa89-400a-982b-17d01b7fb554", "nobody", "nobody@nushigh.edu.sg"),
+("1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89", "YONG ZHE DIAN", "h210170@nushigh.edu.sg"),
+("30b59dc0-02a5-441a-9afc-58fd4ba34b93", "CHIN QIAO QI", "h210036@nushigh.edu.sg"),
+("47f817c4-4a33-4f8b-abd5-0f23199dbef1", "Chemistry Department", "chem@nushigh.edu.sg"),
+("52c4eabf-89bb-45ac-aca7-29797afdde36", "ANG E HERNG AYDEN", "h1910009@nushigh.edu.sg"),
+("636c9342-e0ce-47e8-aa23-4fc2e0eceef1", "LAM EU LER", "h1910074@nushigh.edu.sg"),
+("79be1b8f-9b5c-4f78-9aea-85a2bde41e1f", "CHIA SHENGJUN RYAN", "h1910018@nushigh.edu.sg"),
+("8f2512c4-c35f-4386-998b-e582f09a9dc3", "Media Club", "media@nushigh.edu.sg"),
+("94f4ec08-49a0-4bf0-8657-5bcf939d61b5", "HUANG YUEBIN", "h1910045@nushigh.edu.sg"),
+("a03f51f2-54cf-4803-97af-0b5986fc7ae5", "NUS High Orientation", "orientation@nushigh.edu.sg"),
+("d50b038d-2521-4300-948d-f3d4ca79cd63", "NUS High School IT", "nhsit@nushigh.edu.sg"),
+("eb00f5ec-78a4-4630-b71c-29185919ef5a", "Leonhard Euler", "euler@u.nus.edu"),
+("f2519a85-3e2a-4f2a-aac4-4305b8a84b6b", "PE Dept", "pe@nushigh.edu.sg"),
+("f6e3fbb6-8199-43a9-85b7-41d0744266c1", "somebody", "somebody@nushigh.edu.sg");
 
-insert into user (u_id, name, email) values
-('636c9342-e0ce-47e8-aa23-4fc2e0eceef1', 'LAM EU LER', 'h1910074@nushigh.edu.sg'), -- very not real people
-('79be1b8f-9b5c-4f78-9aea-85a2bde41e1f', 'CHIA SHENGJUN RYAN', 'h1910018@nushigh.edu.sg'),
-('30b59dc0-02a5-441a-9afc-58fd4ba34b93', 'CHIN QIAO QI', 'h210036@nushigh.edu.sg'),
-('1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89', 'YONG ZHE DIAN', 'h210170@nushigh.edu.sg'),
-('52c4eabf-89bb-45ac-aca7-29797afdde36', 'ANG E HERNG AYDEN', 'h1910009@nushigh.edu.sg'),
-('94f4ec08-49a0-4bf0-8657-5bcf939d61b5', 'HUANG YUEBIN', 'h1910045@nushigh.edu.sg'),
-('eb00f5ec-78a4-4630-b71c-29185919ef5a', 'Leonhard Euler', 'euler@u.nus.edu'),
-('8f2512c4-c35f-4386-998b-e582f09a9dc3', 'Media Club', 'media@nushigh.edu.sg'),
-('d50b038d-2521-4300-948d-f3d4ca79cd63', 'NUS High School IT', 'nhsit@nushigh.edu.sg'),
-('1f95f196-fa89-400a-982b-17d01b7fb554', 'nobody', 'nobody@nushigh.edu.sg'),
-('f6e3fbb6-8199-43a9-85b7-41d0744266c1', 'somebody', 'somebody@nushigh.edu.sg'),
-('47f817c4-4a33-4f8b-abd5-0f23199dbef1', 'Chemistry Department', 'chem@nushigh.edu.sg'),
-('a03f51f2-54cf-4803-97af-0b5986fc7ae5', 'NUS High Orientation', 'orientation@nushigh.edu.sg'),
-('f2519a85-3e2a-4f2a-aac4-4305b8a84b6b', 'PE Dept', 'pe@nushigh.edu.sg');
+insert into `team` (`t_id`,`owner_id`,`name`,`public`,`description`,`details`,`handle`) values
+("4C_m6q4dXN", "f2519a85-3e2a-4f2a-aac4-4305b8a84b6b", "PE Dept Equipment Loan", 1, "Request for PE equipment for games and exercise", null, "pe_loan"),
+("MGwSb5f0xj", "a03f51f2-54cf-4803-97af-0b5986fc7ae5", "OT'24 Logs", 0, null, "Submit all logs requests **1 week** before the first **dry run**.
 
-insert into team (t_id, owner_id, name, public, description, handle) values
-('aOS7wG5P02', '8f2512c4-c35f-4386-998b-e582f09a9dc3', 'Media Club Requisition Form', true, 'Service requisition and equipment loan from Media Club', 'mediareq'),
-('lfJtyCZOjp', '47f817c4-4a33-4f8b-abd5-0f23199dbef1', 'Chemistry Lab Requisition', true, 'Chemistry Lab equipment requisition for lab sessions', 'chemlab'),
-('4C_m6q4dXN', 'f2519a85-3e2a-4f2a-aac4-4305b8a84b6b', 'PE Dept Equipment Loan', true, 'Request for PE equipment for games and exercise', 'pe_loan'),
-('MGwSb5f0xj', 'a03f51f2-54cf-4803-97af-0b5986fc7ae5', "OT'24 Logs", false, null, 'o24logs'),
-('ikb-ZWQoT6', 'eb00f5ec-78a4-4630-b71c-29185919ef5a', 'Math tutoring by famous mathematician', false, 'Learn from the best', null);
+Contact your comm IC for more details.", "o24logs"),
+("aOS7wG5P02", "8f2512c4-c35f-4386-998b-e582f09a9dc3", "Media Club Requisition Form", 1, "Service requisition and equipment loan from Media Club", "https://tinyurl.com/NUSHMediaRequisitionGuidelines
 
-update team set details='https://tinyurl.com/NUSHMediaRequisitionGuidelines\n\n* Please submit this form at **least 2** weeks in advance.\n\n* All changes with regards to the event should be communicated to Media Club through WhatsApp or Email.\n\n* Please note that not all requests can/will be fulfilled, and any decisions made by Media Club or IT staff are final.\n\n* Photos and Videos will only be available **2 weeks** after the event has ended, not inclusive of common test or exam weeks.'
-where t_id='aOS7wG5P02';
+* Please submit this form at **least 2** weeks in advance.
 
-insert into favourite (u_id, t_id) values
-('636c9342-e0ce-47e8-aa23-4fc2e0eceef1', 'aOS7wG5P02'),
-('636c9342-e0ce-47e8-aa23-4fc2e0eceef1', 'MGwSb5f0xj'),
-('636c9342-e0ce-47e8-aa23-4fc2e0eceef1', 'lfJtyCZOjp'),
-('94f4ec08-49a0-4bf0-8657-5bcf939d61b5', 'aOS7wG5P02'),
-('1f95f196-fa89-400a-982b-17d01b7fb554', 'aOS7wG5P02'),
-('f6e3fbb6-8199-43a9-85b7-41d0744266c1', 'MGwSb5f0xj');
+* All changes with regards to the event should be communicated to Media Club through WhatsApp or Email.
 
-insert into manager (u_id, t_id) values
-('79be1b8f-9b5c-4f78-9aea-85a2bde41e1f', 'aOS7wG5P02'),
-('52c4eabf-89bb-45ac-aca7-29797afdde36', 'aOS7wG5P02'),
-('30b59dc0-02a5-441a-9afc-58fd4ba34b93', 'aOS7wG5P02'),
-('1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89', 'aOS7wG5P02'),
-('636c9342-e0ce-47e8-aa23-4fc2e0eceef1', 'aOS7wG5P02'),
-('d50b038d-2521-4300-948d-f3d4ca79cd63', 'aOS7wG5P02'),
-('f6e3fbb6-8199-43a9-85b7-41d0744266c1', 'ikb-ZWQoT6');
+* Please note that not all requests can/will be fulfilled, and any decisions made by Media Club or IT staff are final.
 
-insert into member (u_id, t_id) values
-('1f95f196-fa89-400a-982b-17d01b7fb554', 'ikb-ZWQoT6'),
-('636c9342-e0ce-47e8-aa23-4fc2e0eceef1', 'MGwSb5f0xj'),
-('94f4ec08-49a0-4bf0-8657-5bcf939d61b5', 'MGwSb5f0xj');
+* Photos and Videos will only be available **2 weeks** after the event has ended, not inclusive of common test or exam weeks.", "mediareq"),
+("ikb-ZWQoT6", "eb00f5ec-78a4-4630-b71c-29185919ef5a", "Math tutoring by famous mathematician", 0, "Learn from the best", null, null),
+("lfJtyCZOjp", "47f817c4-4a33-4f8b-abd5-0f23199dbef1", "Chemistry Lab Requisition", 1, "Chemistry Lab equipment requisition for lab sessions", "**Note:** We will only accede to requests where **chemicals and apparatus are already found** in our labs, relatively **common and safe** for usage.
 
-insert into request (req_id, t_id, u_id, date, name, description, committee, note, status) values
-('bpbpIjYOa2', 'aOS7wG5P02', '636c9342-e0ce-47e8-aa23-4fc2e0eceef1', '2023-12-15 01:02:03', 'Orientation 2024 Storyline and Finale', 'Storyling skit and finale skit+dances', 'Orientation Finale Decor Committee', 'ask IC for updated script', 2),
-('sN1pwvm3UR', 'aOS7wG5P02', '94f4ec08-49a0-4bf0-8657-5bcf939d61b5', '2024-2-23 12:34:56', 'Positivitea Week', 'Positivitea booth at canteen w music and kahoot', 'Positivitea', null, 0),
-('TwRLG0WxEp', 'lfJtyCZOjp', '636c9342-e0ce-47e8-aa23-4fc2e0eceef1', '2024-3-5 21:08:47', 'CM6131 Task 3 Group 1', 'Demonstration', 'M24604', null, 0),
-('1HsIMbVaUm', 'aOS7wG5P02', 'eb00f5ec-78a4-4630-b71c-29185919ef5a', '2024-2-27 00:00:09', 'Secret event', null, null, null, 2),
-('k6w0bmz0uD', 'aOS7wG5P02', 'a03f51f2-54cf-4803-97af-0b5986fc7ae5', '2023-12-25 00:00:00', 'Orientation 2024 Activities', 'Mass dance, briefings with slides', 'Orientation Core Team', null, 0),
-('rVBT7e5VxX', 'lfJtyCZOjp', '79be1b8f-9b5c-4f78-9aea-85a2bde41e1f', '2024-2-15 11:11:11', 'Chem Task 3', 'Demo', 'M24601', null, 0),
-('eJvJ5Ou2eC', 'aOS7wG5P02', '79be1b8f-9b5c-4f78-9aea-85a2bde41e1f', '2024-2-15 11:11:11', 'Testing', 'Testing 123', 'Media Club', null, 0);
+If not, requests will not be approved, and you will need to think of alternative safer options.", "chemlab");
 
-insert into req_date (req_id, start, end, description) values
-('bpbpIjYOa2', '2024-01-02 08:30:00', '2024-01-02 09:00:00', 'Day 1 AM'),
-('bpbpIjYOa2', '2024-01-02 15:00:00', '2024-01-02 15:30:00', 'Day 1 PM'),
-('bpbpIjYOa2', '2024-01-03 08:00:00', '2024-01-03 08:30:00', 'Day 2 AM'),
-('bpbpIjYOa2', '2024-01-03 14:00:00', '2024-01-03 14:30:00', 'Day 2 PM'),
-('bpbpIjYOa2', '2024-01-02 18:30:00', '2024-01-02 20:30:00', 'Finale'),
-('sN1pwvm3UR', '2024-02-28 10:00:00', '2024-02-28 14:00:00', ''),
-('sN1pwvm3UR', '2024-02-29 10:00:00', '2024-02-29 14:00:00', ''),
-('TwRLG0WxEp', '2024-03-19 08:00:00', '2024-03-19 10:00:00', 'Practice session'),
-('TwRLG0WxEp', '2024-03-28 08:00:00', '2024-03-28 10:00:00', 'Presentation session'),
-('1HsIMbVaUm', '2024-02-27 13:00:00', '2024-02-28 13:00:00', ''),
-('1HsIMbVaUm', '2024-02-28 13:00:00', '2024-02-29 13:00:00', ''),
-('k6w0bmz0uD', '2024-01-04 08:00:00', '2024-01-04 18:30:00', 'Day 3'),
-('k6w0bmz0uD', '2024-01-04 20:30:00', '2024-01-04 21:30:00', 'Day 3 Debrief');
+insert into `manager` (`u_id`,`t_id`) values
+("1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89", "aOS7wG5P02"),
+("30b59dc0-02a5-441a-9afc-58fd4ba34b93", "aOS7wG5P02"),
+("52c4eabf-89bb-45ac-aca7-29797afdde36", "aOS7wG5P02"),
+("636c9342-e0ce-47e8-aa23-4fc2e0eceef1", "aOS7wG5P02"),
+("79be1b8f-9b5c-4f78-9aea-85a2bde41e1f", "aOS7wG5P02"),
+("d50b038d-2521-4300-948d-f3d4ca79cd63", "aOS7wG5P02"),
+("f6e3fbb6-8199-43a9-85b7-41d0744266c1", "ikb-ZWQoT6");
 
-insert into deployment (dep_id, req_id, t_id, start, end, creator_id, create_date, approver_id, approve_date, note) values
-('Z7vg08Plnb', 'bpbpIjYOa2', 'aOS7wG5P02', '2024-01-02 08:30:00', '2024-01-02 09:00:00', '79be1b8f-9b5c-4f78-9aea-85a2bde41e1f', '2023-12-20', '8f2512c4-c35f-4386-998b-e582f09a9dc3', '2023-12-23', 'Day 1 AM'),
-('M1U2TWMIZD', 'bpbpIjYOa2', 'aOS7wG5P02', '2024-01-02 15:00:00', '2024-01-02 15:30:00', '79be1b8f-9b5c-4f78-9aea-85a2bde41e1f', '2023-12-20', '8f2512c4-c35f-4386-998b-e582f09a9dc3', '2023-12-23', 'Day 1 PM'),
-('VMReLOEgvM', 'bpbpIjYOa2', 'aOS7wG5P02', '2024-01-03 08:00:00', '2024-01-03 08:30:00', '79be1b8f-9b5c-4f78-9aea-85a2bde41e1f', '2023-12-20', '8f2512c4-c35f-4386-998b-e582f09a9dc3', '2023-12-23', 'Day 2 AM'),
-('7RBLdUAfH5', 'bpbpIjYOa2', 'aOS7wG5P02', '2024-01-03 14:00:00', '2024-01-03 14:30:00', '79be1b8f-9b5c-4f78-9aea-85a2bde41e1f', '2023-12-20', '8f2512c4-c35f-4386-998b-e582f09a9dc3', '2023-12-23', 'Day 2 PM'),
-('7dQtxic61a', 'bpbpIjYOa2', 'aOS7wG5P02', '2024-01-04 17:00:00', '2024-01-04 20:30:00', '79be1b8f-9b5c-4f78-9aea-85a2bde41e1f', '2023-12-20', '8f2512c4-c35f-4386-998b-e582f09a9dc3', '2023-12-23', 'Finale'),
-('mKGqQfbq1t', 'sN1pwvm3UR', 'aOS7wG5P02', '2024-02-28 10:00:00', '2024-02-28 14:00:00', '1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89', '2024-2-23', null, null, null),
-('tiLGwtwXmF', 'sN1pwvm3UR', 'aOS7wG5P02', '2024-02-29 10:00:00', '2024-02-29 14:00:00', '1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89', '2024-2-23', null, null, null),
-('015WabgG4I', '1HsIMbVaUm', 'aOS7wG5P02', '2024-02-28 00:00:00', '2024-02-28 11:00:00', '1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89', '2024-2-27', '30b59dc0-02a5-441a-9afc-58fd4ba34b93', '2024-2-27', null),
-('oMymQEi8RV', '1HsIMbVaUm', 'aOS7wG5P02', '2024-02-28 13:00:00', '2024-02-29 13:00:00', '1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89', '2024-2-27', '30b59dc0-02a5-441a-9afc-58fd4ba34b93', '2024-2-27', null),
-('oY7e_F0-g9', 'k6w0bmz0uD', 'aOS7wG5P02', '2024-01-04 08:00:00', '2024-01-04 18:30:00', '1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89', '2023-12-19', null, null, null),
-('sXwn2OqK9S', 'k6w0bmz0uD', 'aOS7wG5P02', '2024-01-04 20:30:00', '2024-01-04 21:30:00', '1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89', '2023-12-19', null, null, null);
+insert into `member` (`u_id`,`t_id`) values
+("636c9342-e0ce-47e8-aa23-4fc2e0eceef1", "MGwSb5f0xj"),
+("94f4ec08-49a0-4bf0-8657-5bcf939d61b5", "MGwSb5f0xj"),
+("1f95f196-fa89-400a-982b-17d01b7fb554", "ikb-ZWQoT6");
 
-insert into item (item, t_id, count, visible, description, category) values
-('Bose S1 Pro', 'aOS7wG5P02', 2, true, 'Portable bluetooth speaker', 'Speakers'),
-('Bose S1 Pro + Microphone', 'aOS7wG5P02', 2, true, 'Portable bluetooth speaker and wired microphone', 'Speakers'),
-('Senrun', 'aOS7wG5P02', 2, true, 'Luggage speaker with microphone', 'Speakers'),
-('Prism+ TV', 'aOS7wG5P02', 2, true, 'Big TV (movable on wheels)', null),
-('Beaker (100mL)', 'lfJtyCZOjp', 81, true, null, 'Glassware'),
-('Beaker (250mL)', 'lfJtyCZOjp', 65, true, null, 'Glassware'),
-('Beaker (600mL)', 'lfJtyCZOjp', 39, true, null, 'Glassware'),
-('Bunsen burner', 'lfJtyCZOjp', 40, true, null, 'Heating'),
-('Lighter (spark)', 'lfJtyCZOjp', 46, true, null, 'Heating'),
-('Hot plate with magnetic stirrer', 'lfJtyCZOjp', 27, true, null, 'Heating'),
-('Crucible tongs', 'lfJtyCZOjp', 28, true, 'Stainless steel', 'Heating');
+insert into `favourite` (`u_id`,`t_id`) values
+("636c9342-e0ce-47e8-aa23-4fc2e0eceef1", "MGwSb5f0xj"),
+("f6e3fbb6-8199-43a9-85b7-41d0744266c1", "MGwSb5f0xj"),
+("1f95f196-fa89-400a-982b-17d01b7fb554", "aOS7wG5P02"),
+("636c9342-e0ce-47e8-aa23-4fc2e0eceef1", "aOS7wG5P02"),
+("94f4ec08-49a0-4bf0-8657-5bcf939d61b5", "aOS7wG5P02"),
+("636c9342-e0ce-47e8-aa23-4fc2e0eceef1", "lfJtyCZOjp");
 
-insert into service (service, t_id, visible, description, category) values
-('Photo', 'aOS7wG5P02', true, null, null),
-('Video', 'aOS7wG5P02', true, null, null),
-('AV', 'aOS7wG5P02', true, null, null),
-('Livestream', 'aOS7wG5P02', false, null, null);
+insert into `request` (`req_id`,`t_id`,`u_id`,`date`,`name`,`description`,`committee`,`note`,`status`) values
+("1HsIMbVaUm", "aOS7wG5P02", "eb00f5ec-78a4-4630-b71c-29185919ef5a", "2024-02-27 00:00:09.000", "Secret event", null, null, null, 2),
+("TwRLG0WxEp", "lfJtyCZOjp", "636c9342-e0ce-47e8-aa23-4fc2e0eceef1", "2024-03-05 21:08:47.000", "CM6131 Task 3 Group 1", "Demonstration", "M24604", null, 0),
+("bpbpIjYOa2", "aOS7wG5P02", "636c9342-e0ce-47e8-aa23-4fc2e0eceef1", "2023-12-15 01:02:03.000", "Orientation 2024 Storyline and Finale", "Storyling skit and finale skit+dances", "Orientation Finale Decor Committee", "ask IC for updated script", 2),
+("eJvJ5Ou2eC", "aOS7wG5P02", "79be1b8f-9b5c-4f78-9aea-85a2bde41e1f", "2024-02-15 11:11:11.000", "Testing", "Testing 123", "Media Club", null, 0),
+("k6w0bmz0uD", "aOS7wG5P02", "a03f51f2-54cf-4803-97af-0b5986fc7ae5", "2023-12-25 00:00:00.000", "Orientation 2024 Activities", "Mass dance, briefings with slides", "Orientation Core Team", null, 0),
+("rVBT7e5VxX", "lfJtyCZOjp", "79be1b8f-9b5c-4f78-9aea-85a2bde41e1f", "2024-02-15 11:11:11.000", "Chem Task 3", "Demo", "M24601", null, 0),
+("sN1pwvm3UR", "aOS7wG5P02", "94f4ec08-49a0-4bf0-8657-5bcf939d61b5", "2024-02-23 12:34:56.000", "Positivitea Week", "Positivitea booth at canteen w music and kahoot", "Positivitea", null, 0);
 
-insert into item_req (req_id, item, t_id, count) values
-('sN1pwvm3UR', 'Prism+ TV', 'aOS7wG5P02', 1),
-('sN1pwvm3UR', 'Bose S1 Pro', 'aOS7wG5P02', 2),
-('TwRLG0WxEp', 'Beaker (250mL)', 'lfJtyCZOjp', 2),
-('TwRLG0WxEp', 'Bunsen burner', 'lfJtyCZOjp', 1),
-('TwRLG0WxEp', 'Lighter (spark)', 'lfJtyCZOjp', 1),
-('TwRLG0WxEp', 'Hot plate with magnetic stirrer', 'lfJtyCZOjp', 1),
-('TwRLG0WxEp', 'Crucible tongs', 'lfJtyCZOjp', 2),
-('1HsIMbVaUm', 'Bose S1 Pro', 'aOS7wG5P02', 2);
+insert into `req_date` (`req_id`,`start`,`end`,`description`) values
+("1HsIMbVaUm", "2024-02-27 13:00:00.000", "2024-02-28 13:00:00.000", ""),
+("1HsIMbVaUm", "2024-02-28 13:00:00.000", "2024-02-29 13:00:00.000", ""),
+("TwRLG0WxEp", "2024-03-19 08:00:00.000", "2024-03-19 10:00:00.000", "Practice session"),
+("TwRLG0WxEp", "2024-03-28 08:00:00.000", "2024-03-28 10:00:00.000", "Presentation session"),
+("bpbpIjYOa2", "2024-01-02 08:30:00.000", "2024-01-02 09:00:00.000", "Day 1 AM"),
+("bpbpIjYOa2", "2024-01-02 15:00:00.000", "2024-01-02 15:30:00.000", "Day 1 PM"),
+("bpbpIjYOa2", "2024-01-02 18:30:00.000", "2024-01-02 20:30:00.000", "Finale"),
+("bpbpIjYOa2", "2024-01-03 08:00:00.000", "2024-01-03 08:30:00.000", "Day 2 AM"),
+("bpbpIjYOa2", "2024-01-03 14:00:00.000", "2024-01-03 14:30:00.000", "Day 2 PM"),
+("k6w0bmz0uD", "2024-01-04 08:00:00.000", "2024-01-04 18:30:00.000", "Day 3"),
+("k6w0bmz0uD", "2024-01-04 20:30:00.000", "2024-01-04 21:30:00.000", "Day 3 Debrief"),
+("sN1pwvm3UR", "2024-02-28 10:00:00.000", "2024-02-28 14:00:00.000", ""),
+("sN1pwvm3UR", "2024-02-29 10:00:00.000", "2024-02-29 14:00:00.000", "");
 
-insert into service_req (req_id, service, t_id) values
-('bpbpIjYOa2', 'Photo', 'aOS7wG5P02'),
-('bpbpIjYOa2', 'Video', 'aOS7wG5P02'),
-('bpbpIjYOa2', 'AV', 'aOS7wG5P02'),
-('k6w0bmz0uD', 'AV', 'aOS7wG5P02');
+insert into `deployment` (`dep_id`,`req_id`,`t_id`,`start`,`end`,`creator_id`,`create_date`,`approver_id`,`approve_date`,`note`) values
+("015WabgG4I", "1HsIMbVaUm", "aOS7wG5P02", "2024-02-28 00:00:00.000", "2024-02-28 11:00:00.000", "1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89", "2024-02-27 00:00:00.000", "30b59dc0-02a5-441a-9afc-58fd4ba34b93", "2024-02-27 00:00:00.000", null),
+("7RBLdUAfH5", "bpbpIjYOa2", "aOS7wG5P02", "2024-01-03 14:00:00.000", "2024-01-03 14:30:00.000", "79be1b8f-9b5c-4f78-9aea-85a2bde41e1f", "2023-12-20 00:00:00.000", "8f2512c4-c35f-4386-998b-e582f09a9dc3", "2023-12-23 00:00:00.000", "Day 2 PM"),
+("7dQtxic61a", "bpbpIjYOa2", "aOS7wG5P02", "2024-01-04 17:00:00.000", "2024-01-04 20:30:00.000", "79be1b8f-9b5c-4f78-9aea-85a2bde41e1f", "2023-12-20 00:00:00.000", "8f2512c4-c35f-4386-998b-e582f09a9dc3", "2023-12-23 00:00:00.000", "Finale"),
+("M1U2TWMIZD", "bpbpIjYOa2", "aOS7wG5P02", "2024-01-02 15:00:00.000", "2024-01-02 15:30:00.000", "79be1b8f-9b5c-4f78-9aea-85a2bde41e1f", "2023-12-20 00:00:00.000", "8f2512c4-c35f-4386-998b-e582f09a9dc3", "2023-12-23 00:00:00.000", "Day 1 PM"),
+("VMReLOEgvM", "bpbpIjYOa2", "aOS7wG5P02", "2024-01-03 08:00:00.000", "2024-01-03 08:30:00.000", "79be1b8f-9b5c-4f78-9aea-85a2bde41e1f", "2023-12-20 00:00:00.000", "8f2512c4-c35f-4386-998b-e582f09a9dc3", "2023-12-23 00:00:00.000", "Day 2 AM"),
+("Z7vg08Plnb", "bpbpIjYOa2", "aOS7wG5P02", "2024-01-02 08:30:00.000", "2024-01-02 09:00:00.000", "79be1b8f-9b5c-4f78-9aea-85a2bde41e1f", "2023-12-20 00:00:00.000", "8f2512c4-c35f-4386-998b-e582f09a9dc3", "2023-12-23 00:00:00.000", "Day 1 AM"),
+("mKGqQfbq1t", "sN1pwvm3UR", "aOS7wG5P02", "2024-02-28 10:00:00.000", "2024-02-28 14:00:00.000", "1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89", "2024-02-23 00:00:00.000", null, null, null),
+("oMymQEi8RV", "1HsIMbVaUm", "aOS7wG5P02", "2024-02-28 13:00:00.000", "2024-02-29 13:00:00.000", "1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89", "2024-02-27 00:00:00.000", "30b59dc0-02a5-441a-9afc-58fd4ba34b93", "2024-02-27 00:00:00.000", null),
+("oY7e_F0-g9", "k6w0bmz0uD", "aOS7wG5P02", "2024-01-04 08:00:00.000", "2024-01-04 18:30:00.000", "1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89", "2023-12-19 00:00:00.000", null, null, null),
+("sXwn2OqK9S", "k6w0bmz0uD", "aOS7wG5P02", "2024-01-04 20:30:00.000", "2024-01-04 21:30:00.000", "1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89", "2023-12-19 00:00:00.000", null, null, null),
+("tiLGwtwXmF", "sN1pwvm3UR", "aOS7wG5P02", "2024-02-29 10:00:00.000", "2024-02-29 14:00:00.000", "1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89", "2024-02-23 00:00:00.000", null, null, null);
 
-insert into item_dep (dep_id, item, t_id, count, note) values
-('mKGqQfbq1t', 'Prism+ TV', 'aOS7wG5P02', 1, 'get from IT'),
-('mKGqQfbq1t', 'Bose S1 Pro', 'aOS7wG5P02', 1, 'Bose 1'),
-('tiLGwtwXmF', 'Prism+ TV', 'aOS7wG5P02', 1, 'get from IT'),
-('tiLGwtwXmF', 'Bose S1 Pro', 'aOS7wG5P02', 1, 'Bose 2'),
-('015WabgG4I', 'Bose S1 Pro', 'aOS7wG5P02', 2, null),
-('oMymQEi8RV', 'Bose S1 Pro', 'aOS7wG5P02', 1, null);
+insert into `item` (`item`,`t_id`,`count`,`visible`,`description`,`category`) values
+("Beaker (100mL)", "lfJtyCZOjp", 81, 1, null, "Glassware"),
+("Beaker (250mL)", "lfJtyCZOjp", 65, 1, null, "Glassware"),
+("Beaker (600mL)", "lfJtyCZOjp", 39, 1, null, "Glassware"),
+("Bose S1 Pro", "aOS7wG5P02", 2, 1, "Portable bluetooth speaker", "Speakers"),
+("Bose S1 Pro + Microphone", "aOS7wG5P02", 2, 1, "Portable bluetooth speaker and wired microphone", "Speakers"),
+("Bunsen burner", "lfJtyCZOjp", 40, 1, null, "Heating"),
+("Crucible tongs", "lfJtyCZOjp", 28, 1, "Stainless steel", "Heating"),
+("Hot plate with magnetic stirrer", "lfJtyCZOjp", 27, 1, null, "Heating"),
+("Lighter (spark)", "lfJtyCZOjp", 46, 1, null, "Heating"),
+("Prism+ TV", "aOS7wG5P02", 2, 1, "Big TV (movable on wheels)", null),
+("Senrun", "aOS7wG5P02", 2, 1, "Luggage speaker with microphone", "Speakers");
 
-insert into service_dep (dep_id, service, t_id, u_id, role) values
-('Z7vg08Plnb', 'AV', 'aOS7wG5P02', '79be1b8f-9b5c-4f78-9aea-85a2bde41e1f', 'IC'),
-('Z7vg08Plnb', 'AV', 'aOS7wG5P02', '30b59dc0-02a5-441a-9afc-58fd4ba34b93', 'Lights'),
-('Z7vg08Plnb', 'AV', 'aOS7wG5P02', '1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89', 'Sound'),
-('7dQtxic61a', 'Photo', 'aOS7wG5P02', '52c4eabf-89bb-45ac-aca7-29797afdde36', 'Finale'),
-('7dQtxic61a', 'Video', 'aOS7wG5P02', '8f2512c4-c35f-4386-998b-e582f09a9dc3', 'Static cam'),
-('7dQtxic61a', 'AV', 'aOS7wG5P02', '79be1b8f-9b5c-4f78-9aea-85a2bde41e1f', 'IC'),
-('7dQtxic61a', 'AV', 'aOS7wG5P02', '30b59dc0-02a5-441a-9afc-58fd4ba34b93', 'Lights'),
-('7dQtxic61a', 'AV', 'aOS7wG5P02', '1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89', 'Sound'),
-('oY7e_F0-g9', 'AV', 'aOS7wG5P02', 'd50b038d-2521-4300-948d-f3d4ca79cd63', 'Roamer'),
-('sXwn2OqK9S', 'AV', 'aOS7wG5P02', '636c9342-e0ce-47e8-aa23-4fc2e0eceef1', 'Slide');
+insert into `service` (`service`,`t_id`,`visible`,`description`,`category`) values
+("AV", "aOS7wG5P02", 1, null, null),
+("Livestream", "aOS7wG5P02", 0, null, null),
+("Photo", "aOS7wG5P02", 1, null, null),
+("Video", "aOS7wG5P02", 1, null, null);
 
-insert into can_serve (u_id, service, t_id) values
-('52c4eabf-89bb-45ac-aca7-29797afdde36', 'Photo', 'aOS7wG5P02'),
-('8f2512c4-c35f-4386-998b-e582f09a9dc3', 'Photo', 'aOS7wG5P02'),
-('8f2512c4-c35f-4386-998b-e582f09a9dc3', 'Video', 'aOS7wG5P02'),
-('8f2512c4-c35f-4386-998b-e582f09a9dc3', 'AV', 'aOS7wG5P02'),
-('79be1b8f-9b5c-4f78-9aea-85a2bde41e1f', 'AV', 'aOS7wG5P02'),
-('30b59dc0-02a5-441a-9afc-58fd4ba34b93', 'AV', 'aOS7wG5P02'),
-('1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89', 'AV', 'aOS7wG5P02'),
-('636c9342-e0ce-47e8-aa23-4fc2e0eceef1', 'AV', 'aOS7wG5P02'),
-('d50b038d-2521-4300-948d-f3d4ca79cd63', 'AV', 'aOS7wG5P02');
+insert into `can_serve` (`u_id`,`service`,`t_id`) values
+("1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89", "AV", "aOS7wG5P02"),
+("30b59dc0-02a5-441a-9afc-58fd4ba34b93", "AV", "aOS7wG5P02"),
+("636c9342-e0ce-47e8-aa23-4fc2e0eceef1", "AV", "aOS7wG5P02"),
+("79be1b8f-9b5c-4f78-9aea-85a2bde41e1f", "AV", "aOS7wG5P02"),
+("8f2512c4-c35f-4386-998b-e582f09a9dc3", "AV", "aOS7wG5P02"),
+("d50b038d-2521-4300-948d-f3d4ca79cd63", "AV", "aOS7wG5P02"),
+("52c4eabf-89bb-45ac-aca7-29797afdde36", "Photo", "aOS7wG5P02"),
+("8f2512c4-c35f-4386-998b-e582f09a9dc3", "Photo", "aOS7wG5P02"),
+("8f2512c4-c35f-4386-998b-e582f09a9dc3", "Video", "aOS7wG5P02");
+
+insert into `item_req` (`req_id`,`item`,`t_id`,`count`) values
+("1HsIMbVaUm", "Bose S1 Pro", "aOS7wG5P02", 2),
+("TwRLG0WxEp", "Beaker (250mL)", "lfJtyCZOjp", 2),
+("TwRLG0WxEp", "Bunsen burner", "lfJtyCZOjp", 1),
+("TwRLG0WxEp", "Crucible tongs", "lfJtyCZOjp", 2),
+("TwRLG0WxEp", "Hot plate with magnetic stirrer", "lfJtyCZOjp", 1),
+("TwRLG0WxEp", "Lighter (spark)", "lfJtyCZOjp", 1),
+("sN1pwvm3UR", "Bose S1 Pro", "aOS7wG5P02", 2),
+("sN1pwvm3UR", "Prism+ TV", "aOS7wG5P02", 1);
+
+insert into `service_req` (`req_id`,`service`,`t_id`) values
+("bpbpIjYOa2", "AV", "aOS7wG5P02"),
+("k6w0bmz0uD", "AV", "aOS7wG5P02"),
+("bpbpIjYOa2", "Photo", "aOS7wG5P02"),
+("bpbpIjYOa2", "Video", "aOS7wG5P02");
+
+insert into `item_dep` (`dep_id`,`item`,`t_id`,`count`,`note`) values
+("015WabgG4I", "Bose S1 Pro", "aOS7wG5P02", 2, null),
+("mKGqQfbq1t", "Bose S1 Pro", "aOS7wG5P02", 1, "Bose 1"),
+("mKGqQfbq1t", "Prism+ TV", "aOS7wG5P02", 1, "get from IT"),
+("oMymQEi8RV", "Bose S1 Pro", "aOS7wG5P02", 1, null),
+("tiLGwtwXmF", "Bose S1 Pro", "aOS7wG5P02", 1, "Bose 2"),
+("tiLGwtwXmF", "Prism+ TV", "aOS7wG5P02", 1, "get from IT");
+
+insert into `service_dep` (`dep_id`,`u_id`,`service`,`t_id`,`role`) values
+("7dQtxic61a", "1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89", "AV", "aOS7wG5P02", "Sound"),
+("7dQtxic61a", "30b59dc0-02a5-441a-9afc-58fd4ba34b93", "AV", "aOS7wG5P02", "Lights"),
+("7dQtxic61a", "52c4eabf-89bb-45ac-aca7-29797afdde36", "Photo", "aOS7wG5P02", "Finale"),
+("7dQtxic61a", "79be1b8f-9b5c-4f78-9aea-85a2bde41e1f", "AV", "aOS7wG5P02", "IC"),
+("7dQtxic61a", "8f2512c4-c35f-4386-998b-e582f09a9dc3", "Video", "aOS7wG5P02", "Static cam"),
+("Z7vg08Plnb", "1fc1ad99-4cb4-4f73-b8f2-e4ffd94f3c89", "AV", "aOS7wG5P02", "Sound"),
+("Z7vg08Plnb", "30b59dc0-02a5-441a-9afc-58fd4ba34b93", "AV", "aOS7wG5P02", "Lights"),
+("Z7vg08Plnb", "79be1b8f-9b5c-4f78-9aea-85a2bde41e1f", "AV", "aOS7wG5P02", "IC"),
+("oY7e_F0-g9", "d50b038d-2521-4300-948d-f3d4ca79cd63", "AV", "aOS7wG5P02", "Roamer"),
+("sXwn2OqK9S", "636c9342-e0ce-47e8-aa23-4fc2e0eceef1", "AV", "aOS7wG5P02", "Slide");
