@@ -146,7 +146,12 @@ router.post('/team/:id/request', bodyParser.json(), async (req, res, next) => {
         }
 
         const req_id = nanoid(10)
-        console.log(req_id)
+
+        if (typeof request.name === 'string' && request.name.trim()) {
+            request.name = request.name.trim()
+        } else {
+            throw { status: 400, message: 'Invalid request name: Name cannot be blank' }
+        }
 
         await insert('request', ['req_id', 't_id', 'u_id', 'date', 'name', 'description', 'committee'], [{ ...request, req_id, t_id: req.params.id, u_id: user, date: formatDate(new Date())}])
 
@@ -166,7 +171,6 @@ router.post('/team/:id/request', bodyParser.json(), async (req, res, next) => {
                     }
                 }
             }
-            console.log(dates)
             await insert('req_date', ['req_id', 'start', 'end', 'description'], dates)
         }
         if (Array.isArray(request.items)) {
@@ -184,7 +188,6 @@ router.post('/team/:id/request', bodyParser.json(), async (req, res, next) => {
                     }
                 }
             }
-            console.log(items)
             await insert('item_req', ['req_id', 'item', 't_id', 'count'], items)
         }
         if (Array.isArray(request.services)) {
@@ -199,12 +202,10 @@ router.post('/team/:id/request', bodyParser.json(), async (req, res, next) => {
                     }
                 }
             }
-            console.log(services)
             await insert('service_req', ['req_id', 'service', 't_id'], services)
             res.send({ req_id })
         }
     } catch (e) {
-        console.log(e)
         error(e, res)
     }
 })

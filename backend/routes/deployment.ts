@@ -148,10 +148,7 @@ router.post('/request/:id/deploy', bodyParser.json(), async (req, res, next) => 
 
         const deployment = objectColumns(req.body.deployment, [...COLUMNS, 'items', 'services'], false)
 
-        console.log(deployment?.items, deployment?.services)
-
         if (!deployment) throw { status: 400, message: 'No deployment given' }
-
 
         const dep_id = nanoid(10)
 

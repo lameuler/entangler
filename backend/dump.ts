@@ -78,7 +78,7 @@ function serialize(value: any) {
         return '"'+value.toString()+'"'
     } else if (typeof value === 'string') {
         return '"'+value+'"'
-    } else if (typeof value === 'number') {
+    } else if (typeof value === 'number' || typeof value === 'boolean') {
         return value.toString()
     } else if (value instanceof Date) {
         return '"'+value.toISOString().replaceAll(/[A-Z]/g,' ').trim()+'"'

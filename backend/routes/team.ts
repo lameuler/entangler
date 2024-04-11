@@ -222,6 +222,7 @@ router.post('/team/:id/items', bodyParser.json(), async (req, res, next) => {
         const item = objectColumns(req.body.item, ['item', 'description', 'count', 'visible'], false)
         
         if (item && item.item !== undefined) {
+            item.description = (typeof item.description === 'string') ? item.description.trim() : null
             item.count = Math.min(Math.max(0, item.count), 999)
             const [result] = await update('item', ['t_id', 'item'], ['description', 'count', 'visible'], { t_id: req.params.id, item: item.item }, item)
             const affected = 'affectedRows' in result ? result.affectedRows : -1
@@ -251,15 +252,20 @@ router.post('/team/:id/items/create', bodyParser.json(), async (req, res, next) 
         
         if (item && item.item !== undefined) {
             item.count = Math.min(Math.max(0, item.count), 999)
+            if (typeof item.item === 'string' && item.item.trim()) {
+                item.item = item.item.trim()
+            } else {
+                throw { status: 400, message: 'Invalid item name' }
+            }
             const [result] = await insert('item', ['t_id', 'item', 'description', 'count', 'visible'], [item])
             console.log(result)
             const affected = result && 'affectedRows' in result ? result.affectedRows : -1
             if (affected === 1) {
-                res.sendStatus(200)
+                return res.sendStatus(200)
             } else if (affected === 0) {
-                res.status(404).send({ error: 'Not found' })
+                throw { status: 404, message: 'Not found' }
             } else {
-                res.status(500).send({ error: 'Failed to insert item' })
+                throw { status: 500, message: 'Failed to insert item' }
             }
         }
         res.status(400).send({ error: 'No item specified' })
@@ -329,6 +335,7 @@ router.post('/team/:id/services', bodyParser.json(), async (req, res, next) => {
         const service = objectColumns(req.body.service, ['service', 'description', 'visible'], false)
         
         if (service && service.service !== undefined) {
+            service.description = (typeof service.description === 'string') ? service.description.trim() : null
             service.count = Math.min(Math.max(0, service.count), 999)
             const [result] = await update('service', ['t_id', 'service'], ['description', 'visible'], { t_id: req.params.id, service: service.service }, service)
             const affected = 'affectedRows' in result ? result.affectedRows : -1
@@ -358,15 +365,20 @@ router.post('/team/:id/services/create', bodyParser.json(), async (req, res, nex
         
         if (service && service.service !== undefined) {
             service.count = Math.min(Math.max(0, service.count), 999)
+            if (typeof service.service === 'string' && service.service.trim()) {
+                service.service = service.service.trim()
+            } else {
+                throw { status: 400, message: 'Invalid item name' }
+            }
             const [result] = await insert('service', ['t_id', 'service', 'description', 'visible'], [service])
 
             const affected = result && 'affectedRows' in result ? result.affectedRows : -1
             if (affected === 1) {
-                res.sendStatus(200)
+                return res.sendStatus(200)
             } else if (affected === 0) {
-                res.status(404).send({ error: 'Not found' })
+                throw { status: 404, message: 'Not found' }
             } else {
-                res.status(500).send({ error: 'Failed to insert service' })
+                throw { status: 500, message: 'Failed to insert service' }
             }
         }
         res.status(400).send({ error: 'No service specified' })

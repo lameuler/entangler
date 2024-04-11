@@ -6,7 +6,10 @@ export function objectColumns<T extends readonly string[]>(object: any, columns:
     for (const col of columns) {
         if(object[col] !== undefined) {
             const raw = object[col]
-            result[col] = Buffer.isBuffer(raw) ? raw.toString() : raw
+            if (typeof raw === 'string') result[col] = raw.trim()
+            else if (Buffer.isBuffer(raw)) result[col] = raw.toString()
+            else if (raw instanceof Date) result[col] = raw.toISOString()
+            else result[col] = raw // number, boolean, null etc
         } else if (all) {
             return null
         }
