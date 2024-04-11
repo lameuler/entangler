@@ -17,7 +17,7 @@
 
 <style lang="postcss">
     article :global(a) {
-        @apply text-violet-600 underline;
+        @apply text-violet-600 underline break-all;
     }
     :global(.dark) article :global(a) {
         @apply text-violet-400;

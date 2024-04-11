@@ -1,11 +1,3 @@
-create table ikea (
-    name varchar(30) primary key,
-    cost float,
-    stock int
-);
-insert into ikea values
-('Blahaj', 10.9, 29);
-
 set global time_zone = '+00:00';
 set time_zone = "+00:00";
 
@@ -334,6 +326,9 @@ insert into team (t_id, owner_id, name, public, description, handle) values
 ('4C_m6q4dXN', 'f2519a85-3e2a-4f2a-aac4-4305b8a84b6b', 'PE Dept Equipment Loan', true, 'Request for PE equipment for games and exercise', 'pe_loan'),
 ('MGwSb5f0xj', 'a03f51f2-54cf-4803-97af-0b5986fc7ae5', "OT'24 Logs", false, null, 'o24logs'),
 ('ikb-ZWQoT6', 'eb00f5ec-78a4-4630-b71c-29185919ef5a', 'Math tutoring by famous mathematician', false, 'Learn from the best', null);
+
+update team set details='https://tinyurl.com/NUSHMediaRequisitionGuidelines\n\n* Please submit this form at **least 2** weeks in advance.\n\n* All changes with regards to the event should be communicated to Media Club through WhatsApp or Email.\n\n* Please note that not all requests can/will be fulfilled, and any decisions made by Media Club or IT staff are final.\n\n* Photos and Videos will only be available **2 weeks** after the event has ended, not inclusive of common test or exam weeks.'
+where t_id='aOS7wG5P02';
 
 insert into favourite (u_id, t_id) values
 ('636c9342-e0ce-47e8-aa23-4fc2e0eceef1', 'aOS7wG5P02'),
