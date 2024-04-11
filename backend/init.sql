@@ -89,7 +89,7 @@ create table req_date (
     start       datetime,
     end         datetime,
     description varchar(150),
-    primary key (req_id, start, end),
+    primary key (req_id, start, end, description),
     foreign key (req_id) references request(req_id) on delete cascade
 );
 

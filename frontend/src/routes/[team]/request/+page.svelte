@@ -88,7 +88,7 @@
                 await goto('/dashboard/requests')
             } catch (e) {
                 const err = e as Error
-                if ((err?.cause as any).status === 400) {
+                if ((err?.cause as any)?.status === 400) {
                     nameError = err.message
                 } else {
                     error = err.message
@@ -111,9 +111,11 @@
                 {/if}
                 <a href="/{$page.params.team}" class="text-lg font-medium hover:underline">{ team.name }</a>
                 <h1 class="text-3xl font-semibold">New Request</h1>
+                {#if team.description}
                 <p class="my-2 text-justify text-slate-700 dark:text-slate-300">
                     { team.description }
                 </p>
+                {/if}
                 {#if team.details }
                 <Button on:click={ () => open = true }>
                     Show details

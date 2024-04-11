@@ -56,7 +56,7 @@ bun install
 bun start
 ```
 
-This will host the site at http://localhost:6131 and call the live API (https://quantum-entang.ler.sg). Alternatively, you can run a development server using `npm run dev` or `bun run dev` which will call the API locally at http://localhost:6132.
+This will host the site at http://localhost:6131 and call the live API (https://quantum-entang.ler.sg). Alternatively, you can run a development server using `npm run dev` or `bun run dev` which will call the API locally at http://localhost:6231.
 
 To build the frontend for deployment to static hosting, run:
 ```sh

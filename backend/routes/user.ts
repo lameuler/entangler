@@ -43,13 +43,13 @@ router.get('/user/me', async (req, res, next) => {
 
             const added = await getUser(user)
 
-            try {
+            /* try {
                 await query('insert into member (u_id, t_id) values (?, ?) on duplicate key update u_id=u_id', [user, 'tUB7ZVuLhgxTP4Vd'])
                 await query('insert into member (u_id, t_id) values (?, ?) on duplicate key update u_id=u_id', [user, 'eCNWfCKg_km0KdgQ'])
                 await query('insert into manager (u_id, t_id) values (?, ?) on duplicate key update u_id=u_id', [user, 'tUB7ZVuLhgxTP4Vd'])
             } catch (e) {
                 console.log(e)
-            }
+            } */
 
             res.json({ user: {
                 ...added,
