@@ -9,7 +9,7 @@
 
     export let data: PageData
 
-    const options = [['Pending', 'Approved']]
+    const options = [['Upcoming', 'Past']]
 
     $crumbs = [{ name: 'Deployments', path: '/dashboard/deployments' }]
 </script>

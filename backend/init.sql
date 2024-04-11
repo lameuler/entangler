@@ -88,7 +88,7 @@ create table req_date (
     req_id      binary(10),
     start       datetime,
     end         datetime,
-    description varchar(150),
+    description varchar(150) default '',
     primary key (req_id, start, end, description),
     foreign key (req_id) references request(req_id) on delete cascade
 );
@@ -195,11 +195,12 @@ and (((managed is null or managed=true) and exists(select * from manager m where
     or ((managed is null or managed=false) and r.u_id=u_id))
 order by r.date desc $/$/$
 
-create procedure memberdeployments(in u_id char(36))
+create procedure memberdeployments(in u_id char(36), in is_past boolean)
 select d.dep_id, d.req_id, d.t_id, d.start, d.end, d.note, d.approver_id is not null approved, s.service, s.role, t.name team, r.name request
 from deployment d, service_dep s, team t, request r
 where d.t_id = t.t_id and d.req_id = r.req_id
 and s.dep_id = d.dep_id and s.u_id = u_id
+and (is_past is null or (d.end < now())=is_past)
 order by d.start desc $/$/$
 
 create procedure teamdeployments(in t_id binary(10), in req_id binary(10), in dep_id binary(10), in is_approved int)
@@ -370,12 +371,12 @@ insert into req_date (req_id, start, end, description) values
 ('bpbpIjYOa2', '2024-01-03 08:00:00', '2024-01-03 08:30:00', 'Day 2 AM'),
 ('bpbpIjYOa2', '2024-01-03 14:00:00', '2024-01-03 14:30:00', 'Day 2 PM'),
 ('bpbpIjYOa2', '2024-01-02 18:30:00', '2024-01-02 20:30:00', 'Finale'),
-('sN1pwvm3UR', '2024-02-28 10:00:00', '2024-02-28 14:00:00', null),
-('sN1pwvm3UR', '2024-02-29 10:00:00', '2024-02-29 14:00:00', null),
+('sN1pwvm3UR', '2024-02-28 10:00:00', '2024-02-28 14:00:00', ''),
+('sN1pwvm3UR', '2024-02-29 10:00:00', '2024-02-29 14:00:00', ''),
 ('TwRLG0WxEp', '2024-03-19 08:00:00', '2024-03-19 10:00:00', 'Practice session'),
 ('TwRLG0WxEp', '2024-03-28 08:00:00', '2024-03-28 10:00:00', 'Presentation session'),
-('1HsIMbVaUm', '2024-02-27 13:00:00', '2024-02-28 13:00:00', null),
-('1HsIMbVaUm', '2024-02-28 13:00:00', '2024-02-29 13:00:00', null),
+('1HsIMbVaUm', '2024-02-27 13:00:00', '2024-02-28 13:00:00', ''),
+('1HsIMbVaUm', '2024-02-28 13:00:00', '2024-02-29 13:00:00', ''),
 ('k6w0bmz0uD', '2024-01-04 08:00:00', '2024-01-04 18:30:00', 'Day 3'),
 ('k6w0bmz0uD', '2024-01-04 20:30:00', '2024-01-04 21:30:00', 'Day 3 Debrief');
 

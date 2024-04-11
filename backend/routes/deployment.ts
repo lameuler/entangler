@@ -59,8 +59,12 @@ router.get('/user/deployments', async (req, res, next) => {
         if(typeof req.query.q === 'string') {
             search = decodeURI(req.query.q.replaceAll('+', ' ').trim())
         }
+
+        const { result, filters } = parseFilters(req.query.filter, {
+            is_past: ['upcoming','past']
+        })
         
-        const [raw] = await query('call memberdeployments(?)', [user])
+        const [raw] = await query('call memberdeployments(?,?)', [user, result.is_past ?? null])
 
         if(Array.isArray(raw)) {
             const results = Array.isArray(raw[0]) ? raw[0] : raw
@@ -71,9 +75,9 @@ router.get('/user/deployments', async (req, res, next) => {
                 deployments = fuse.search(search).map(result => result.item)
             }
 
-            res.json({ deployments })
+            res.json({ deployments, filters })
         } else {
-            res.json({ deployments: null })
+            res.json({ deployments: null, filters })
         }
     } catch (e) {
         error(e, res)

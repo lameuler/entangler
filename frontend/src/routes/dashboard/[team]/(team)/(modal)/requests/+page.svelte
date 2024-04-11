@@ -25,7 +25,7 @@
 {:then result}
     <ErrorAlert bind:error/>
     <div class="absolute flex flex-col h-full w-full">
-        <div class="px-2 pt-2"><Search value={ data.q ?? undefined }
+        <div class="px-2 pt-2 z-20"><Search value={ data.q ?? undefined }
             on:search={({detail}) => search('/dashboard/'+data.t_id+'/requests', detail, filter)}>
             <FiltersConfig bind:filter {options}/>
         </Search>
