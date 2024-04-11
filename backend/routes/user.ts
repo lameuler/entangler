@@ -35,7 +35,7 @@ router.get('/user/me', async (req, res, next) => {
         const result = await getUser(user)
         // console.log('user:result')
         if (result === null) {
-            await insert(TABLE, COLUMNS, [{
+            await insert(TABLE, ['u_id', 'name', 'email'], [{
                 u_id: user,
                 name: token.name,
                 email: token.email
