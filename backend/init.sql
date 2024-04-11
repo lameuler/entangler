@@ -224,14 +224,14 @@ where m.u_id=u.u_id and t.t_id=m.t_id and t.t_id=t_id
 and (exclude is null or m.u_id not in (select u_id from service_dep s where s.dep_id=exclude))
 order by role desc $/$/$
 
-create trigger manager_insert before insert on manager
+create trigger manager_insert after insert on manager
 for each row
 begin
 insert into member (t_id, u_id) values (new.t_id, new.u_id) on duplicate key update u_id=u_id;
 call updaterole(new.u_id);
 end $/$/$
 
-create trigger manager_update before update on manager
+create trigger manager_update after update on manager
 for each row
 begin
 if old.u_id!=new.u_id then
@@ -241,16 +241,16 @@ call updaterole(old.u_id);
 call updaterole(new.u_id);
 end $/$/$
 
-create trigger manager_delete before delete on manager
+create trigger manager_delete after delete on manager
 for each row
 call updaterole(old.u_id);
 drop trigger if exists member_delete $/$/$
 
-create trigger member_insert before insert on member
+create trigger member_insert after insert on member
 for each row
 call updaterole(new.u_id) $/$/$
 
-create trigger member_update before update on member
+create trigger member_update after update on member
 for each row
 begin
 if old.u_id!=new.u_id then
@@ -260,7 +260,7 @@ call updaterole(old.u_id);
 call updaterole(new.u_id);
 end $/$/$
 
-create trigger member_delete before delete on member
+create trigger member_delete after delete on member
 for each row
 begin
 delete from manager where u_id=old.u_id;

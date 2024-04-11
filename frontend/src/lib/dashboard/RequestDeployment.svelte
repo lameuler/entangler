@@ -111,7 +111,7 @@
             <Button on:click={save}>Save</Button>
         </div>
     {:else}
-        <div class="flex gap-1 mt-2">
+        <div class="flex flex-wrap gap-1 mt-2">
             <LinkButton href="/dashboard/{deployment.t_id}/{deployment.req_id}/{deployment.dep_id}">Edit details</LinkButton>
             <div class="grow"/>
             {#if deleting}

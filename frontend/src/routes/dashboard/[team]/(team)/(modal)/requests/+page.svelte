@@ -27,7 +27,7 @@
     <div class="absolute flex flex-col h-full w-full">
         <div class="px-2 pt-2 z-20"><Search value={ data.q ?? undefined }
             on:search={({detail}) => search('/dashboard/'+data.t_id+'/requests', detail, filter)}>
-            <FiltersConfig bind:filter {options}/>
+            <FiltersConfig slot="config" bind:filter {options}/>
         </Search>
         </div>
         <div class="px-2 pb-24 overflow-y-scroll">
