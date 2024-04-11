@@ -200,7 +200,9 @@ router.get('/team/:id/items', async (req, res, next) => {
         const { user } = await authenticate(req, res, next)
         const showAll = await isManager(req.params.id, user)
 
-        const [raw] = await query('select * from item where t_id=? and (visible=true or ?)', [req.params.id, showAll])
+        const col = req.params.id.startsWith('@') ? 'concat("@",t.`handle`)' : '`t_id`'
+
+        const [raw] = await query('select i.* from item i, team t where i.t_id=t.t_id and '+col+'=? and (visible=true or ?)', [req.params.id, showAll])
 
         if(Array.isArray(raw)) {
             const results = Array.isArray(raw[0]) ? raw[0] : raw
@@ -313,7 +315,9 @@ router.get('/team/:id/services', async (req, res, next) => {
         const { user } = await authenticate(req, res, next)
         const showAll = await isManager(req.params.id, user)
 
-        const [raw] = await query('select * from service where t_id=? and (visible=true or ?)', [req.params.id, showAll])
+        const col = req.params.id.startsWith('@') ? 'concat("@",t.`handle`)' : '`t_id`'
+
+        const [raw] = await query('select s.* from service s, team t where s.t_id=t.t_id and '+col+'=? and (visible=true or ?)', [req.params.id, showAll])
 
         if(Array.isArray(raw)) {
             const results = Array.isArray(raw[0]) ? raw[0] : raw

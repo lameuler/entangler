@@ -84,7 +84,9 @@
                 services: Object.keys(serviceReqs).map(s => serviceReqs[s] ? { service: s } : undefined).filter(s=>s)
             }
             try {
-                await request(fetch, '/team/'+data.t_id+'/request', token, 'POST', { request: req })
+                const team = await data.teamPromise
+                if (!team?.t_id) throw new Error('Team not found')
+                await request(fetch, '/team/'+team.t_id+'/request', token, 'POST', { request: req })
                 await goto('/dashboard/requests')
             } catch (e) {
                 const err = e as Error
