@@ -6,7 +6,7 @@
     import PageLink from '$lib/PageLink.svelte';
     import { beforeNavigate } from '$app/navigation';
     
-    // export let data: LayoutData;
+    export let data: LayoutData;
 
     let showing = false
     let menu: HTMLElement
@@ -57,18 +57,24 @@
                 </svg>
                 Teams
             </NavLink>
+            {#await data.user then user}
+            {#if user?.is_manager}
             <NavLink href="/dashboard/inbox">
                 <svg viewBox="0 0 24 24" class="icon h-5 w-5 opacity-60">
                     <path d="M10 21v-6.5a3.5 3.5 0 0 0 -7 0v6.5h18v-6a4 4 0 0 0 -4 -4h-10.5" /><path d="M12 11v-8h4l2 2l-2 2h-4" /><path d="M6 15h1" />
                 </svg>
                 Inbox
             </NavLink>
+            {/if}
+            {#if user?.is_member}
             <NavLink href="/dashboard/deployments">
                 <svg viewBox="0 0 24 24" class="icon h-5 w-5 opacity-60">
                     <path d="M13.5 21h-7.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v5" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /><path d="M19 16l-2 3h4l-2 3" />
                 </svg>
                 Deployments
             </NavLink>
+            {/if}
+            {/await}
         </div>
     </nav>
     <div class="grow pt-16 md:ml-64 px-4 sm:px-8">
