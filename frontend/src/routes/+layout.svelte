@@ -9,6 +9,7 @@
     import { account } from '$lib/auth';
     import type { LayoutData } from './$types';
     import { page } from '$app/stores';
+    import ShutdownNotice from '$lib/ShutdownNotice.svelte';
 
     export let data: LayoutData
 
@@ -40,6 +41,7 @@
 <div class="grid grid-rows-[1fr_auto] h-full w-full">
     <header class="fixed w-full flex justify-center top-0 z-40">
         <NavBar user={data.user}/>
+        <ShutdownNotice/>
     </header>
     <div class="max-w-6xl justify-self-center w-full relative"><slot>
         <PageSpinner/>

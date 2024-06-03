@@ -4,7 +4,6 @@
         Lam Eu Ler &copy; 2024
     </a>
     <div>
-        <!-- <a href="">View on GitHub</a> -->
-        <a href="/credits">Credits</a>
+        <a href="https://github.com/lameuler/entangler">View on GitHub</a>
     </div>
 </nav>
