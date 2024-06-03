@@ -7,7 +7,7 @@ The frontend is designed to be hosted as a static site (no server-side rendering
 The live site is available at https://entang.ler.sg.
 
 > [!NOTE]
-> The backend is no longer between hosted, so the live site will not work as expected.
+> The backend is no longer being hosted, so the live site will not work as expected.
 
 The site can also be hosted locally using npm (or bun) or Docker.
 

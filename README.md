@@ -3,7 +3,7 @@
 Entangler is the all-in-one platform for managing requests and item loans.
 
 > [!NOTE]
-> The backend is no longer between hosted, so the live site will not work as expected.
+> The backend is no longer being hosted, so the live site will not work as expected.
 
 ## Docker Quickstart
 
